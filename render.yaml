@@ -32,7 +32,7 @@ services:
       - key: EMBEDDING_API_KEY
         value: mock-key
 
-  - type: static
+  - type: web
     name: nexora-frontend
     runtime: static
     buildCommand: npm --prefix frontend install && npm --prefix frontend run build
