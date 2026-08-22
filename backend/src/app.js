@@ -62,12 +62,15 @@ app.use(
 
 app.use(requestLogger);
 
-// 4. Rate Limiting Middleware
+// 4. Public Health Route
+// Must be available before API rate limiting for Render health checks.
+app.use("/api/v1/health", healthRoutes);
+
+// 5. Rate Limiting Middleware
 app.use("/api/v1", apiLimiter);
 app.use("/api/v1/ai", aiLimiter);
 
-// 5. Versioned API Routes (/api/v1)
-app.use("/api/v1/health", healthRoutes);
+// 6. Versioned API Routes (/api/v1)
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/tasks", taskRoutes);
