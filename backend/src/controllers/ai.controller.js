@@ -21,7 +21,7 @@ const chat = async (req, res, next) => {
 /**
  * SSE Backend Streaming Endpoint: POST /api/v1/ai/chat/stream
  */
-const chatStream = async (req, res, next) => {
+const chatStream = async (req, res, _next) => {
   const { conversationId, message, isFreshChat } = req.body || {};
 
   if (!message || !message.trim()) {

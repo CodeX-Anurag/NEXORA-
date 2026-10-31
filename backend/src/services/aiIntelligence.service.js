@@ -1,9 +1,7 @@
-const crypto = require("crypto");
 const Recommendation = require("../models/Recommendation.model");
 const Task = require("../models/Task.model");
 const StudySession = require("../models/StudySession.model");
 const Project = require("../models/Project.model");
-const User = require("../models/User.model");
 const { getUserCareerAnalysis } = require("./career.service");
 const LLMClient = require("../ai/llmClient");
 const PromptManager = require("../ai/promptManager");
@@ -29,7 +27,6 @@ const createFingerprint = (title = "", type = "skill") => {
 const analyzeSkillGaps = async (userId, llmClientOverride = null) => {
   // Deterministic calculation in backend
   const analysis = await getUserCareerAnalysis(userId);
-  const user = await User.findById(userId);
 
   const { systemContext } = await ContextBuilder.buildContext(
     userId,

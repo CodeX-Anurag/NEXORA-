@@ -6,7 +6,6 @@ if (typeof dns.setDefaultResultOrder === "function") {
 const app = require("./app");
 const { PORT } = require("./config/env");
 const { connectDB, disconnectDB } = require("./config/db");
-const mongoose = require("mongoose");
 const jobScheduler = require("./services/jobScheduler.service");
 
 let server;
