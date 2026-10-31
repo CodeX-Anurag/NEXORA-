@@ -213,6 +213,7 @@ const generateRecommendations = async (userId, llmClientOverride = null) => {
 - Top Skill Gap: ${topGap ? topGap.skillName : "General Full Stack"} (Gap: ${topGap ? topGap.gap : 0} points)
 - Urgent Task: ${urgentTask ? urgentTask.title : "No pending high priority tasks"}
 - Active Projects: ${projects.length}
+- Recent Study Sessions Tracked: ${studySessions.length}
 - Previous Rejected Fingerprints: ${Array.from(rejectedFingerprints).join(", ") || "None"}
 
 INSTRUCTIONS:
@@ -345,7 +346,7 @@ const submitFeedback = async (userId, recommendationId, { feedback, status }) =>
 /**
  * 6. Give Another Recommendation: Guarantees a fresh, non-duplicate recommendation distinct from past rejected items
  */
-const giveAnotherRecommendation = async (userId, llmClientOverride = null) => {
+const giveAnotherRecommendation = async (userId, _llmClientOverride = null) => {
   const existingRecs = await Recommendation.find({ userId });
   
   // Mark any active/pending recommendation as rejected or dismissed

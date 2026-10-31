@@ -44,7 +44,6 @@ describe("Phase 8C — SSE Backend Streaming Tests", () => {
     if (mongoose.connection.readyState !== 1) return;
 
     const resA = await request(app).post("/api/v1/auth/register").send(userA);
-    const tokenA = resA.body.accessToken;
 
     const resB = await request(app).post("/api/v1/auth/register").send(userB);
     const tokenB = resB.body.accessToken;
@@ -90,7 +89,7 @@ describe("Phase 8C — SSE Backend Streaming Tests", () => {
     const regRes = await request(app).post("/api/v1/auth/register").send(userA);
     const token = regRes.body.accessToken;
 
-    const streamRes = await request(app)
+    await request(app)
       .post("/api/v1/ai/chat/stream")
       .set("Authorization", `Bearer ${token}`)
       .send({ message: "What is Node.js Express?" });
@@ -135,7 +134,6 @@ describe("Phase 8C — SSE Backend Streaming Tests", () => {
     if (mongoose.connection.readyState !== 1) return;
 
     const regRes = await request(app).post("/api/v1/auth/register").send(userA);
-    const token = regRes.body.accessToken;
 
     const failingLLM = {
       generateStream: async () => {

@@ -22,7 +22,6 @@ afterAll(async () => {
 
 describe("Substep 11A — Centralized AI Token, Cost & Performance Metrics Tracking Tests", () => {
   let tokenA = "";
-  let tokenB = "";
   let userAId = "";
   let userBId = "";
 
@@ -44,7 +43,6 @@ describe("Substep 11A — Centralized AI Token, Cost & Performance Metrics Track
         email: "telemetry_bob@example.com",
         password: "Password123!"
       });
-      tokenB = regB.body.accessToken;
       userBId = regB.body.user.id;
     }
   });

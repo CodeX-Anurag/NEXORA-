@@ -144,23 +144,6 @@ describe("Substep 9A — Security Foundation & API Hardening Tests", () => {
 
   test("8. Substep 12D Rate Limiter — Auth endpoint rate limiting handler returns 429 JSON response", async () => {
     const rateLimiter = require("../src/middleware/rateLimiter.middleware");
-    const mockReq = { userId: "test_user_id", ip: "127.0.0.1" };
-    const mockRes = {
-      headers: {},
-      statusCode: 200,
-      getHeader(key) {
-        return this.headers[key] || "60";
-      },
-      status(code) {
-        this.statusCode = code;
-        return this;
-      },
-      json(data) {
-        this.data = data;
-        return this;
-      }
-    };
-
     rateLimiter.adminLimiter; // Ensure exports exist
     expect(rateLimiter.authLimiter).toBeDefined();
     expect(rateLimiter.aiLimiter).toBeDefined();

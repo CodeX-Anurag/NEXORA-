@@ -24,7 +24,6 @@ describe("Substep 11C — Notification Service & REST API Tests", () => {
   let tokenA = "";
   let tokenB = "";
   let userAId = "";
-  let userBId = "";
 
   beforeEach(async () => {
     if (mongoose.connection.readyState === 1) {
@@ -45,7 +44,6 @@ describe("Substep 11C — Notification Service & REST API Tests", () => {
         password: "Password123!"
       });
       tokenB = regB.body.accessToken;
-      userBId = regB.body.user.id;
     }
   });
 

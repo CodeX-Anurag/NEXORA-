@@ -42,7 +42,6 @@ describe("Phase 6 NEXORA Memory System Unit & Integration Tests", () => {
     // Register User A & User B
     const resA = await request(app).post("/api/v1/auth/register").send(userA);
     const tokenA = resA.body.accessToken;
-    const userIdA = resA.body.user.id;
 
     const resB = await request(app).post("/api/v1/auth/register").send(userB);
     const tokenB = resB.body.accessToken;

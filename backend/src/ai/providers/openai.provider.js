@@ -102,7 +102,7 @@ class OpenAIProviderAdapter {
 
     if (!response.ok) {
       const errText = await response.text();
-      const err = new Error(`AI Provider Stream Error: HTTP ${response.status}`);
+      const err = new Error(`AI Provider Stream Error: HTTP ${response.status} - ${errText}`);
       err.statusCode = 502;
       throw err;
     }

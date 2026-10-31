@@ -1,6 +1,4 @@
-const request = require("supertest");
 const mongoose = require("mongoose");
-const app = require("../src/app");
 const User = require("../src/models/User.model");
 const Memory = require("../src/models/Memory.model");
 const MemoryRetriever = require("../src/ai/memoryRetriever");

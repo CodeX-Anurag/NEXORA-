@@ -44,7 +44,6 @@ describe("Phase 12 — Substep 12E: Final E2E Release Engineering & System Regre
   };
 
   let tokenA = "";
-  let tokenB = "";
   let adminToken = "";
 
   beforeEach(async () => {
@@ -61,8 +60,7 @@ describe("Phase 12 — Substep 12E: Final E2E Release Engineering & System Regre
       tokenA = regA.body.accessToken;
 
       // Register Student B
-      const regB = await request(app).post("/api/v1/auth/register").send(studentUserB);
-      tokenB = regB.body.accessToken;
+      await request(app).post("/api/v1/auth/register").send(studentUserB);
 
       // Register Admin User & update role directly in DB
       const regAdmin = await request(app).post("/api/v1/auth/register").send(adminUser);

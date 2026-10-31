@@ -30,7 +30,6 @@ describe("Substep 9D — Comprehensive System Integration & Regression Tests", (
   const userBData = { name: "Integration Bob", email: "int_bob@example.com", password: "Password123!" };
 
   let tokenA = "";
-  let tokenB = "";
   let userAId = "";
   let userBId = "";
 
@@ -50,7 +49,6 @@ describe("Substep 9D — Comprehensive System Integration & Regression Tests", (
       userAId = regA.body.user.id;
 
       const regB = await request(app).post("/api/v1/auth/register").send(userBData);
-      tokenB = regB.body.accessToken;
       userBId = regB.body.user.id;
     }
   });
