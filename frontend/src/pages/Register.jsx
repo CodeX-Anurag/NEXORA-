@@ -43,10 +43,10 @@ export const Register = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto my-12 p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl space-y-6">
+    <div className="max-w-md mx-auto my-12 p-8 rounded-2xl bg-[#191816] border border-[#2D2925] shadow-2xl space-y-6">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold tracking-tight text-white">Create NEXORA Account</h2>
-        <p className="text-xs text-slate-400">Join the AI-powered student productivity platform</p>
+        <h2 className="text-2xl font-bold tracking-tight text-[#FAF7F2] font-display">Create NEXORA Account</h2>
+        <p className="text-xs text-[#9C9384]">Join the AI-powered student productivity platform</p>
       </div>
 
       {error && <ErrorMessage title="Registration Failed" message={error} />}
@@ -94,9 +94,9 @@ export const Register = () => {
         </Button>
       </form>
 
-      <div className="pt-4 border-t border-slate-800 text-center text-xs text-slate-400">
+      <div className="pt-4 border-t border-[#262420] text-center text-xs text-[#9C9384]">
         Already have an account?{" "}
-        <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
+        <Link to="/login" className="text-[#E0693B] hover:text-[#EB784B] font-semibold transition-colors">
           Sign In
         </Link>
       </div>

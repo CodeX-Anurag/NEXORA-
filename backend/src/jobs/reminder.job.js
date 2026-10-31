@@ -34,7 +34,7 @@ const runReminderJob = async () => {
       const isOverdue = deadline < now;
 
       if (isDueSoon) {
-        const dedupKey = `${task.userId}_TASK_DUE_SOON_${task._id}_24h`;
+        const dedupKey = `task-duesoon-${task._id}-${dateWindowKey}`;
         const result = await notificationService.createNotificationIdempotent({
           userId: task.userId,
           type: "TASK_DUE_SOON",
@@ -48,7 +48,7 @@ const runReminderJob = async () => {
         if (result.created) stats.createdCount += 1;
         if (result.duplicate) stats.skippedDuplicates += 1;
       } else if (isOverdue) {
-        const dedupKey = `${task.userId}_TASK_OVERDUE_${task._id}_overdue`;
+        const dedupKey = `task-overdue-${task._id}-${dateWindowKey}`;
         const result = await notificationService.createNotificationIdempotent({
           userId: task.userId,
           type: "TASK_OVERDUE",

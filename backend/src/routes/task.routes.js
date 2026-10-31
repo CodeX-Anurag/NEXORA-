@@ -1,25 +1,36 @@
 const express = require("express");
 const taskController = require("../controllers/task.controller");
 const { authenticate } = require("../middleware/auth.middleware");
+const { aiLimiter } = require("../middleware/rateLimiter.middleware");
 
 const router = express.Router();
 
 // All task endpoints are protected
 router.use(authenticate);
 
-// GET /api/v1/tasks
+// 1. Task Analytics
+router.get("/analytics", taskController.getAnalytics);
+
+// 2. AI Intelligence Task Endpoints
+router.post("/ai/breakdown", aiLimiter, taskController.aiBreakdown);
+router.post("/ai/daily-plan", aiLimiter, taskController.aiDailyPlan);
+router.get("/ai/risk-detection", taskController.aiRiskDetection);
+router.post("/:id/ai/smart-reschedule", aiLimiter, taskController.aiSmartReschedule);
+
+// 3. Subtasks Endpoints
+router.post("/:id/subtasks", taskController.addSubtask);
+router.patch("/:id/subtasks/:subtaskId", taskController.toggleSubtask);
+router.delete("/:id/subtasks/:subtaskId", taskController.deleteSubtask);
+
+// 4. Focus Session & My Day Endpoints
+router.post("/:id/focus-session", taskController.recordFocusSession);
+router.patch("/:id/my-day", taskController.toggleMyDay);
+
+// 5. Core CRUD Endpoints
 router.get("/", taskController.getTasks);
-
-// POST /api/v1/tasks
 router.post("/", taskController.createTask);
-
-// GET /api/v1/tasks/:id
 router.get("/:id", taskController.getTaskById);
-
-// PUT /api/v1/tasks/:id
 router.put("/:id", taskController.updateTask);
-
-// DELETE /api/v1/tasks/:id
 router.delete("/:id", taskController.deleteTask);
 
 module.exports = router;

@@ -80,17 +80,17 @@ export const RecommendationsWidget = () => {
 
   if (loading) {
     return (
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-        <Loader message="Analyzing priority signals & generating recommendation..." size="sm" />
+      <div className="bg-[#191816] border border-[#2D2925] rounded-2xl p-6">
+        <Loader text="Analyzing priority signals & generating recommendation..." size="sm" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 text-center text-xs text-rose-400">
+      <div className="bg-[#191816] border border-[#2D2925] rounded-2xl p-6 text-center text-xs text-rose-400">
         {error}
-        <div className="mt-2">
+        <div className="mt-3">
           <Button variant="secondary" size="sm" onClick={fetchOrGenerateRecommendation}>
             Retry
           </Button>
@@ -102,45 +102,45 @@ export const RecommendationsWidget = () => {
   if (!recommendation) return null;
 
   return (
-    <div className="bg-slate-900 border border-indigo-500/30 rounded-xl p-6 space-y-4 shadow-lg shadow-indigo-950/20 relative overflow-hidden">
-      <div className="flex items-center justify-between">
+    <div className="bg-[#191816] border border-[#E0693B]/25 rounded-2xl p-6 space-y-4 shadow-xl relative overflow-hidden">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="text-xs font-mono uppercase tracking-wider text-indigo-400 font-bold">
+          <span className="w-2 h-2 rounded-full bg-[#2EA366] animate-pulse"></span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#E0693B] font-display">
             NEXORA AI Recommendation
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#262420] text-[#CDC5B6] border border-[#3A352F] uppercase">
             {recommendation.type}
           </span>
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono bg-[#2EA366]/15 text-[#2EA366] border border-[#2EA366]/30">
             {recommendation.relevanceScore}% Match
           </span>
         </div>
       </div>
 
       {msg && (
-        <div className="text-xs p-2 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 animate-fade-in">
+        <div className="text-xs p-2.5 rounded-xl bg-[#2EA366]/15 border border-[#2EA366]/30 text-[#2EA366] animate-fade-in font-medium">
           {msg}
         </div>
       )}
 
       <div>
-        <h3 className="text-lg font-bold text-slate-100">{recommendation.title}</h3>
-        <p className="text-xs text-slate-300 mt-1 leading-relaxed">{recommendation.description}</p>
+        <h3 className="text-lg font-bold text-[#FAF7F2] font-display">{recommendation.title}</h3>
+        <p className="text-xs text-[#CDC5B6] mt-1.5 leading-relaxed">{recommendation.description}</p>
       </div>
 
       {recommendation.actionableSteps && recommendation.actionableSteps.length > 0 && (
-        <div className="bg-slate-950/60 rounded-lg p-3 border border-slate-800 space-y-2">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+        <div className="bg-[#141312] rounded-xl p-4 border border-[#2D2925] space-y-2">
+          <span className="text-[11px] font-bold text-[#9C9384] uppercase tracking-wider block">
             Actionable Next Steps
           </span>
-          <ul className="space-y-1">
+          <ul className="space-y-1.5">
             {recommendation.actionableSteps.map((step, idx) => (
-              <li key={idx} className="text-xs text-slate-300 flex items-start gap-2">
-                <span className="text-indigo-400 font-bold">•</span>
-                <span>{step}</span>
+              <li key={idx} className="text-xs text-[#FAF7F2] flex items-start gap-2.5">
+                <span className="text-[#E0693B] font-bold text-sm leading-none">•</span>
+                <span className="leading-relaxed">{step}</span>
               </li>
             ))}
           </ul>
@@ -148,15 +148,15 @@ export const RecommendationsWidget = () => {
       )}
 
       {/* Feedback Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#262420]">
         <div className="flex items-center gap-2">
           <button
             onClick={() => handleFeedback("helpful")}
             disabled={actionLoading}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               recommendation.feedback === "helpful"
-                ? "bg-emerald-600 text-white font-bold"
-                : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                ? "bg-[#2EA366] text-white shadow-sm"
+                : "bg-[#22201D] text-[#CDC5B6] hover:text-[#FAF7F2] hover:bg-[#2A2724] border border-[#332F2A]"
             }`}
           >
             👍 Helpful
@@ -164,10 +164,10 @@ export const RecommendationsWidget = () => {
           <button
             onClick={() => handleFeedback("not_useful")}
             disabled={actionLoading}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               recommendation.feedback === "not_useful"
-                ? "bg-rose-600 text-white font-bold"
-                : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                ? "bg-rose-600 text-white shadow-sm"
+                : "bg-[#22201D] text-[#CDC5B6] hover:text-[#FAF7F2] hover:bg-[#2A2724] border border-[#332F2A]"
             }`}
           >
             👎 Not useful
@@ -175,10 +175,10 @@ export const RecommendationsWidget = () => {
           <button
             onClick={() => handleFeedback("accepted")}
             disabled={actionLoading}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               recommendation.feedback === "accepted"
-                ? "bg-indigo-600 text-white font-bold"
-                : "bg-slate-800 text-indigo-300 hover:bg-slate-700"
+                ? "bg-[#E0693B] text-white shadow-sm"
+                : "bg-[#22201D] text-[#E0693B] hover:bg-[#E0693B]/10 border border-[#E0693B]/30"
             }`}
           >
             ✓ Accept

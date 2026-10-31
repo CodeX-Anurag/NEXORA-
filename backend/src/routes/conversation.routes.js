@@ -19,4 +19,10 @@ router.get("/:id/messages", validateObjectId("id"), conversationController.getMe
 // POST /api/v1/conversations/:id/messages
 router.post("/:id/messages", validateObjectId("id"), conversationController.addMessage);
 
+// PATCH /api/v1/conversations/:id  (rename)
+router.patch("/:id", validateObjectId("id"), conversationController.renameConversation);
+
+// DELETE /api/v1/conversations/:id
+router.delete("/:id", validateObjectId("id"), conversationController.deleteConversation);
+
 module.exports = router;

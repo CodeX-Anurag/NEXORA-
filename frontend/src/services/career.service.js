@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api/v1";
 
 const careerFetch = async (endpoint, accessToken, options = {}) => {
   const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
@@ -37,6 +37,50 @@ export const careerService = {
     return await careerFetch("/users/me/career", accessToken, {
       method: "PUT",
       body: JSON.stringify(careerData)
+    });
+  },
+
+  // Career Intelligence Multi-Platform Connectors
+  getPlatforms: async (accessToken) => {
+    return await careerFetch("/career/platforms", accessToken, { method: "GET" });
+  },
+
+  connectPlatform: async (accessToken, platform, payload) => {
+    return await careerFetch(`/career/platforms/${platform}/connect`, accessToken, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+  },
+
+  refreshPlatform: async (accessToken, platform, payload = {}) => {
+    return await careerFetch(`/career/platforms/${platform}/refresh`, accessToken, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+  },
+
+  disconnectPlatform: async (accessToken, platform) => {
+    return await careerFetch(`/career/platforms/${platform}`, accessToken, {
+      method: "DELETE"
+    });
+  },
+
+  updateSelectedItems: async (accessToken, platform, selectedItems) => {
+    return await careerFetch(`/career/platforms/${platform}/selected`, accessToken, {
+      method: "PUT",
+      body: JSON.stringify({ selectedItems })
+    });
+  },
+
+  syncProjectsToNexora: async (accessToken) => {
+    return await careerFetch("/career/platforms/sync/projects", accessToken, {
+      method: "POST"
+    });
+  },
+
+  syncToResumeProfile: async (accessToken) => {
+    return await careerFetch("/career/platforms/sync/resume", accessToken, {
+      method: "POST"
     });
   }
 };

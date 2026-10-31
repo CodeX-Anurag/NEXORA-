@@ -9,12 +9,16 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
-  Cell
+  Cell,
+  Legend
 } from "recharts";
+import { TrendingUp, CheckCircle2, BookOpen, Target } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import analyticsService from "../services/analytics.service";
 import Loader from "../components/common/Loader";
 import ErrorMessage from "../components/common/ErrorMessage";
+import StatCard from "../components/common/StatCard";
+import Badge from "../components/common/Badge";
 
 export const Analytics = () => {
   const { accessToken } = useAuth();
@@ -53,11 +57,11 @@ export const Analytics = () => {
     return <Loader text="Generating deterministic analytics charts..." />;
   }
 
-  // Task Status Chart Data
+  // Task Status Chart Data with warm terracotta, sage, and stone palette
   const taskStatusChartData = [
-    { name: "To Do", count: prodData?.statusCounts?.todo || 0, color: "#64748b" },
-    { name: "In Progress", count: prodData?.statusCounts?.in_progress || 0, color: "#6366f1" },
-    { name: "Completed", count: prodData?.statusCounts?.completed || 0, color: "#10b981" }
+    { name: "To Do", count: prodData?.statusCounts?.todo || 0, color: "#787165" },
+    { name: "In Progress", count: prodData?.statusCounts?.in_progress || 0, color: "#E0693B" },
+    { name: "Completed", count: prodData?.statusCounts?.completed || 0, color: "#2EA366" }
   ];
 
   // Subject Study Distribution Data
@@ -70,75 +74,133 @@ export const Analytics = () => {
     "Required Level": s.requiredLevel
   }));
 
+  const tooltipStyle = {
+    backgroundColor: "#191816",
+    borderColor: "#332F2A",
+    borderRadius: "12px",
+    color: "#FAF7F2",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.5)"
+  };
+
+  const totalTasks =
+    (prodData?.statusCounts?.todo || 0) +
+    (prodData?.statusCounts?.in_progress || 0) +
+    (prodData?.statusCounts?.completed || 0);
+
+  const completionRate =
+    totalTasks > 0 ? Math.round(((prodData?.statusCounts?.completed || 0) / totalTasks) * 100) : 0;
+
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in">
+    <div className="max-w-5xl mx-auto space-y-8 animate-fade-in pb-16">
       {/* Header Banner */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 space-y-2">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-400">Recharts Visualizations</span>
-        <h1 className="text-2xl font-bold text-slate-100">Productivity & Career Analytics</h1>
-        <p className="text-xs text-slate-400">
+      <div className="p-6 sm:p-8 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-2 shadow-xl">
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#E0693B] font-display">
+            Data Visualizations
+          </span>
+          <Badge variant="primary" size="xs">
+            Live Deterministic Analytics
+          </Badge>
+        </div>
+        <h1 className="text-2xl font-bold text-[#FAF7F2] font-display">Productivity & Career Analytics</h1>
+        <p className="text-xs text-[#9C9384] leading-relaxed">
           Deterministic backend calculations mapping task completion velocity, study duration per subject, and target role skill gap progress.
         </p>
       </div>
 
       {error && <ErrorMessage title="Analytics Error" message={error} onRetry={fetchAnalytics} />}
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Career Readiness</span>
-          <p className="text-3xl font-extrabold text-indigo-400 font-mono">{careerData?.careerReadinessScore || 0}%</p>
-          <p className="text-[11px] text-slate-500">Target Role: {careerData?.targetRole}</p>
-        </div>
+      {/* Summary KPI Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          label="Career Readiness"
+          value={`${careerData?.careerReadinessScore || 0}%`}
+          subtext={`Target: ${careerData?.targetRole || "Role"}`}
+          color="terracotta"
+          icon={Target}
+        />
 
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Task Completion</span>
-          <p className="text-3xl font-extrabold text-emerald-400 font-mono">
-            {prodData?.statusCounts?.completed || 0} Finished
-          </p>
-          <p className="text-[11px] text-slate-500">{prodData?.statusCounts?.todo || 0} To Do / {prodData?.statusCounts?.in_progress || 0} In Progress</p>
-        </div>
+        <StatCard
+          label="Tasks Completed"
+          value={prodData?.statusCounts?.completed || 0}
+          subtext={`${totalTasks} total tasks`}
+          color="sage"
+          icon={CheckCircle2}
+        />
 
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Subjects Tracked</span>
-          <p className="text-3xl font-extrabold text-cyan-400 font-mono">{studySubjectChartData.length}</p>
-          <p className="text-[11px] text-slate-500">Active focus subjects</p>
-        </div>
+        <StatCard
+          label="Completion Rate"
+          value={`${completionRate}%`}
+          subtext={`${prodData?.statusCounts?.in_progress || 0} in progress`}
+          color="amber"
+          icon={TrendingUp}
+        />
+
+        <StatCard
+          label="Subjects Tracked"
+          value={studySubjectChartData.length}
+          subtext="Active focus areas"
+          color="white"
+          icon={BookOpen}
+        />
       </div>
 
       {/* Chart Row 1: Task Status Distribution & Study Time by Subject */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Task Status Distribution */}
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-          <h3 className="text-base font-semibold text-slate-100">Task Status Distribution</h3>
+        <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4 shadow-xl">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-semibold text-[#FAF7F2] font-display">Task Status Distribution</h3>
+            <span className="text-xs text-[#9C9384] font-mono">{totalTasks} tasks</span>
+          </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={taskStatusChartData} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                <Pie
+                  data={taskStatusChartData}
+                  dataKey="count"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={75}
+                  innerRadius={35}
+                  paddingAngle={3}
+                >
                   {taskStatusChartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ backgroundColor: "#0f172a", borderColor: "#334155", borderRadius: "8px", color: "#fff" }} />
+                <Tooltip contentStyle={tooltipStyle} />
+                <Legend
+                  verticalAlign="bottom"
+                  height={32}
+                  wrapperStyle={{ fontSize: "12px", color: "#CDC5B6" }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Study Hours by Subject */}
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-          <h3 className="text-base font-semibold text-slate-100">Study Duration by Subject (Minutes)</h3>
+        <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4 shadow-xl">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-semibold text-[#FAF7F2] font-display">Study Duration by Subject</h3>
+            <span className="text-xs text-[#9C9384] font-mono">{studySubjectChartData.length} subjects</span>
+          </div>
           {studySubjectChartData.length === 0 ? (
-            <p className="text-xs text-slate-500 py-12 text-center">No study sessions recorded yet to chart.</p>
+            <p className="text-xs text-[#787165] py-16 text-center">No study sessions recorded yet to chart.</p>
           ) : (
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={studySubjectChartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                  <XAxis dataKey="subject" stroke="#94a3b8" fontSize={11} />
-                  <YAxis stroke="#94a3b8" fontSize={11} />
-                  <Tooltip contentStyle={{ backgroundColor: "#0f172a", borderColor: "#334155", borderRadius: "8px", color: "#fff" }} />
-                  <Bar dataKey="minutes" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <BarChart data={studySubjectChartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#2D2925" />
+                  <XAxis dataKey="subject" stroke="#9C9384" fontSize={11} />
+                  <YAxis stroke="#9C9384" fontSize={11} />
+                  <Tooltip
+                    contentStyle={tooltipStyle}
+                    formatter={(val) => [`${val} mins (${(val / 60).toFixed(1)} hrs)`, "Duration"]}
+                  />
+                  <Bar dataKey="minutes" fill="#E0693B" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -147,26 +209,36 @@ export const Analytics = () => {
       </div>
 
       {/* Chart Row 2: Skill Levels vs Target Requirements */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="text-base font-semibold text-slate-100">Skill Competency Level Comparison</h3>
-            <p className="text-xs text-slate-400">Current student rating vs required benchmark for {careerData?.targetRole}</p>
+            <h3 className="text-base font-semibold text-[#FAF7F2] font-display">Skill Competency Level Comparison</h3>
+            <p className="text-xs text-[#9C9384] mt-0.5">
+              Current student rating vs required benchmark for {careerData?.targetRole}
+            </p>
+          </div>
+          <div className="flex items-center gap-4 text-xs font-mono">
+            <span className="flex items-center gap-1.5 text-[#E0693B]">
+              <span className="w-2.5 h-2.5 rounded bg-[#E0693B]" /> Current Level
+            </span>
+            <span className="flex items-center gap-1.5 text-[#CDC5B6]">
+              <span className="w-2.5 h-2.5 rounded bg-[#645D54]" /> Required Level
+            </span>
           </div>
         </div>
 
         {skillGapChartData.length === 0 ? (
-          <p className="text-xs text-slate-500 py-8 text-center">No career skills data available.</p>
+          <p className="text-xs text-[#787165] py-12 text-center">No career skills data available.</p>
         ) : (
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={skillGapChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} />
-                <YAxis domain={[0, 100]} stroke="#94a3b8" fontSize={11} />
-                <Tooltip contentStyle={{ backgroundColor: "#0f172a", borderColor: "#334155", borderRadius: "8px", color: "#fff" }} />
-                <Bar dataKey="Current Level" fill="#818cf8" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Required Level" fill="#334155" radius={[4, 4, 0, 0]} />
+              <BarChart data={skillGapChartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#2D2925" />
+                <XAxis dataKey="name" stroke="#9C9384" fontSize={11} interval={0} angle={-15} textAnchor="end" />
+                <YAxis domain={[0, 100]} stroke="#9C9384" fontSize={11} />
+                <Tooltip contentStyle={tooltipStyle} />
+                <Bar dataKey="Current Level" fill="#E0693B" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="Required Level" fill="#645D54" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

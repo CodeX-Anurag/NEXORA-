@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import Button from "../common/Button";
 import NotificationCenter from "../notifications/NotificationCenter";
 
-export const Navbar = ({ apiStatus }) => {
+export const Navbar = ({ apiStatus, onToggleMobileMenu, onRefreshHealth }) => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -14,54 +14,74 @@ export const Navbar = ({ apiStatus }) => {
   };
 
   return (
-    <header className="h-16 bg-slate-900/80 backdrop-blur border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-30">
-      {/* Brand & Logo */}
+    <header className="h-16 bg-[#161513]/90 backdrop-blur-md border-b border-[#2B2723] px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 transition-all">
+      {/* Brand & Mobile Toggle */}
       <div className="flex items-center gap-3">
+        {/* Mobile menu button */}
+        <button
+          type="button"
+          onClick={onToggleMobileMenu}
+          className="lg:hidden p-2 rounded-lg text-[#9C9384] hover:text-[#FAF7F2] hover:bg-[#22201D] transition-colors focus:outline-none focus:ring-1 focus:ring-[#E0693B]"
+          aria-label="Toggle navigation drawer"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#C5572C] to-[#E0693B] flex items-center justify-center text-white shadow-md shadow-[#E0693B]/20 group-hover:scale-105 transition-all">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <span className="text-xl font-bold tracking-wider bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-            NEXORA
-          </span>
+          <div className="flex flex-col">
+            <span className="text-lg font-bold tracking-wider text-[#FAF7F2] font-display">
+              NEXORA
+            </span>
+            <span className="text-[9px] font-medium tracking-tight text-[#9C9384] -mt-1 hidden sm:block">
+              Career & Productivity Platform
+            </span>
+          </div>
         </Link>
-        <span className="px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800/60 rounded-full uppercase">
-          Phase 12 In-App Notifications
-        </span>
       </div>
 
       {/* Backend API Health & User Auth Section */}
-      <div className="flex items-center gap-4">
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/60 border border-slate-800 text-xs">
+      <div className="flex items-center gap-3 sm:gap-4">
+        {/* Health status badge */}
+        <button
+          type="button"
+          onClick={onRefreshHealth}
+          title="Click to refresh API connection status"
+          className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1C1A17] hover:bg-[#25221E] border border-[#2D2925] hover:border-[#3D3833] text-xs transition-all cursor-pointer"
+        >
           <span
             className={`w-2 h-2 rounded-full ${
               apiStatus === "healthy"
-                ? "bg-emerald-500 shadow-sm shadow-emerald-500"
+                ? "bg-[#2EA366] shadow-[0_0_8px_rgba(46,163,102,0.6)]"
                 : apiStatus === "checking"
-                ? "bg-amber-500 animate-ping"
+                ? "bg-[#D97706] animate-ping"
                 : "bg-rose-500"
             }`}
           />
-          <span className="text-slate-400">
+          <span className="text-[#9C9384]">
             API:{" "}
             <span
-              className={`font-medium ${
-                apiStatus === "healthy" ? "text-emerald-400" : apiStatus === "checking" ? "text-amber-400" : "text-rose-400"
+              className={`font-semibold ${
+                apiStatus === "healthy" ? "text-[#2EA366]" : apiStatus === "checking" ? "text-[#D97706]" : "text-rose-400"
               }`}
             >
-              {apiStatus === "healthy" ? "Online" : apiStatus === "checking" ? "Checking" : "Offline"}
+              {apiStatus === "healthy" ? "Online" : apiStatus === "checking" ? "Checking..." : "Offline"}
             </span>
           </span>
-        </div>
+        </button>
 
         {isAuthenticated ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <NotificationCenter />
             <div className="text-right hidden md:block">
-              <p className="text-xs font-semibold text-slate-200">{user?.name}</p>
-              <p className="text-[10px] text-slate-400">{user?.email}</p>
+              <p className="text-xs font-semibold text-[#FAF7F2] leading-tight">{user?.name}</p>
+              <p className="text-[10px] text-[#9C9384]">{user?.email}</p>
             </div>
             <Button variant="secondary" size="sm" onClick={handleLogout}>
               Logout

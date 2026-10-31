@@ -14,14 +14,14 @@ export const Modal = ({ isOpen, onClose, title, children, footer }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-lg bg-[#191816] border border-[#332F2A] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-          <h3 className="text-lg font-semibold text-slate-100">{title}</h3>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#2D2925] bg-[#1E1C19]">
+          <h3 className="text-base font-semibold text-[#FAF7F2] font-display">{title}</h3>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors focus:outline-none"
+            className="p-1.5 rounded-lg text-[#9C9384] hover:text-[#FAF7F2] hover:bg-[#2A2723] transition-colors focus:outline-none"
             aria-label="Close modal"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,10 +31,16 @@ export const Modal = ({ isOpen, onClose, title, children, footer }) => {
         </div>
 
         {/* Body */}
-        <div className="p-6 text-slate-300 text-sm overflow-y-auto max-h-[70vh]">{children}</div>
+        <div className="p-6 text-[#CDC5B6] text-sm overflow-y-auto max-h-[70vh] space-y-4">
+          {children}
+        </div>
 
         {/* Footer */}
-        {footer && <div className="flex items-center justify-end gap-3 px-6 py-4 bg-slate-950/50 border-t border-slate-800">{footer}</div>}
+        {footer && (
+          <div className="flex items-center justify-end gap-3 px-6 py-4 bg-[#141312] border-t border-[#2D2925]">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );

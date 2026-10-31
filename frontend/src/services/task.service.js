@@ -1,54 +1,133 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
-
-const taskFetch = async (endpoint, accessToken, options = {}) => {
-  const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
-  
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${accessToken}`,
-    ...options.headers
-  };
-
-  const response = await fetch(url, { ...options, headers, credentials: "include" });
-  const data = await response.json();
-
-  if (!response.ok) {
-    const error = new Error(data.message || `API Error: Status ${response.status}`);
-    error.status = response.status;
-    error.data = data;
-    throw error;
-  }
-
-  return data;
-};
+import apiClient from "./api";
 
 export const taskService = {
   getTasks: async (accessToken, params = {}) => {
+    if (!accessToken) throw new Error("Authentication token required.");
     const query = new URLSearchParams(params).toString();
-    const endpoint = `/tasks${query ? `?${query}` : ""}`;
-    return await taskFetch(endpoint, accessToken, { method: "GET" });
+    return await apiClient(`/tasks${query ? `?${query}` : ""}`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
   },
 
   createTask: async (accessToken, taskData) => {
-    return await taskFetch("/tasks", accessToken, {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient("/tasks", {
       method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` },
       body: JSON.stringify(taskData)
     });
   },
 
   getTaskById: async (accessToken, taskId) => {
-    return await taskFetch(`/tasks/${taskId}`, accessToken, { method: "GET" });
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient(`/tasks/${taskId}`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
   },
 
   updateTask: async (accessToken, taskId, updateData) => {
-    return await taskFetch(`/tasks/${taskId}`, accessToken, {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient(`/tasks/${taskId}`, {
       method: "PUT",
+      headers: { Authorization: `Bearer ${accessToken}` },
       body: JSON.stringify(updateData)
     });
   },
 
   deleteTask: async (accessToken, taskId) => {
-    return await taskFetch(`/tasks/${taskId}`, accessToken, { method: "DELETE" });
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient(`/tasks/${taskId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+  },
+
+  getTaskAnalytics: async (accessToken) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient("/tasks/analytics", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+  },
+
+  addSubtask: async (accessToken, taskId, title) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient(`/tasks/${taskId}/subtasks`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ title })
+    });
+  },
+
+  toggleSubtask: async (accessToken, taskId, subtaskId, completed) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient(`/tasks/${taskId}/subtasks/${subtaskId}`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ completed })
+    });
+  },
+
+  deleteSubtask: async (accessToken, taskId, subtaskId) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient(`/tasks/${taskId}/subtasks/${subtaskId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+  },
+
+  recordFocusSession: async (accessToken, taskId, payload) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient(`/tasks/${taskId}/focus-session`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify(payload)
+    });
+  },
+
+  toggleMyDay: async (accessToken, taskId, isMyDay) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient(`/tasks/${taskId}/my-day`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify(typeof isMyDay === "boolean" ? { isMyDay } : {})
+    });
+  },
+
+  aiBreakdown: async (accessToken, payload) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient("/tasks/ai/breakdown", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify(payload)
+    });
+  },
+
+  aiDailyPlan: async (accessToken, payload = {}) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient("/tasks/ai/daily-plan", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify(payload)
+    });
+  },
+
+  aiRiskDetection: async (accessToken) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient("/tasks/ai/risk-detection", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+  },
+
+  aiSmartReschedule: async (accessToken, taskId) => {
+    if (!accessToken) throw new Error("Authentication token required.");
+    return await apiClient(`/tasks/${taskId}/ai/smart-reschedule`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
   }
 };
 

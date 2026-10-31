@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-export const Sidebar = () => {
+export const Sidebar = ({ mobileOpen = false, onCloseMobile }) => {
   const { user } = useAuth();
 
   const activeNavItems = [
@@ -47,6 +47,12 @@ export const Sidebar = () => {
       icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
     },
     {
+      label: "AI Socratic Viva",
+      path: "/viva",
+      badge: "Voice AI",
+      icon: "M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"
+    },
+    {
       label: "Memory & Privacy",
       path: "/memory-settings",
       icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
@@ -61,38 +67,82 @@ export const Sidebar = () => {
     });
   }
 
-  return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 p-4 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)]">
+  const navContent = (
+    <aside className="w-64 bg-[#161513] border-r border-[#2B2723] p-4 flex flex-col justify-between shrink-0 h-[calc(100vh-4rem)] sticky top-16 z-20">
       <div className="space-y-6">
         <div>
-          <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Platform Suite</p>
+          <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-[#9C9384] mb-2 font-display">
+            Platform Suite
+          </p>
           <nav className="space-y-1">
             {activeNavItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
+                onClick={onCloseMobile}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  `relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-indigo-600/15 text-indigo-400 border border-indigo-500/20 font-semibold"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
+                      ? "bg-[#E0693B]/10 text-[#FAF7F2] border border-[#E0693B]/30 font-semibold shadow-sm"
+                      : "text-[#A89F91] hover:text-[#FAF7F2] hover:bg-[#201E1B] border border-transparent"
                   }`
                 }
               >
-                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.icon} />
-                </svg>
-                {item.label}
+                {({ isActive }) => (
+                  <>
+                    <svg
+                      className={`w-5 h-5 shrink-0 transition-colors ${
+                        isActive ? "text-[#E0693B]" : "text-[#877E71]"
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.9" d={item.icon} />
+                    </svg>
+                    <span>{item.label}</span>
+                    {item.badge && (
+                      <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#E0693B]/20 text-[#E0693B] border border-[#E0693B]/30 tracking-tight">
+                        {item.badge}
+                      </span>
+                    )}
+                  </>
+                )}
               </NavLink>
             ))}
           </nav>
         </div>
       </div>
 
-      <div className="pt-4 border-t border-slate-800 text-center">
-        <p className="text-[11px] text-slate-500 font-mono">NEXORA Platform v0.6.0</p>
+      <div className="pt-4 border-t border-[#2B2723] px-2 flex items-center justify-between">
+        <span className="text-[11px] text-[#877E71] font-mono">NEXORA Platform</span>
+        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-[#22201D] text-[#CDC5B6] border border-[#332F2A]">
+          v1.0.0 Pro
+        </span>
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Desktop view */}
+      <div className="hidden lg:block shrink-0">{navContent}</div>
+
+      {/* Mobile Drawer view */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+            onClick={onCloseMobile}
+          />
+          {/* Drawer */}
+          <div className="relative w-64 max-w-[80vw] h-full shadow-2xl animate-fade-in">
+            {navContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

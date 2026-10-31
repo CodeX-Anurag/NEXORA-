@@ -55,18 +55,26 @@ const chatStream = async (req, res, next) => {
   try {
     let startEmitted = false;
 
+    const emitStart = (info = {}) => {
+      if (!startEmitted) {
+        startEmitted = true;
+        writeSSE("start", {
+          conversationId: info.conversationId || conversationId || "new",
+          userMessageId: info.userMessageId || info.userMessage?._id || null
+        });
+      }
+    };
+
     const result = await aiService.generateStreamingChatResponse(
       req.userId,
-      { conversationId, messageContent: message, isFreshChat },
+      {
+        conversationId,
+        messageContent: message,
+        isFreshChat,
+        onStart: (info) => emitStart(info)
+      },
       (chunk) => {
-        if (!startEmitted) {
-          // Send initial start event once user message is created/validated
-          startEmitted = true;
-          writeSSE("start", {
-            conversationId: result?.conversationId || conversationId || "new",
-            userMessageId: result?.userMessage?._id || null
-          });
-        }
+        emitStart();
 
         if (chunk && chunk.content) {
           writeSSE("token", { content: chunk.content });
@@ -76,12 +84,10 @@ const chatStream = async (req, res, next) => {
     );
 
     // If start was not emitted yet, emit start event now
-    if (!startEmitted) {
-      writeSSE("start", {
-        conversationId: result.conversationId,
-        userMessageId: result.userMessage._id
-      });
-    }
+    emitStart({
+      conversationId: result.conversationId,
+      userMessageId: result.userMessage?._id
+    });
 
     // Stream finished successfully
     isStreamCompleted = true;

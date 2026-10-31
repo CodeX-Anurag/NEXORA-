@@ -117,7 +117,7 @@ const generateChatResponse = async (userId, { conversationId, messageContent, is
  */
 const generateStreamingChatResponse = async (
   userId,
-  { conversationId, messageContent, isFreshChat = false },
+  { conversationId, messageContent, isFreshChat = false, onStart = null },
   onTokenChunk,
   signal,
   llmClientOverride = null
@@ -158,6 +158,17 @@ const generateStreamingChatResponse = async (
     role: "user",
     content: messageContent.trim()
   });
+
+  if (typeof onStart === "function") {
+    try {
+      onStart({
+        conversationId: conversation._id,
+        userMessage
+      });
+    } catch {
+      // safe guard onStart
+    }
+  }
 
   // 2. Load recent messages for conversation
   const previousMessages = await Message.find({ conversationId: conversation._id }).sort({ createdAt: 1 });

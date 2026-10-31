@@ -23,6 +23,9 @@ const conversationRoutes = require("./routes/conversation.routes");
 const memoryRoutes = require("./routes/memory.routes");
 const notificationRoutes = require("./routes/notification.routes");
 const resumeRoutes = require("./routes/resume.routes");
+const careerPlatformRoutes = require("./routes/careerPlatform.routes");
+const jobRoutes = require("./routes/jobScraper.routes");
+const vivaRoutes = require("./routes/viva.routes");
 
 const app = express();
 
@@ -43,16 +46,27 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
 
-// 3. CORS Configuration (Scoped to CLIENT_URL with credentials support)
+// 3. CORS Configuration (Scoped to CLIENT_URL and local dev origins with credentials support)
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow non-browser requests (Postman, curl, internal node) or matching CLIENT_URL
-      if (!origin || origin === CLIENT_URL) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS policy violation: Access from this origin is prohibited."));
+      // Allow non-browser requests (Postman, curl, internal node)
+      if (!origin) return callback(null, true);
+
+      // In development or test, allow all localhost and 127.0.0.1 variants
+      if (
+        NODE_ENV !== "production" &&
+        (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:"))
+      ) {
+        return callback(null, true);
       }
+
+      // In production or configured origin
+      if (origin === CLIENT_URL) {
+        return callback(null, true);
+      }
+
+      callback(new Error("CORS policy violation: Access from this origin is prohibited."));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -78,6 +92,7 @@ app.use("/api/v1/study", studyRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/skills", skillRoutes);
 app.use("/api/v1/careers", careerRoutes);
+app.use("/api/v1/career/platforms", careerPlatformRoutes);
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 
@@ -94,6 +109,12 @@ app.use("/api/v1/notifications", notificationRoutes);
 
 // Phase 12 Resume & Portfolio Route
 app.use("/api/v1/resume", resumeRoutes);
+
+// Job Intelligence & Web Scraper Route
+app.use("/api/v1/jobs", jobRoutes);
+
+// AI Socratic Viva Interactive Examiner Route
+app.use("/api/v1/viva", vivaRoutes);
 
 // Fallback Middlewares
 app.use(notFoundHandler);

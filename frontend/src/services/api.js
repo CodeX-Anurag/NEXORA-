@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api/v1";
 
 /**
  * Centralized API client wrapper using standard fetch.
@@ -8,7 +8,7 @@ export const apiClient = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
   
   const headers = {
-    "Content-Type": "application/json",
+    ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
     ...options.headers
   };
 
@@ -19,6 +19,23 @@ export const apiClient = async (endpoint, options = {}) => {
 
   try {
     const response = await fetch(url, config);
+
+    if (options.responseType === "blob") {
+      if (!response.ok) {
+        let errMessage = `API Error: Status ${response.status}`;
+        try {
+          const errData = await response.json();
+          errMessage = errData.message || errMessage;
+        } catch {
+          // ignore
+        }
+        const error = new Error(errMessage);
+        error.status = response.status;
+        throw error;
+      }
+      return await response.blob();
+    }
+
     const data = await response.json();
 
     if (!response.ok) {

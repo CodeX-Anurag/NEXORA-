@@ -20,6 +20,36 @@ const createConversation = async (userId, { title }) => {
 };
 
 /**
+ * Delete a conversation and its messages (scoped to authenticated user)
+ */
+const deleteConversation = async (userId, conversationId) => {
+  const conversation = await Conversation.findOne({ _id: conversationId, userId });
+  if (!conversation) {
+    const err = new Error("Conversation not found or access denied.");
+    err.statusCode = 404;
+    throw err;
+  }
+  await Message.deleteMany({ conversationId });
+  await conversation.deleteOne();
+  return { deleted: true };
+};
+
+/**
+ * Rename a conversation title (scoped to authenticated user)
+ */
+const renameConversation = async (userId, conversationId, title) => {
+  const conversation = await Conversation.findOne({ _id: conversationId, userId });
+  if (!conversation) {
+    const err = new Error("Conversation not found or access denied.");
+    err.statusCode = 404;
+    throw err;
+  }
+  conversation.title = title.trim().slice(0, 120) || conversation.title;
+  await conversation.save();
+  return conversation;
+};
+
+/**
  * Get messages for a specific conversation (scoped to authenticated user)
  */
 const getMessages = async (userId, conversationId) => {
@@ -40,5 +70,7 @@ const getMessages = async (userId, conversationId) => {
 module.exports = {
   getConversations,
   createConversation,
-  getMessages
+  getMessages,
+  deleteConversation,
+  renameConversation
 };

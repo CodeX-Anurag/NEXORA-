@@ -14,7 +14,16 @@ const notificationSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ["TASK_DUE_SOON", "TASK_OVERDUE", "STUDY_REMINDER", "SYSTEM_ALERT"],
+      enum: [
+        "TASK_DUE_SOON",
+        "TASK_OVERDUE",
+        "TASK_REMINDER",
+        "DEADLINE_APPROACHING",
+        "DAILY_SUMMARY",
+        "TASK_COMPLETED",
+        "STUDY_REMINDER",
+        "SYSTEM_ALERT"
+      ],
       index: true
     },
     title: {
@@ -41,6 +50,15 @@ const notificationSchema = new mongoose.Schema(
       default: false,
       index: true
     },
+    isArchived: {
+      type: Boolean,
+      default: false,
+      index: true
+    },
+    metadata: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
+    },
     deduplicationKey: {
       type: String,
       required: true
@@ -53,6 +71,6 @@ const notificationSchema = new mongoose.Schema(
 
 // Compound Unique Index enforcing 100% Database-Level Idempotency & Deduplication
 notificationSchema.index({ userId: 1, deduplicationKey: 1 }, { unique: true });
-notificationSchema.index({ userId: 1, isRead: 1, createdAt: -1 });
+notificationSchema.index({ userId: 1, isRead: 1, isArchived: 1, createdAt: -1 });
 
 module.exports = mongoose.model("Notification", notificationSchema);

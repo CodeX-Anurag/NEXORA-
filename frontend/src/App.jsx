@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import PageLayout from "./components/layout/PageLayout";
 import ProtectedRoute from "./components/common/ProtectedRoute";
@@ -15,6 +15,7 @@ import AIChat from "./pages/AIChat";
 import MemorySettings from "./pages/MemorySettings";
 import ObservabilityDashboard from "./pages/ObservabilityDashboard";
 import ResumeBuilder from "./pages/ResumeBuilder";
+import Viva from "./pages/Viva";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import healthService from "./services/health.service";
@@ -38,12 +39,15 @@ export const App = () => {
 
   useEffect(() => {
     verifyHealth();
+    // Auto-poll health status every 10 seconds so status dynamically updates
+    const interval = setInterval(verifyHealth, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <AuthProvider>
       <BrowserRouter>
-        <PageLayout apiStatus={apiStatus}>
+        <PageLayout apiStatus={apiStatus} onRefreshHealth={verifyHealth}>
           <Routes>
             <Route path="/" element={<Home onRefreshHealth={verifyHealth} />} />
             <Route path="/login" element={<Login />} />
@@ -112,19 +116,20 @@ export const App = () => {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/memories"
-              element={
-                <ProtectedRoute>
-                  <MemorySettings />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/memories" element={<Navigate to="/memory-settings" replace />} />
             <Route
               path="/resume"
               element={
                 <ProtectedRoute>
                   <ResumeBuilder />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/viva"
+              element={
+                <ProtectedRoute>
+                  <Viva />
                 </ProtectedRoute>
               }
             />

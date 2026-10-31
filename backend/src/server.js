@@ -1,6 +1,11 @@
+const dns = require("dns");
+if (typeof dns.setDefaultResultOrder === "function") {
+  dns.setDefaultResultOrder("ipv4first");
+}
+
 const app = require("./app");
 const { PORT } = require("./config/env");
-const { connectDB } = require("./config/db");
+const { connectDB, disconnectDB } = require("./config/db");
 const mongoose = require("mongoose");
 const jobScheduler = require("./services/jobScheduler.service");
 
@@ -17,6 +22,18 @@ const startServer = async () => {
         console.log("[Server] Background job scheduler initialized.");
       }
     });
+
+    server.on("error", (error) => {
+      if (error.code === "EADDRINUSE") {
+        console.error(
+          `\n[Server Error] Port ${PORT} is already in use by another running instance of NEXORA.\n` +
+          `Please close the other terminal running 'npm run dev' or free port ${PORT}.\n`
+        );
+      } else {
+        console.error(`[Server Error] ${error.message}`);
+      }
+      process.exit(1);
+    });
   } catch (error) {
     console.error(`[Server] Failed to start server: ${error.message}`);
     process.exit(1);
@@ -32,10 +49,8 @@ const gracefulShutdown = async (signal) => {
     server.close(async () => {
       console.log("[Server] HTTP server closed.");
       try {
-        if (mongoose.connection.readyState !== 0) {
-          await mongoose.connection.close();
-          console.log("[Server] Mongoose connection closed.");
-        }
+        await disconnectDB();
+        console.log("[Server] Database connection closed.");
         process.exit(0);
       } catch (err) {
         console.error(`[Server] Error during database disconnect: ${err.message}`);

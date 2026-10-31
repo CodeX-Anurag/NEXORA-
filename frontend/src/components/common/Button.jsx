@@ -12,19 +12,27 @@ export const Button = ({
   ...props
 }) => {
   const baseStyle =
-    "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#121110] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]";
 
   const variants = {
-    primary: "bg-indigo-600 hover:bg-indigo-500 text-white focus:ring-indigo-500",
-    secondary: "bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 focus:ring-slate-500",
-    outline: "border border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10 focus:ring-indigo-500",
-    danger: "bg-rose-600 hover:bg-rose-500 text-white focus:ring-rose-500"
+    primary:
+      "bg-[#E0693B] hover:bg-[#EB784B] active:bg-[#C5572C] text-white shadow-sm shadow-[#E0693B]/20 focus:ring-[#E0693B]",
+    secondary:
+      "bg-[#22201D] hover:bg-[#2A2724] text-[#FAF7F2] border border-[#35312C] hover:border-[#47423B] focus:ring-[#CDC5B6]",
+    outline:
+      "border border-[#E0693B]/50 text-[#E0693B] hover:bg-[#E0693B]/10 hover:border-[#E0693B] focus:ring-[#E0693B]",
+    danger:
+      "bg-[#DC3838] hover:bg-[#C52B2B] text-white shadow-sm shadow-rose-900/30 focus:ring-rose-500",
+    success:
+      "bg-[#2EA366] hover:bg-[#268B57] text-white shadow-sm shadow-emerald-900/30 focus:ring-[#2EA366]",
+    ghost:
+      "bg-transparent hover:bg-[#22201D] text-[#CDC5B6] hover:text-[#FAF7F2] focus:ring-[#47423B]"
   };
 
   const sizes = {
-    sm: "px-3 py-1.5 text-xs",
-    md: "px-4 py-2 text-sm",
-    lg: "px-6 py-3 text-base"
+    sm: "px-3 py-1.5 text-xs font-semibold gap-1.5",
+    md: "px-4 py-2 text-sm font-medium gap-2",
+    lg: "px-5 py-2.5 text-base font-semibold gap-2.5"
   };
 
   return (
@@ -45,7 +53,7 @@ export const Button = ({
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          Loading...
+          <span>Loading...</span>
         </span>
       ) : (
         children

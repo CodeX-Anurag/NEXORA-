@@ -41,9 +41,33 @@ const addMessage = async (req, res, next) => {
   }
 };
 
+const deleteConversation = async (req, res, next) => {
+  try {
+    await conversationService.deleteConversation(req.userId, req.params.id);
+    return res.status(200).json({ success: true, message: "Conversation deleted." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const renameConversation = async (req, res, next) => {
+  try {
+    const { title } = req.body;
+    if (!title || !title.trim()) {
+      return res.status(400).json({ success: false, message: "Title is required." });
+    }
+    const conversation = await conversationService.renameConversation(req.userId, req.params.id, title);
+    return res.status(200).json({ success: true, conversation });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getConversations,
   createConversation,
   getMessages,
-  addMessage
+  addMessage,
+  deleteConversation,
+  renameConversation
 };

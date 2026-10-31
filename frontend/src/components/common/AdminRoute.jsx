@@ -16,7 +16,7 @@ export const AdminRoute = ({ children }) => {
 
   if (user?.role !== "admin") {
     return (
-      <div className="max-w-xl mx-auto my-16 p-8 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-6 animate-fade-in">
+      <div className="max-w-xl mx-auto my-16 p-8 rounded-2xl bg-[#191816] border border-[#2D2925] text-center space-y-6 animate-fade-in shadow-2xl">
         <div className="w-16 h-16 mx-auto rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -29,16 +29,16 @@ export const AdminRoute = ({ children }) => {
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-xl font-bold text-slate-100">403 — Access Denied</h2>
-          <p className="text-sm text-slate-400">
-            System Observability Telemetry is restricted to Administrator accounts. Your account (<span className="text-indigo-400 font-mono">{user?.email}</span>) does not have administrative privileges.
+          <h2 className="text-xl font-bold text-[#FAF7F2] font-display">403 — Access Denied</h2>
+          <p className="text-sm text-[#9C9384] leading-relaxed">
+            System Observability Telemetry is restricted to Administrator accounts. Your account (<span className="text-[#E0693B] font-mono">{user?.email}</span>) does not have administrative privileges.
           </p>
         </div>
 
         <div className="pt-2">
           <Link
             to="/dashboard"
-            className="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-colors"
+            className="inline-flex items-center px-4 py-2 rounded-xl bg-[#E0693B] hover:bg-[#EB784B] text-white text-xs font-semibold transition-colors shadow-sm"
           >
             Return to Student Dashboard
           </Link>

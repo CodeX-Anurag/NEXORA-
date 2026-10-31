@@ -33,10 +33,10 @@ export const Login = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto my-12 p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl space-y-6">
+    <div className="max-w-md mx-auto my-12 p-8 rounded-2xl bg-[#191816] border border-[#2D2925] shadow-2xl space-y-6">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold tracking-tight text-white">Sign In to NEXORA</h2>
-        <p className="text-xs text-slate-400">Enter your credentials to access your student workspace</p>
+        <h2 className="text-2xl font-bold tracking-tight text-[#FAF7F2] font-display">Sign In to NEXORA</h2>
+        <p className="text-xs text-[#9C9384]">Enter your credentials to access your student workspace</p>
       </div>
 
       {error && <ErrorMessage title="Authentication Failed" message={error} />}
@@ -65,9 +65,9 @@ export const Login = () => {
         </Button>
       </form>
 
-      <div className="pt-4 border-t border-slate-800 text-center text-xs text-slate-400">
+      <div className="pt-4 border-t border-[#262420] text-center text-xs text-[#9C9384]">
         Don't have an account?{" "}
-        <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
+        <Link to="/register" className="text-[#E0693B] hover:text-[#EB784B] font-semibold transition-colors">
           Register Here
         </Link>
       </div>

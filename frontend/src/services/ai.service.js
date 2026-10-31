@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api/v1";
 
 const aiFetch = async (endpoint, accessToken, options = {}) => {
   const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
@@ -136,6 +136,17 @@ export const aiService = {
 
   getMessages: async (accessToken, conversationId) => {
     return await aiFetch(`/conversations/${conversationId}/messages`, accessToken, { method: "GET" });
+  },
+
+  deleteConversation: async (accessToken, conversationId) => {
+    return await aiFetch(`/conversations/${conversationId}`, accessToken, { method: "DELETE" });
+  },
+
+  renameConversation: async (accessToken, conversationId, title) => {
+    return await aiFetch(`/conversations/${conversationId}`, accessToken, {
+      method: "PATCH",
+      body: JSON.stringify({ title })
+    });
   },
 
   // Phase 7 AI Intelligence & Recommendation Endpoints

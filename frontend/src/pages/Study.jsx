@@ -1,4 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Clock, CheckCircle2, Timer, BookOpen, Trash2, Plus } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from "recharts";
 import { useAuth } from "../context/AuthContext";
 import studyService from "../services/study.service";
 import Button from "../components/common/Button";
@@ -6,6 +16,9 @@ import Input from "../components/common/Input";
 import Modal from "../components/common/Modal";
 import Loader from "../components/common/Loader";
 import ErrorMessage from "../components/common/ErrorMessage";
+import StatCard from "../components/common/StatCard";
+import Badge from "../components/common/Badge";
+import EmptyState from "../components/common/EmptyState";
 
 export const Study = () => {
   const { accessToken } = useAuth();
@@ -17,6 +30,7 @@ export const Study = () => {
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [formData, setFormData] = useState({
     subject: "",
     duration: "45",
@@ -74,27 +88,52 @@ export const Study = () => {
     }
   };
 
-  const handleDeleteSession = async (sessionId) => {
-    if (!window.confirm("Are you sure you want to delete this study session record?")) return;
+  const handleDeleteSession = (sessionId) => {
+    setDeleteConfirmId(sessionId);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteConfirmId || !accessToken) return;
+
     try {
-      await studyService.deleteStudySession(accessToken, sessionId);
+      await studyService.deleteStudySession(accessToken, deleteConfirmId);
+      setDeleteConfirmId(null);
       fetchStudySessions();
     } catch (err) {
       setError(err.message || "Failed to delete study session.");
     }
   };
 
-  // Deterministic calculations
-  const totalMinutes = sessions.reduce((acc, s) => acc + (s.duration || 0), 0);
-  const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
+  const totalMinutes = sessions.reduce((acc, curr) => acc + (curr.duration || 0), 0);
+  const totalHours = (totalMinutes / 60).toFixed(1);
+
+  const subjectChartData = useMemo(() => {
+    const map = {};
+    sessions.forEach((s) => {
+      const sub = s.subject?.trim() || "General";
+      map[sub] = (map[sub] || 0) + (s.duration || 0);
+    });
+    return Object.entries(map)
+      .map(([subject, minutes]) => ({
+        subject,
+        minutes,
+        hours: (minutes / 60).toFixed(1)
+      }))
+      .sort((a, b) => b.minutes - a.minutes)
+      .slice(0, 8);
+  }, [sessions]);
+
+  const uniqueSubjects = useMemo(() => {
+    return new Set(sessions.map((s) => s.subject?.trim()).filter(Boolean)).size;
+  }, [sessions]);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 animate-fade-in">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-2xl bg-slate-900 border border-slate-800">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-2xl bg-[#191816] border border-[#2D2925]">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Study Sessions & Focus Tracker</h1>
-          <p className="text-xs text-slate-400 mt-1">Log your subject study time and monitor focus hours</p>
+          <h1 className="text-2xl font-bold text-[#FAF7F2] font-display">Study Sessions & Focus Tracker</h1>
+          <p className="text-xs text-[#9C9384] mt-1">Log your subject study time and monitor focus hours</p>
         </div>
         <Button variant="primary" onClick={handleOpenRecordModal}>
           + Record Study Session
@@ -104,30 +143,77 @@ export const Study = () => {
       {error && <ErrorMessage title="Study Tracker Error" message={error} onRetry={fetchStudySessions} />}
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Study Time</span>
-          <p className="text-2xl font-bold text-indigo-400 font-mono">{totalHours} hrs</p>
-          <p className="text-[11px] text-slate-500">({totalMinutes} minutes total)</p>
-        </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          label="Total Study Time"
+          value={`${totalHours} hrs`}
+          subtext={`${totalMinutes} mins total`}
+          color="terracotta"
+          icon={Clock}
+        />
 
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Recorded Sessions</span>
-          <p className="text-2xl font-bold text-emerald-400 font-mono">{sessions.length}</p>
-          <p className="text-[11px] text-slate-500">Log entries</p>
-        </div>
+        <StatCard
+          label="Recorded Sessions"
+          value={sessions.length}
+          subtext="Focus logs"
+          color="sage"
+          icon={CheckCircle2}
+        />
 
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Avg Session Duration</span>
-          <p className="text-2xl font-bold text-cyan-400 font-mono">
-            {sessions.length > 0 ? Math.round(totalMinutes / sessions.length) : 0} mins
-          </p>
-          <p className="text-[11px] text-slate-500">Per focus session</p>
-        </div>
+        <StatCard
+          label="Avg Session"
+          value={`${sessions.length > 0 ? Math.round(totalMinutes / sessions.length) : 0}m`}
+          subtext="Per focus block"
+          color="amber"
+          icon={Timer}
+        />
+
+        <StatCard
+          label="Active Subjects"
+          value={uniqueSubjects}
+          subtext="Distinct topics"
+          color="white"
+          icon={BookOpen}
+        />
       </div>
 
+      {/* Visual Analytics: Study Time by Subject */}
+      {subjectChartData.length > 0 && (
+        <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4 shadow-xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-semibold text-[#FAF7F2] font-display">Study Duration by Subject</h3>
+              <p className="text-xs text-[#9C9384]">Cumulative focus minutes logged across each technical subject</p>
+            </div>
+            <Badge variant="primary" size="xs">
+              {subjectChartData.length} Subjects Tracked
+            </Badge>
+          </div>
+          <div className="h-56 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={subjectChartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#2D2925" />
+                <XAxis dataKey="subject" stroke="#9C9384" fontSize={11} interval={0} />
+                <YAxis stroke="#9C9384" fontSize={11} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#191816",
+                    borderColor: "#332F2A",
+                    borderRadius: "12px",
+                    color: "#FAF7F2",
+                    fontSize: "12px"
+                  }}
+                  formatter={(val) => [`${val} mins (${(val / 60).toFixed(1)} hrs)`, "Study Duration"]}
+                />
+                <Bar dataKey="minutes" fill="#E0693B" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
       {/* Filter Bar */}
-      <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between gap-4">
+      <div className="p-4 rounded-xl bg-[#191816] border border-[#2D2925] flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 w-full max-w-xs">
           <Input
             placeholder="Filter by subject..."
@@ -139,7 +225,7 @@ export const Study = () => {
         {subjectFilter && (
           <button
             onClick={() => setSubjectFilter("")}
-            className="text-xs text-indigo-400 hover:underline shrink-0"
+            className="text-xs text-[#E0693B] hover:underline shrink-0 font-medium"
           >
             Clear Filter
           </button>
@@ -150,42 +236,44 @@ export const Study = () => {
       {isLoading ? (
         <Loader text="Loading study session logs..." />
       ) : sessions.length === 0 ? (
-        <div className="p-12 rounded-2xl bg-slate-900/40 border border-dashed border-slate-800 text-center space-y-3">
-          <div className="w-12 h-12 rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-400 mx-auto">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h3 className="text-base font-semibold text-slate-200">No study sessions recorded yet</h3>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto">
-            Log your study hours to build subject discipline and track productivity progress.
-          </p>
-          <Button variant="primary" size="sm" onClick={handleOpenRecordModal}>
-            + Record First Session
-          </Button>
-        </div>
+        <EmptyState
+          icon={BookOpen}
+          title="No study sessions recorded yet"
+          description="Log your study hours to build subject discipline and track productivity progress."
+          action={
+            <Button variant="primary" size="sm" onClick={handleOpenRecordModal}>
+              <Plus className="w-3.5 h-3.5 mr-1" /> Record First Session
+            </Button>
+          }
+        />
       ) : (
         <div className="space-y-3">
           {sessions.map((session) => (
             <div
               key={session._id}
-              className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+              className="p-4 rounded-xl bg-[#191816] border border-[#2D2925] hover:border-[#3D3832] transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
             >
-              <div className="space-y-1 flex-1 min-w-0">
+              <div className="space-y-1.5 flex-1 min-w-0">
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h3 className="text-sm font-semibold text-slate-100">{session.subject}</h3>
-                  <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 font-mono">
+                  <h3 className="text-sm font-semibold text-[#FAF7F2]">{session.subject}</h3>
+                  <Badge variant="success" size="xs">
                     {session.duration} mins
-                  </span>
-                  <span className="text-[11px] text-slate-500 font-mono">
+                  </Badge>
+                  <span className="text-[11px] text-[#787165] font-mono">
                     {new Date(session.date || session.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                {session.notes && <p className="text-xs text-slate-400 line-clamp-2">{session.notes}</p>}
+                {session.notes && <p className="text-xs text-[#9C9384] line-clamp-2 leading-relaxed">{session.notes}</p>}
               </div>
 
-              <Button variant="danger" size="sm" onClick={() => handleDeleteSession(session._id)}>
-                Delete
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => handleDeleteSession(session._id)}
+                className="flex items-center gap-1 text-xs"
+              >
+                <Trash2 className="w-3 h-3" />
+                <span>Delete</span>
               </Button>
             </div>
           ))}
@@ -217,6 +305,29 @@ export const Study = () => {
             required
           />
 
+          {/* Duration Presets */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-[#CDC5B6] uppercase tracking-wider block">
+              Duration Preset
+            </label>
+            <div className="flex gap-2">
+              {[25, 45, 60, 90].map((mins) => (
+                <button
+                  key={mins}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, duration: String(mins) })}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold border transition-all ${
+                    formData.duration === String(mins)
+                      ? "bg-[#E0693B]/10 text-[#E0693B] border-[#E0693B]/40"
+                      : "bg-[#141312] text-[#9C9384] border-[#2D2925] hover:text-[#FAF7F2]"
+                  }`}
+                >
+                  {mins}m
+                </button>
+              ))}
+            </div>
+          </div>
+
           <Input
             label="Duration (in minutes)"
             type="number"
@@ -236,15 +347,38 @@ export const Study = () => {
           />
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-slate-300">Notes & Key Takeaways (Optional)</label>
+            <label className="text-xs font-semibold text-[#CDC5B6] uppercase tracking-wider">
+              Notes & Key Takeaways (Optional)
+            </label>
             <textarea
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               placeholder="Covered TCP/IP layers, socket programming examples..."
-              className="w-full px-3.5 py-2 text-sm bg-slate-950 border border-slate-800 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[80px]"
+              className="w-full px-3.5 py-2.5 text-sm bg-[#141312] border border-[#302C28] rounded-xl text-[#FAF7F2] placeholder-[#787165] focus:outline-none focus:border-[#E0693B] focus:ring-1 focus:ring-[#E0693B] min-h-[80px]"
             />
           </div>
         </form>
+      </Modal>
+
+      {/* Delete Confirmation Modal (Replaces window.confirm) */}
+      <Modal
+        isOpen={Boolean(deleteConfirmId)}
+        onClose={() => setDeleteConfirmId(null)}
+        title="Delete Study Session"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setDeleteConfirmId(null)}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleConfirmDelete}>
+              Delete Session
+            </Button>
+          </>
+        }
+      >
+        <p className="text-xs text-[#CDC5B6] leading-relaxed">
+          Are you sure you want to permanently delete this study log entry? This will update your total focus hours and subject analytics.
+        </p>
       </Modal>
     </div>
   );

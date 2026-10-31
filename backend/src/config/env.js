@@ -44,6 +44,10 @@ const validateEnv = (cfg) => {
     errors.push("LLM_API_KEY must be provided when LLM_PROVIDER is set to 'openai'.");
   }
 
+  if (cfg.LLM_PROVIDER === "gemini" && (!cfg.LLM_API_KEY || cfg.LLM_API_KEY === "mock-key" || cfg.LLM_API_KEY === "YOUR_GEMINI_API_KEY_HERE")) {
+    errors.push("LLM_API_KEY must be a valid Google Gemini API key when LLM_PROVIDER is set to 'gemini'.");
+  }
+
   if (cfg.EMBEDDING_PROVIDER === "openai" && (!cfg.EMBEDDING_API_KEY || cfg.EMBEDDING_API_KEY === "mock-key")) {
     errors.push("EMBEDDING_API_KEY must be provided when EMBEDDING_PROVIDER is set to 'openai'.");
   }
