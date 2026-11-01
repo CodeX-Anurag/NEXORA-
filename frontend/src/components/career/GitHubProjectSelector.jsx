@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FolderGit2,
   Star,
@@ -18,17 +18,39 @@ export const GitHubProjectSelector = ({
   isSaving = false,
   isSyncing = false
 }) => {
-  const allRepos = githubConnection?.importedData?.repos || [];
-  const initialSelected = githubConnection?.selectedItems || [];
+  const allRepos = Array.isArray(githubConnection?.importedData?.repos)
+    ? githubConnection.importedData.repos
+    : [];
+  const initialSelected = Array.isArray(githubConnection?.selectedItems)
+    ? githubConnection.selectedItems
+    : [];
 
   // Map initial selected items by ID
   const [selectedMap, setSelectedMap] = useState(() => {
     const map = {};
     initialSelected.forEach((item) => {
-      map[item.id] = { ...item };
+      const id = String(item.id || item._id || item.name || "");
+      if (id) {
+        map[id] = { ...item };
+      }
     });
     return map;
   });
+
+  // Sync selectedMap when githubConnection changes
+  useEffect(() => {
+    const freshSelected = Array.isArray(githubConnection?.selectedItems)
+      ? githubConnection.selectedItems
+      : [];
+    const map = {};
+    freshSelected.forEach((item) => {
+      const id = String(item.id || item._id || item.name || "");
+      if (id) {
+        map[id] = { ...item };
+      }
+    });
+    setSelectedMap(map);
+  }, [githubConnection?.selectedItems]);
 
   const [expandedId, setExpandedId] = useState(null);
   const [saveBanner, setSaveBanner] = useState("");
@@ -37,23 +59,31 @@ export const GitHubProjectSelector = ({
     return null;
   }
 
-  const toggleSelectRepo = (repo) => {
+  const toggleSelectRepo = (repo, idx) => {
+    if (!repo) return;
+    const repoId = String(repo.id || repo._id || repo.name || `repo-${idx}`);
+
     setSelectedMap((prev) => {
       const next = { ...prev };
-      if (next[repo.id]) {
-        delete next[repo.id];
+      if (next[repoId]) {
+        delete next[repoId];
       } else {
-        next[repo.id] = {
-          id: repo.id,
-          title: repo.title || repo.name,
+        const rawTech = Array.isArray(repo.techStack) ? repo.techStack : [repo.language];
+        const techStack = rawTech.filter((t) => typeof t === "string" && t.trim()).map((t) => t.trim());
+        const stars = Number(repo.stars) || 0;
+        const forks = Number(repo.forks) || 0;
+
+        next[repoId] = {
+          id: repoId,
+          title: repo.title || repo.name || "Untitled Project",
           description: repo.description || "",
-          techStack: repo.techStack || [repo.language].filter(Boolean),
-          url: repo.url,
-          stars: repo.stars || 0,
-          forks: repo.forks || 0,
+          techStack,
+          url: repo.url || repo.html_url || "",
+          stars,
+          forks,
           bulletPoints: [
-            `Engineered open-source software project with ${repo.stars} stars and ${repo.forks} forks.`,
-            `Implemented core functionality utilizing ${(repo.techStack || [repo.language]).join(", ")}.`
+            `Engineered software project with ${stars} stars and ${forks} forks.`,
+            `Implemented core functionality utilizing ${techStack.length > 0 ? techStack.join(", ") : "modern software engineering practices"}.`
           ],
           selectedForResume: true
         };
@@ -63,12 +93,13 @@ export const GitHubProjectSelector = ({
   };
 
   const updateItemField = (id, field, value) => {
+    const key = String(id);
     setSelectedMap((prev) => {
-      if (!prev[id]) return prev;
+      if (!prev[key]) return prev;
       return {
         ...prev,
-        [id]: {
-          ...prev[id],
+        [key]: {
+          ...prev[key],
           [field]: value
         }
       };
@@ -134,14 +165,20 @@ export const GitHubProjectSelector = ({
 
       {/* Repositories Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {allRepos.map((repo) => {
-          const isSelected = !!selectedMap[repo.id];
-          const itemData = selectedMap[repo.id] || repo;
-          const isExpanded = expandedId === repo.id;
+        {allRepos.map((repo, idx) => {
+          const repoId = String(repo.id || repo._id || repo.name || `repo-${idx}`);
+          const isSelected = !!selectedMap[repoId];
+          const itemData = selectedMap[repoId] || repo;
+          const isExpanded = expandedId === repoId;
+          const safeUrl = repo.url && /^https?:\/\//i.test(repo.url)
+            ? repo.url
+            : repo.url
+            ? `https://github.com/${repo.url.replace(/^\/+/, "")}`
+            : "#";
 
           return (
             <div
-              key={repo.id}
+              key={repoId}
               className={`p-4 rounded-xl border transition-all ${
                 isSelected
                   ? "bg-[#1C1A17] border-[#E0693B]/40 shadow-sm"
@@ -152,46 +189,48 @@ export const GitHubProjectSelector = ({
                 <div className="flex items-center gap-2.5">
                   <input
                     type="checkbox"
-                    id={`repo-chk-${repo.id}`}
+                    id={`repo-chk-${repoId}`}
                     checked={isSelected}
-                    onChange={() => toggleSelectRepo(repo)}
+                    onChange={() => toggleSelectRepo(repo, idx)}
                     className="w-4 h-4 rounded border-[#2D2925] text-[#E0693B] focus:ring-0 cursor-pointer"
                   />
                   <div>
                     <label
-                      htmlFor={`repo-chk-${repo.id}`}
+                      htmlFor={`repo-chk-${repoId}`}
                       className="text-sm font-bold text-[#FAF7F2] font-display cursor-pointer hover:text-[#E0693B]"
                     >
-                      {itemData.title || repo.name}
+                      {itemData.title || repo.name || "Untitled Project"}
                     </label>
                     <div className="flex items-center gap-3 text-[11px] text-[#9C9384] mt-0.5">
                       {repo.language && (
                         <span className="font-mono text-[#E0693B] font-medium">{repo.language}</span>
                       )}
                       <span className="flex items-center gap-0.5">
-                        <Star className="w-3 h-3 text-amber-400" /> {repo.stars}
+                        <Star className="w-3 h-3 text-amber-400" /> {Number(repo.stars) || 0}
                       </span>
                       <span className="flex items-center gap-0.5">
-                        <GitFork className="w-3 h-3 text-[#9C9384]" /> {repo.forks}
+                        <GitFork className="w-3 h-3 text-[#9C9384]" /> {Number(repo.forks) || 0}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-1">
-                  <a
-                    href={repo.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-1 text-[#787165] hover:text-[#FAF7F2]"
-                    title="View on GitHub"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                  {safeUrl !== "#" && (
+                    <a
+                      href={safeUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-1 text-[#787165] hover:text-[#FAF7F2]"
+                      title="View on GitHub"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
                   {isSelected && (
                     <button
                       type="button"
-                      onClick={() => setExpandedId(isExpanded ? null : repo.id)}
+                      onClick={() => setExpandedId(isExpanded ? null : repoId)}
                       className="p-1 text-[#787165] hover:text-[#E0693B]"
                       title="Edit project details"
                     >
@@ -216,7 +255,7 @@ export const GitHubProjectSelector = ({
                     <input
                       type="text"
                       value={itemData.title || ""}
-                      onChange={(e) => updateItemField(repo.id, "title", e.target.value)}
+                      onChange={(e) => updateItemField(repoId, "title", e.target.value)}
                       className="w-full bg-[#141312] border border-[#2D2925] rounded p-1.5 text-[#FAF7F2]"
                     />
                   </div>
@@ -230,7 +269,7 @@ export const GitHubProjectSelector = ({
                       value={Array.isArray(itemData.techStack) ? itemData.techStack.join(", ") : ""}
                       onChange={(e) =>
                         updateItemField(
-                          repo.id,
+                          repoId,
                           "techStack",
                           e.target.value.split(",").map((s) => s.trim()).filter(Boolean)
                         )
@@ -247,7 +286,7 @@ export const GitHubProjectSelector = ({
                       rows={2}
                       value={Array.isArray(itemData.bulletPoints) ? itemData.bulletPoints.join("\n") : ""}
                       onChange={(e) =>
-                        updateItemField(repo.id, "bulletPoints", e.target.value.split("\n"))
+                        updateItemField(repoId, "bulletPoints", e.target.value.split("\n"))
                       }
                       className="w-full bg-[#141312] border border-[#2D2925] rounded p-1.5 text-[#FAF7F2] font-mono text-[11px]"
                     />

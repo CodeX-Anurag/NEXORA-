@@ -134,9 +134,31 @@ export const PlatformCard = ({
     }
   };
 
+  const getProfileHref = () => {
+    if (!connection) return null;
+    const rawUrl = connection.profileUrl || connection.username;
+    if (!rawUrl) return null;
+    if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
+    if (platformKey === "github") return `https://github.com/${connection.username || rawUrl}`;
+    if (platformKey === "leetcode") return `https://leetcode.com/u/${connection.username || rawUrl}`;
+    if (platformKey === "codeforces") return `https://codeforces.com/profile/${connection.username || rawUrl}`;
+    if (platformKey === "linkedin") return `https://linkedin.com/in/${connection.username || rawUrl}`;
+    return `https://${rawUrl}`;
+  };
+
+  const formattedSyncDate = () => {
+    if (!connection?.lastSyncedAt) return "Never";
+    try {
+      const d = new Date(connection.lastSyncedAt);
+      return isNaN(d.getTime()) ? "Recently" : d.toLocaleString();
+    } catch {
+      return "Recently";
+    }
+  };
+
   // Status Badge
   const getBadge = () => {
-    if (!isConnected) {
+    if (!isConnected || !connection) {
       return (
         <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#22201D] text-[#9C9384] border border-[#2D2925]">
           Not Connected
@@ -157,6 +179,8 @@ export const PlatformCard = ({
     );
   };
 
+  const profileHref = getProfileHref();
+
   return (
     <div className="p-5 rounded-2xl bg-[#191816] border border-[#2D2925] flex flex-col justify-between space-y-4 hover:border-[#38332E] transition-all shadow-md">
       {/* Top Bar: Icon, Name, Status */}
@@ -167,9 +191,9 @@ export const PlatformCard = ({
           </div>
           <div>
             <h3 className="font-bold text-sm text-[#FAF7F2] font-display">{cfg.name}</h3>
-            {isConnected && connection.profileUrl ? (
+            {isConnected && profileHref ? (
               <a
-                href={connection.profileUrl}
+                href={profileHref}
                 target="_blank"
                 rel="noreferrer"
                 className="text-[11px] text-[#9C9384] hover:text-[#E0693B] flex items-center gap-1 underline underline-offset-2"
@@ -188,7 +212,7 @@ export const PlatformCard = ({
 
       {/* Middle: Metrics / Summary */}
       <div className="space-y-1.5 min-h-[48px]">
-        {isConnected ? (
+        {isConnected && connection ? (
           <>
             <div className="flex items-baseline justify-between">
               <span className="text-sm font-bold font-mono text-[#FAF7F2]">
@@ -204,7 +228,7 @@ export const PlatformCard = ({
               <p className="text-xs text-[#9C9384] line-clamp-1">{connection.summary.headline}</p>
             )}
             <p className="text-[10px] text-[#787165]">
-              Last synced: {connection.lastSyncedAt ? new Date(connection.lastSyncedAt).toLocaleString() : "Never"}
+              Last synced: {formattedSyncDate()}
             </p>
           </>
         ) : (

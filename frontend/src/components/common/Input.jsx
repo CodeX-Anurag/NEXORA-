@@ -5,6 +5,7 @@ export const Input = ({
   error,
   helperText,
   id,
+  name,
   type = "text",
   className = "",
   value,
@@ -12,9 +13,11 @@ export const Input = ({
   placeholder,
   disabled = false,
   required = false,
+  autoComplete,
   ...props
 }) => {
   const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
+  const inputName = name || inputId;
 
   return (
     <div className="flex flex-col gap-1.5 w-full">
@@ -26,12 +29,14 @@ export const Input = ({
       )}
       <input
         id={inputId}
+        name={inputName}
         type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
         required={required}
+        autoComplete={autoComplete}
         className={`w-full px-3.5 py-2.5 text-sm bg-[#181715] border ${
           error
             ? "border-rose-500/80 focus:ring-rose-500 focus:border-rose-500"

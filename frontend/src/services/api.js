@@ -13,6 +13,7 @@ export const apiClient = async (endpoint, options = {}) => {
   };
 
   const config = {
+    credentials: "include", // Send httpOnly cookies for sessions & CORS
     ...options,
     headers
   };
@@ -36,7 +37,12 @@ export const apiClient = async (endpoint, options = {}) => {
       return await response.blob();
     }
 
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      data = { message: `Server returned HTTP ${response.status} (${response.statusText || "Unknown"})` };
+    }
 
     if (!response.ok) {
       const error = new Error(data.message || `API Error: Status ${response.status}`);
@@ -53,5 +59,27 @@ export const apiClient = async (endpoint, options = {}) => {
     throw error;
   }
 };
+
+// Shortcut helper methods for uniform REST calling
+apiClient.get = (endpoint, options = {}) => apiClient(endpoint, { ...options, method: "GET" });
+apiClient.post = (endpoint, body, options = {}) =>
+  apiClient(endpoint, {
+    ...options,
+    method: "POST",
+    body: body instanceof FormData ? body : JSON.stringify(body)
+  });
+apiClient.put = (endpoint, body, options = {}) =>
+  apiClient(endpoint, {
+    ...options,
+    method: "PUT",
+    body: body instanceof FormData ? body : JSON.stringify(body)
+  });
+apiClient.patch = (endpoint, body, options = {}) =>
+  apiClient(endpoint, {
+    ...options,
+    method: "PATCH",
+    body: body instanceof FormData ? body : JSON.stringify(body)
+  });
+apiClient.delete = (endpoint, options = {}) => apiClient(endpoint, { ...options, method: "DELETE" });
 
 export default apiClient;

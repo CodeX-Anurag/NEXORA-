@@ -1,11 +1,14 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Sun, Moon } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 import Button from "../common/Button";
 import NotificationCenter from "../notifications/NotificationCenter";
 
 export const Navbar = ({ apiStatus, onToggleMobileMenu, onRefreshHealth }) => {
   const { user, isAuthenticated, logout } = useAuth();
+  const { theme, toggleTheme, isDay } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -47,7 +50,37 @@ export const Navbar = ({ apiStatus, onToggleMobileMenu, onRefreshHealth }) => {
       </div>
 
       {/* Backend API Health & User Auth Section */}
-      <div className="flex items-center gap-3 sm:gap-4">
+      <div className="flex items-center gap-2.5 sm:gap-4">
+        {/* Day / Night Mode Toggle */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          title={isDay ? "Switch to Night Mode (Dark)" : "Switch to Day Mode (Light)"}
+          className="flex items-center gap-1 p-1 rounded-full bg-[#1C1A17] hover:bg-[#25221E] border border-[#2D2925] hover:border-[#3D3833] transition-all cursor-pointer shadow-sm group"
+          aria-label={isDay ? "Switch to Night Mode" : "Switch to Day Mode"}
+        >
+          <span
+            className={`flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full transition-all duration-200 ${
+              isDay
+                ? "bg-[#E0693B] text-white shadow-sm shadow-[#E0693B]/30"
+                : "text-[#9C9384] group-hover:text-[#FAF7F2]"
+            }`}
+            title="Day Mode"
+          >
+            <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </span>
+          <span
+            className={`flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full transition-all duration-200 ${
+              !isDay
+                ? "bg-[#25221F] text-[#E0693B] border border-[#3D3833] shadow-sm"
+                : "text-[#9C9384] group-hover:text-[#FAF7F2]"
+            }`}
+            title="Night Mode"
+          >
+            <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </span>
+        </button>
+
         {/* Health status badge */}
         <button
           type="button"

@@ -30,7 +30,10 @@ export const ObservabilityDashboard = () => {
 
   const fetchDiagnostics = useCallback(
     async (isBackground = false) => {
-      if (!accessToken) return;
+      if (!accessToken) {
+        setIsLoading(false);
+        return;
+      }
 
       if (!isBackground) {
         setIsLoading(true);

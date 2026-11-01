@@ -30,14 +30,17 @@ export const Analytics = () => {
   const [error, setError] = useState("");
 
   const fetchAnalytics = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError("");
 
     try {
       const [prodRes, careerRes] = await Promise.all([
-        analyticsService.getProductivityAnalytics(accessToken),
-        analyticsService.getCareerAnalytics(accessToken)
+        analyticsService.getProductivityAnalytics(accessToken).catch(() => null),
+        analyticsService.getCareerAnalytics(accessToken).catch(() => null)
       ]);
 
       setProdData(prodRes);

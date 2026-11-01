@@ -10,10 +10,24 @@ export const CodingStatsWidget = ({ leetcodeConnection, codeforcesConnection }) 
   const lcData = leetcodeConnection?.importedData || {};
   const cfData = codeforcesConnection?.importedData || {};
 
-  const totalLc = lcData.totalSolved || (lcData.easy || 0) + (lcData.medium || 0) + (lcData.hard || 0) || 0;
-  const easyPct = totalLc ? Math.round(((lcData.easy || 0) / totalLc) * 100) : 0;
-  const medPct = totalLc ? Math.round(((lcData.medium || 0) / totalLc) * 100) : 0;
-  const hardPct = totalLc ? Math.round(((lcData.hard || 0) / totalLc) * 100) : 0;
+  const easy = Math.max(0, Number(lcData.easy) || 0);
+  const medium = Math.max(0, Number(lcData.medium) || 0);
+  const hard = Math.max(0, Number(lcData.hard) || 0);
+  const totalSolved = Math.max(0, Number(lcData.totalSolved) || 0);
+  const totalLc = totalSolved || (easy + medium + hard) || 0;
+
+  const easyPct = totalLc > 0 ? Math.min(100, Math.round((easy / totalLc) * 100)) : 0;
+  const medPct = totalLc > 0 ? Math.min(100, Math.round((medium / totalLc) * 100)) : 0;
+  const hardPct = totalLc > 0 ? Math.min(100, Math.round((hard / totalLc) * 100)) : 0;
+
+  const contestRating = Number(lcData.contestRating);
+  const hasContestRating = Number.isFinite(contestRating) && contestRating > 0;
+
+  const cfRating = Math.max(0, Number(cfData.rating) || 0);
+  const cfMaxRating = Math.max(0, Number(cfData.maxRating) || 0);
+  const cfContestCount = Math.max(0, Number(cfData.contestCount) || 0);
+  const cfRank = typeof cfData.rank === "string" ? cfData.rank : "Unrated";
+  const cfContribution = Number(cfData.contribution) || 0;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -42,9 +56,9 @@ export const CodingStatsWidget = ({ leetcodeConnection, codeforcesConnection }) 
               <span className="text-3xl font-extrabold font-mono text-[#FAF7F2]">{totalLc}</span>
               <span className="text-xs text-[#9C9384] ml-2">Problems Solved</span>
             </div>
-            {lcData.contestRating && (
+            {hasContestRating && (
               <div className="text-right">
-                <span className="text-sm font-bold font-mono text-[#E0693B]">{Math.round(lcData.contestRating)}</span>
+                <span className="text-sm font-bold font-mono text-[#E0693B]">{Math.round(contestRating)}</span>
                 <p className="text-[10px] text-[#787165]">Contest Rating</p>
               </div>
             )}
@@ -52,24 +66,24 @@ export const CodingStatsWidget = ({ leetcodeConnection, codeforcesConnection }) 
 
           {/* Difficulty Progress Stack */}
           <div className="w-full h-2.5 rounded-full bg-[#141312] overflow-hidden flex border border-[#2D2925]">
-            <div style={{ width: `${easyPct}%` }} className="bg-[#2EA366] h-full" title={`Easy: ${lcData.easy || 0}`} />
-            <div style={{ width: `${medPct}%` }} className="bg-[#E0693B] h-full" title={`Medium: ${lcData.medium || 0}`} />
-            <div style={{ width: `${hardPct}%` }} className="bg-rose-500 h-full" title={`Hard: ${lcData.hard || 0}`} />
+            <div style={{ width: `${easyPct}%` }} className="bg-[#2EA366] h-full" title={`Easy: ${easy}`} />
+            <div style={{ width: `${medPct}%` }} className="bg-[#E0693B] h-full" title={`Medium: ${medium}`} />
+            <div style={{ width: `${hardPct}%` }} className="bg-rose-500 h-full" title={`Hard: ${hard}`} />
           </div>
 
           {/* Detail Counters */}
           <div className="grid grid-cols-3 gap-2 pt-1 text-center text-xs">
             <div className="p-2 rounded-lg bg-[#141312] border border-[#2D2925]">
               <span className="text-[10px] text-[#2EA366] font-semibold block">Easy</span>
-              <span className="font-mono font-bold text-[#FAF7F2]">{lcData.easy || 0}</span>
+              <span className="font-mono font-bold text-[#FAF7F2]">{easy}</span>
             </div>
             <div className="p-2 rounded-lg bg-[#141312] border border-[#2D2925]">
               <span className="text-[10px] text-[#E0693B] font-semibold block">Medium</span>
-              <span className="font-mono font-bold text-[#FAF7F2]">{lcData.medium || 0}</span>
+              <span className="font-mono font-bold text-[#FAF7F2]">{medium}</span>
             </div>
             <div className="p-2 rounded-lg bg-[#141312] border border-[#2D2925]">
               <span className="text-[10px] text-rose-400 font-semibold block">Hard</span>
-              <span className="font-mono font-bold text-[#FAF7F2]">{lcData.hard || 0}</span>
+              <span className="font-mono font-bold text-[#FAF7F2]">{hard}</span>
             </div>
           </div>
         </div>
@@ -90,23 +104,23 @@ export const CodingStatsWidget = ({ leetcodeConnection, codeforcesConnection }) 
 
           <div className="flex items-baseline justify-between">
             <div>
-              <span className="text-3xl font-extrabold font-mono text-[#3B82F6]">{cfData.rating || 0}</span>
-              <span className="text-xs text-[#CDC5B6] font-semibold ml-2 capitalize">({cfData.rank || "Unrated"})</span>
+              <span className="text-3xl font-extrabold font-mono text-[#3B82F6]">{cfRating}</span>
+              <span className="text-xs text-[#CDC5B6] font-semibold ml-2 capitalize">({cfRank})</span>
             </div>
             <div className="text-right">
-              <span className="text-xs font-mono text-[#9C9384]">Peak: {cfData.maxRating || 0}</span>
-              <p className="text-[10px] text-[#787165]">{cfData.contestCount || 0} Contests</p>
+              <span className="text-xs font-mono text-[#9C9384]">Peak: {cfMaxRating}</span>
+              <p className="text-[10px] text-[#787165]">{cfContestCount} Contests</p>
             </div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925] space-y-1 text-xs">
             <div className="flex justify-between text-[#9C9384]">
               <span>Rank Tier:</span>
-              <span className="font-semibold text-[#FAF7F2] capitalize">{cfData.rank || "Newbie"}</span>
+              <span className="font-semibold text-[#FAF7F2] capitalize">{cfRank}</span>
             </div>
             <div className="flex justify-between text-[#9C9384]">
               <span>Community Contribution:</span>
-              <span className="font-mono text-[#2EA366] font-medium">{cfData.contribution || 0}</span>
+              <span className="font-mono text-[#2EA366] font-medium">{cfContribution}</span>
             </div>
           </div>
 

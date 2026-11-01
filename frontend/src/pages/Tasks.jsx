@@ -68,7 +68,10 @@ export const Tasks = () => {
    * Fetch tasks and analytics from backend
    */
   const fetchData = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError("");
 

@@ -9,26 +9,37 @@ export const InferredSkillsWidget = ({
   // Aggregate languages and tech from GitHub and LeetCode
   const inferredMap = new Map();
 
-  const github = platforms.find((p) => p.platform === "github" && p.connectionStatus === "connected");
-  if (github?.importedData?.topLanguages) {
+  const safePlatforms = Array.isArray(platforms) ? platforms : [];
+  const github = safePlatforms.find((p) => p && p.platform === "github" && p.connectionStatus === "connected");
+
+  if (github?.importedData?.topLanguages && Array.isArray(github.importedData.topLanguages)) {
     github.importedData.topLanguages.forEach((lang) => {
-      inferredMap.set(lang, { source: "GitHub Repositories", name: lang });
+      if (typeof lang === "string" && lang.trim()) {
+        const cleanLang = lang.trim();
+        inferredMap.set(cleanLang, { source: "GitHub Repositories", name: cleanLang });
+      }
     });
   }
 
-  if (github?.importedData?.repos) {
+  if (github?.importedData?.repos && Array.isArray(github.importedData.repos)) {
     github.importedData.repos.forEach((r) => {
-      if (Array.isArray(r.techStack)) {
+      if (r && Array.isArray(r.techStack)) {
         r.techStack.forEach((t) => {
-          if (!inferredMap.has(t)) {
-            inferredMap.set(t, { source: "GitHub Tech Stack", name: t });
+          if (typeof t === "string" && t.trim() && !inferredMap.has(t.trim())) {
+            const cleanT = t.trim();
+            inferredMap.set(cleanT, { source: "GitHub Tech Stack", name: cleanT });
           }
         });
       }
     });
   }
 
-  const existingSkillNames = new Set(userSkills.map((s) => s.skillName.toLowerCase()));
+  const existingSkillNames = new Set(
+    (Array.isArray(userSkills) ? userSkills : [])
+      .map((s) => (typeof s === "string" ? s : s?.skillName || s?.name || ""))
+      .filter(Boolean)
+      .map((n) => String(n).toLowerCase())
+  );
   const inferredList = Array.from(inferredMap.values());
 
   if (inferredList.length === 0) return null;
@@ -52,7 +63,7 @@ export const InferredSkillsWidget = ({
 
       <div className="flex flex-wrap gap-2">
         {inferredList.map((item) => {
-          const isAdded = existingSkillNames.has(item.name.toLowerCase());
+          const isAdded = item?.name ? existingSkillNames.has(String(item.name).toLowerCase()) : false;
 
           return (
             <div

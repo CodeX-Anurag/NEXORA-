@@ -80,25 +80,28 @@ export const Career = () => {
    * Fetch all data: catalog, analysis, skills, and multi-platform connections
    */
   const fetchData = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError("");
 
     try {
       const [careersRes, skillsRes, userCareerRes, userSkillsRes, platformsRes] = await Promise.all([
-        careerService.getCareers(),
-        skillService.getSkillCatalog(),
-        careerService.getUserCareer(accessToken),
-        skillService.getUserSkills(accessToken),
+        careerService.getCareers().catch(() => ({ careers: [] })),
+        skillService.getSkillCatalog().catch(() => ({ skills: [] })),
+        careerService.getUserCareer(accessToken).catch(() => null),
+        skillService.getUserSkills(accessToken).catch(() => ({ skills: [] })),
         careerService.getPlatforms(accessToken).catch(() => ({ platforms: [], connectedCount: 0 }))
       ]);
 
-      setCareerCatalog(careersRes.careers || []);
-      setSkillCatalog(skillsRes.skills || []);
-      setCareerAnalysis(userCareerRes);
-      setUserSkills(userSkillsRes.skills || []);
-      setPlatforms(platformsRes.platforms || []);
-      setConnectedCount(platformsRes.connectedCount || 0);
+      setCareerCatalog(careersRes?.careers || []);
+      setSkillCatalog(skillsRes?.skills || []);
+      setCareerAnalysis(userCareerRes || null);
+      setUserSkills(userSkillsRes?.skills || []);
+      setPlatforms(platformsRes?.platforms || []);
+      setConnectedCount(platformsRes?.connectedCount || 0);
     } catch (err) {
       setError(err.message || "Failed to load career intelligence data.");
     } finally {
@@ -239,30 +242,30 @@ export const Career = () => {
     }
   };
 
-  if (isLoading && !careerAnalysis) {
-    return <Loader text="Loading Career Intelligence & Platform Ecosystem..." />;
-  }
-
-  const readinessScore = careerAnalysis?.careerReadinessScore || 0;
-  const skillGaps = careerAnalysis?.skillGaps || [];
-  const githubConn = platforms.find((p) => p.platform === "github");
-  const leetcodeConn = platforms.find((p) => p.platform === "leetcode");
-  const codeforcesConn = platforms.find((p) => p.platform === "codeforces");
+  const readinessScore = Math.max(0, Number(careerAnalysis?.careerReadinessScore) || 0);
+  const skillGaps = Array.isArray(careerAnalysis?.skillGaps) ? careerAnalysis.skillGaps : [];
+  const safePlatforms = Array.isArray(platforms) ? platforms : [];
+  const githubConn = safePlatforms.find((p) => p && p.platform === "github");
+  const leetcodeConn = safePlatforms.find((p) => p && p.platform === "leetcode");
+  const codeforcesConn = safePlatforms.find((p) => p && p.platform === "codeforces");
 
   const chartData = useMemo(() => {
-    return skillGaps.map((s) => ({
-      name: s.skillName,
-      Current: s.currentLevel,
-      Required: s.requiredLevel
-    }));
+    return (skillGaps || [])
+      .filter((s) => s && s.skillName)
+      .map((s) => ({
+        name: s.skillName,
+        Current: Math.max(0, Number(s.currentLevel) || 0),
+        Required: Math.max(0, Number(s.requiredLevel) || 0)
+      }));
   }, [skillGaps]);
 
   const filteredSkillGaps = useMemo(() => {
-    return skillGaps.filter((item) => {
+    return (skillGaps || []).filter((item) => {
+      if (!item || !item.skillName) return false;
       const matchesCategory = skillFilter === "all" || item.category === skillFilter;
       const matchesSearch =
         !skillSearch.trim() ||
-        item.skillName.toLowerCase().includes(skillSearch.toLowerCase().trim());
+        String(item.skillName).toLowerCase().includes(skillSearch.toLowerCase().trim());
       return matchesCategory && matchesSearch;
     });
   }, [skillGaps, skillFilter, skillSearch]);
@@ -281,6 +284,10 @@ export const Career = () => {
       badge: skillGaps.length
     }
   ];
+
+  if (isLoading && !careerAnalysis) {
+    return <Loader text="Loading Career Intelligence & Platform Ecosystem..." />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-fade-in pb-16">
@@ -313,11 +320,17 @@ export const Career = () => {
             onChange={(e) => handleTargetRoleChange(e.target.value)}
             className="w-full px-3.5 py-2.5 text-xs bg-[#141312] border border-[#302C28] rounded-xl text-[#FAF7F2] focus:outline-none focus:border-[#E0693B] font-semibold cursor-pointer"
           >
-            {careerCatalog.map((c) => (
-              <option key={c._id || c.title} value={c.title} className="bg-[#141312]">
-                {c.title}
+            {careerCatalog.length === 0 ? (
+              <option value={careerAnalysis?.targetRole || "Full Stack Developer"} className="bg-[#141312]">
+                {careerAnalysis?.targetRole || "Full Stack Developer"}
               </option>
-            ))}
+            ) : (
+              careerCatalog.map((c) => (
+                <option key={c._id || c.title} value={c.title} className="bg-[#141312]">
+                  {c.title}
+                </option>
+              ))
+            )}
           </select>
 
           <Link
@@ -655,11 +668,17 @@ export const Career = () => {
               onChange={(e) => setSelectedSkillName(e.target.value)}
               className="w-full px-3 py-2 text-sm bg-[#141312] border border-[#302C28] rounded-xl text-[#FAF7F2] focus:outline-none focus:border-[#E0693B]"
             >
-              {skillCatalog.map((s) => (
-                <option key={s._id || s.name} value={s.name}>
-                  {s.name} ({s.category})
+              {skillCatalog.length === 0 ? (
+                <option value={selectedSkillName || "JavaScript"}>
+                  {selectedSkillName || "JavaScript"}
                 </option>
-              ))}
+              ) : (
+                skillCatalog.map((s) => (
+                  <option key={s._id || s.name} value={s.name}>
+                    {s.name} ({s.category || "General"})
+                  </option>
+                ))
+              )}
             </select>
           </div>
 

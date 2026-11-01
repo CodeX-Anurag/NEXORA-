@@ -1,9 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { Sun, Moon } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 
 export const Sidebar = ({ mobileOpen = false, onCloseMobile }) => {
   const { user } = useAuth();
+  const { theme, toggleTheme, isDay } = useTheme();
 
   const activeNavItems = [
     {
@@ -114,11 +117,34 @@ export const Sidebar = ({ mobileOpen = false, onCloseMobile }) => {
         </div>
       </div>
 
-      <div className="pt-4 border-t border-[#2B2723] px-2 flex items-center justify-between">
-        <span className="text-[11px] text-[#877E71] font-mono">NEXORA Platform</span>
-        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-[#22201D] text-[#CDC5B6] border border-[#332F2A]">
-          v1.0.0 Pro
-        </span>
+      <div className="pt-4 border-t border-[#2B2723] px-2 flex flex-col gap-2.5">
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="flex items-center justify-between p-2 rounded-xl bg-[#1C1A17] hover:bg-[#22201D] border border-[#2D2925] hover:border-[#38332E] transition-all text-xs cursor-pointer group"
+          title={isDay ? "Switch to Night Mode" : "Switch to Day Mode"}
+        >
+          <div className="flex items-center gap-2">
+            {isDay ? (
+              <Sun className="w-4 h-4 text-[#E0693B] animate-spin-slow" />
+            ) : (
+              <Moon className="w-4 h-4 text-[#E0693B]" />
+            )}
+            <span className="font-medium text-[#CDC5B6] group-hover:text-[#FAF7F2]">
+              {isDay ? "Day Mode" : "Night Mode"}
+            </span>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#25221F] text-[#E0693B] border border-[#3D3833]">
+            {isDay ? "Light" : "Dark"}
+          </span>
+        </button>
+
+        <div className="flex items-center justify-between pt-1">
+          <span className="text-[11px] text-[#877E71] font-mono">NEXORA Platform</span>
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-[#22201D] text-[#CDC5B6] border border-[#332F2A]">
+            v1.0.0 Pro
+          </span>
+        </div>
       </div>
     </aside>
   );

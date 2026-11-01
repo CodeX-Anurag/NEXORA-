@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import PageLayout from "./components/layout/PageLayout";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AdminRoute from "./components/common/AdminRoute";
@@ -18,6 +19,8 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import Viva from "./pages/Viva";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import NotFound from "./pages/NotFound";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 import healthService from "./services/health.service";
 
 export const App = () => {
@@ -45,108 +48,113 @@ export const App = () => {
   }, []);
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <PageLayout apiStatus={apiStatus} onRefreshHealth={verifyHealth}>
-          <Routes>
-            <Route path="/" element={<Home onRefreshHealth={verifyHealth} />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/tasks"
-              element={
-                <ProtectedRoute>
-                  <Tasks />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/study"
-              element={
-                <ProtectedRoute>
-                  <Study />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/career"
-              element={
-                <ProtectedRoute>
-                  <Career />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/projects"
-              element={
-                <ProtectedRoute>
-                  <Projects />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/analytics"
-              element={
-                <ProtectedRoute>
-                  <Analytics />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ai-coach"
-              element={
-                <ProtectedRoute>
-                  <AIChat />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/memory-settings"
-              element={
-                <ProtectedRoute>
-                  <MemorySettings />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/memories" element={<Navigate to="/memory-settings" replace />} />
-            <Route
-              path="/resume"
-              element={
-                <ProtectedRoute>
-                  <ResumeBuilder />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/viva"
-              element={
-                <ProtectedRoute>
-                  <Viva />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/observability"
-              element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <ObservabilityDashboard />
-                  </AdminRoute>
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <PageLayout apiStatus={apiStatus} onRefreshHealth={verifyHealth}>
+            <ErrorBoundary>
+              <Routes>
+              <Route path="/" element={<Home onRefreshHealth={verifyHealth} />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tasks"
+                element={
+                  <ProtectedRoute>
+                    <Tasks />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/study"
+                element={
+                  <ProtectedRoute>
+                    <Study />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/career"
+                element={
+                  <ProtectedRoute>
+                    <Career />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects"
+                element={
+                  <ProtectedRoute>
+                    <Projects />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/analytics"
+                element={
+                  <ProtectedRoute>
+                    <Analytics />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ai-coach"
+                element={
+                  <ProtectedRoute>
+                    <AIChat />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/memory-settings"
+                element={
+                  <ProtectedRoute>
+                    <MemorySettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/memories" element={<Navigate to="/memory-settings" replace />} />
+              <Route
+                path="/resume"
+                element={
+                  <ProtectedRoute>
+                    <ResumeBuilder />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/viva"
+                element={
+                  <ProtectedRoute>
+                    <Viva />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/observability"
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <ObservabilityDashboard />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ErrorBoundary>
         </PageLayout>
       </BrowserRouter>
     </AuthProvider>
+  </ThemeProvider>
   );
 };
 

@@ -17,17 +17,31 @@ const authFetch = async (endpoint, options = {}) => {
     credentials: "include" // Send httpOnly cookies for refresh token & CORS
   };
 
-  const response = await fetch(url, config);
-  const data = await response.json();
+  try {
+    const response = await fetch(url, config);
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      data = { message: `Server returned HTTP ${response.status} (${response.statusText || "Unknown"})` };
+    }
 
-  if (!response.ok) {
-    const error = new Error(data.message || `HTTP Error: Status ${response.status}`);
-    error.status = response.status;
-    error.data = data;
+    if (!response.ok) {
+      const error = new Error(data.message || `HTTP Error: Status ${response.status}`);
+      error.status = response.status;
+      error.data = data;
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    if (error.name === "TypeError" && error.message.includes("fetch")) {
+      const netError = new Error("Unable to connect to the NEXORA backend. Please verify the API server is online.");
+      netError.status = 503;
+      throw netError;
+    }
     throw error;
   }
-
-  return data;
 };
 
 export const authService = {
@@ -79,6 +93,17 @@ export const authService = {
         Authorization: `Bearer ${accessToken}`
       },
       body: JSON.stringify(updateData)
+    });
+  },
+
+  // PUT /api/v1/users/me (preferences shortcut)
+  updatePreferences: async (accessToken, preferences) => {
+    return await authFetch("/users/me", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({ preferences })
     });
   },
 

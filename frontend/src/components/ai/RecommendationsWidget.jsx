@@ -13,7 +13,10 @@ export const RecommendationsWidget = () => {
   const [error, setError] = useState("");
 
   const fetchOrGenerateRecommendation = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError("");
 

@@ -13,7 +13,7 @@ const REFRESH_COOKIE_NAME = "nexora_refreshToken";
 const getRefreshCookieOptions = () => ({
   httpOnly: true,
   secure: NODE_ENV === "production",
-  sameSite: "lax",
+  sameSite: NODE_ENV === "production" ? "none" : "lax",
   path: "/api/v1/auth",
   maxAge: REFRESH_TOKEN_EXPIRES_DAYS * 24 * 60 * 60 * 1000
 });

@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * EmptyState — reusable empty / zero-data placeholder.
  * Props: icon, title, description, action, size ("sm" | "md" | "lg")
@@ -33,6 +35,25 @@ export function EmptyState({
 }) {
   const s = sizeMap[size] ?? sizeMap.md;
 
+  const renderIcon = () => {
+    if (!icon) return null;
+    if (typeof icon === 'string') {
+      return (
+        <span className={s.iconBox.split(' ').find((c) => c.startsWith('text-'))}>
+          {icon}
+        </span>
+      );
+    }
+    if (React.isValidElement(icon)) {
+      return icon;
+    }
+    if (typeof icon === 'function' || (typeof icon === 'object' && icon !== null)) {
+      const IconComponent = icon;
+      return <IconComponent className="w-6 h-6 text-[#9C9384]" size={24} />;
+    }
+    return null;
+  };
+
   return (
     <div
       className={`flex flex-col items-center justify-center text-center ${s.wrapper}`}
@@ -41,13 +62,7 @@ export function EmptyState({
         <div
           className={`flex items-center justify-center rounded-2xl bg-[#22201D] border border-[#2D2925] ${s.iconBox}`}
         >
-          {typeof icon === 'string' ? (
-            <span className={s.iconBox.split(' ').find((c) => c.startsWith('text-'))}>
-              {icon}
-            </span>
-          ) : (
-            <span className="text-[#9C9384]">{icon}</span>
-          )}
+          {renderIcon()}
         </div>
       )}
 

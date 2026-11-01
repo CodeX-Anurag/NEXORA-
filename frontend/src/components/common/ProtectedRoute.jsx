@@ -8,7 +8,11 @@ export const ProtectedRoute = ({ children }) => {
   const location = useLocation();
 
   if (isLoading) {
-    return <Loader text="Authenticating session..." fullScreen />;
+    return (
+      <div className="p-8 sm:p-12 flex flex-col items-center justify-center min-h-[350px]">
+        <Loader text="Verifying session..." size="md" />
+      </div>
+    );
   }
 
   if (!isAuthenticated) {

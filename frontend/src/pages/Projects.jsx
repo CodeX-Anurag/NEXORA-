@@ -35,7 +35,10 @@ export const Projects = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const fetchProjects = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError("");
     try {

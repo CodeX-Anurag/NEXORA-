@@ -144,7 +144,10 @@ export const Viva = () => {
 
   // Fetch Viva History
   const loadHistory = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setIsLoadingHistory(false);
+      return;
+    }
     setIsLoadingHistory(true);
     try {
       const res = await vivaService.getHistory(accessToken);

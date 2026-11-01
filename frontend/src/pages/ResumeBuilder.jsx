@@ -67,7 +67,10 @@ export const ResumeBuilder = () => {
    * 1. Initial Data Fetching: Retrieve user's confirmed Profile & synthesized resume
    */
   const loadInitialData = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError("");
 

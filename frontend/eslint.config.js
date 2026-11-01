@@ -26,6 +26,8 @@ export default [
         document: true,
         navigator: true,
         console: true,
+        localStorage: true,
+        sessionStorage: true,
         fetch: true,
         setTimeout: true,
         clearTimeout: true,

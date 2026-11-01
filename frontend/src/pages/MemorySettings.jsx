@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Button from "../components/common/Button";
 import Loader from "../components/common/Loader";
 import ErrorMessage from "../components/common/ErrorMessage";
@@ -8,7 +8,7 @@ import authService from "../services/auth.service";
 import { useAuth } from "../context/AuthContext";
 
 export default function MemorySettings() {
-  const { user, refreshUser } = useAuth();
+  const { user, accessToken, updateProfile, refreshUser } = useAuth();
   const [memories, setMemories] = useState([]);
   const [activeType, setActiveType] = useState("");
   const [loading, setLoading] = useState(true);
@@ -31,6 +31,23 @@ export default function MemorySettings() {
     preferenceMemoryEnabled: true
   });
 
+  const fetchMemories = useCallback(async () => {
+    if (!accessToken) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const res = await memoryService.getMemories(accessToken, activeType);
+      setMemories(res.memories || []);
+    } catch (err) {
+      setError(err.message || "Failed to load memory items.");
+    } finally {
+      setLoading(false);
+    }
+  }, [accessToken, activeType]);
+
   useEffect(() => {
     fetchMemories();
     if (user?.preferences) {
@@ -42,20 +59,7 @@ export default function MemorySettings() {
         preferenceMemoryEnabled: user.preferences.preferenceMemoryEnabled !== false
       }));
     }
-  }, [user, activeType]);
-
-  const fetchMemories = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const res = await memoryService.getMemories(activeType);
-      setMemories(res.memories || []);
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to load memory items.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [user, activeType, fetchMemories]);
 
   const handleTogglePrivacy = async (key) => {
     const updated = {
@@ -64,12 +68,18 @@ export default function MemorySettings() {
     };
     setPrivacySettings(updated);
     try {
-      await authService.updatePreferences(updated);
-      await refreshUser();
+      if (updateProfile) {
+        await updateProfile({ preferences: updated });
+      } else if (authService.updatePreferences) {
+        await authService.updatePreferences(accessToken, updated);
+      }
+      if (refreshUser) {
+        await refreshUser();
+      }
       setSuccessMsg("Privacy preferences saved.");
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to update preferences.");
+      setError(err.message || "Failed to update preferences.");
     }
   };
 
@@ -80,8 +90,8 @@ export default function MemorySettings() {
     setActionLoading(true);
     setError("");
     try {
-      const res = await memoryService.createMemory({
-        memory: newMemoryText,
+      const res = await memoryService.createMemory(accessToken, {
+        memory: newMemoryText.trim(),
         type: newMemoryType,
         importance: parseInt(newImportance, 10),
         source: "explicit"
@@ -92,7 +102,7 @@ export default function MemorySettings() {
       setSuccessMsg("Memory stored successfully.");
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create memory.");
+      setError(err.message || "Failed to create memory.");
     } finally {
       setActionLoading(false);
     }
@@ -102,12 +112,12 @@ export default function MemorySettings() {
     setActionLoading(true);
     setError("");
     try {
-      await memoryService.deleteMemory(id);
+      await memoryService.deleteMemory(accessToken, id);
       setMemories((prev) => prev.filter((m) => m._id !== id));
       setSuccessMsg("Memory deleted.");
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to delete memory.");
+      setError(err.message || "Failed to delete memory.");
     } finally {
       setActionLoading(false);
     }
@@ -117,13 +127,13 @@ export default function MemorySettings() {
     setActionLoading(true);
     setError("");
     try {
-      await memoryService.deleteAllMemories();
+      await memoryService.deleteAllMemories(accessToken);
       setMemories([]);
       setIsClearModalOpen(false);
       setSuccessMsg("All user memories cleared.");
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to clear memories.");
+      setError(err.message || "Failed to clear memories.");
     } finally {
       setActionLoading(false);
     }

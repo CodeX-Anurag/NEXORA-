@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Button from "../components/common/Button";
@@ -13,12 +13,32 @@ export const Register = () => {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { register } = useAuth();
+  const { register, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  // If already authenticated, redirect to dashboard
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+
+    if (!trimmedName) {
+      setError("Please enter your full name.");
+      return;
+    }
+
+    if (!trimmedEmail) {
+      setError("Please enter your email address.");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
@@ -33,7 +53,12 @@ export const Register = () => {
     setIsSubmitting(true);
 
     try {
-      await register(name, email, password);
+      await register(trimmedName, trimmedEmail, password);
+      try {
+        localStorage.setItem("nexora_last_email", trimmedEmail);
+      } catch {
+        // ignore
+      }
       navigate("/dashboard", { replace: true });
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.");
@@ -51,41 +76,56 @@ export const Register = () => {
 
       {error && <ErrorMessage title="Registration Failed" message={error} />}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} method="post" className="space-y-4" autoComplete="on">
         <Input
+          id="register-name"
+          name="name"
           label="Full Name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Alex Rivera"
+          autoComplete="name"
+          autoCapitalize="words"
           required
         />
 
         <Input
+          id="register-email"
+          name="email"
           label="Email Address"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="alex@university.edu"
+          autoComplete="username email"
+          autoCapitalize="none"
+          spellCheck="false"
           required
         />
 
         <Input
+          id="register-password"
+          name="password"
           label="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="At least 8 characters"
           helperText="Minimum 8 characters"
+          autoComplete="new-password"
           required
         />
 
         <Input
+          id="register-confirm-password"
+          name="confirmPassword"
           label="Confirm Password"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Repeat password"
+          autoComplete="new-password"
           required
         />
 

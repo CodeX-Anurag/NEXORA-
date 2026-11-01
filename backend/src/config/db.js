@@ -5,10 +5,13 @@ let memoryServer = null;
 
 const connectDB = async () => {
   try {
+    const isCloud = MONGODB_URI && (MONGODB_URI.includes("mongodb+srv") || (!MONGODB_URI.includes("127.0.0.1") && !MONGODB_URI.includes("localhost")));
+    const timeoutMs = isCloud ? 10000 : 2500;
+
     const conn = await mongoose.connect(MONGODB_URI, {
-      serverSelectionTimeoutMS: 2000
+      serverSelectionTimeoutMS: timeoutMs
     });
-    console.log(`[MongoDB] Connected successfully: ${conn.connection.host}`);
+    console.log(`[MongoDB] Connected successfully to host: ${conn.connection.host}, database: ${conn.connection.name}`);
     return conn;
   } catch (error) {
     console.warn(`[MongoDB Warning] Could not connect to MongoDB (${error.message}).`);

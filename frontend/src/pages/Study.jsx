@@ -40,7 +40,10 @@ export const Study = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const fetchStudySessions = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError("");
     try {
@@ -104,14 +107,15 @@ export const Study = () => {
     }
   };
 
-  const totalMinutes = sessions.reduce((acc, curr) => acc + (curr.duration || 0), 0);
+  const safeSessions = Array.isArray(sessions) ? sessions : [];
+  const totalMinutes = safeSessions.reduce((acc, curr) => acc + (Number(curr?.duration) || 0), 0);
   const totalHours = (totalMinutes / 60).toFixed(1);
 
   const subjectChartData = useMemo(() => {
     const map = {};
-    sessions.forEach((s) => {
-      const sub = s.subject?.trim() || "General";
-      map[sub] = (map[sub] || 0) + (s.duration || 0);
+    safeSessions.forEach((s) => {
+      const sub = s?.subject?.trim() || "General";
+      map[sub] = (map[sub] || 0) + (Number(s?.duration) || 0);
     });
     return Object.entries(map)
       .map(([subject, minutes]) => ({
@@ -121,11 +125,11 @@ export const Study = () => {
       }))
       .sort((a, b) => b.minutes - a.minutes)
       .slice(0, 8);
-  }, [sessions]);
+  }, [safeSessions]);
 
   const uniqueSubjects = useMemo(() => {
-    return new Set(sessions.map((s) => s.subject?.trim()).filter(Boolean)).size;
-  }, [sessions]);
+    return new Set(safeSessions.map((s) => s?.subject?.trim()).filter(Boolean)).size;
+  }, [safeSessions]);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 animate-fade-in">

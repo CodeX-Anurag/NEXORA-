@@ -25,7 +25,10 @@ export const Dashboard = () => {
   const [error, setError] = useState("");
 
   const fetchDashboardData = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     setError("");
 

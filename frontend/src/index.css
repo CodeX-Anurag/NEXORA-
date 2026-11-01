@@ -21,6 +21,23 @@
   --accent-amber: #d97706;
 }
 
+[data-theme="light"],
+.light {
+  --bg-canvas: #f8f6f0;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f0ece3;
+  --bg-surface-hover: #e8e3d8;
+  --border-subtle: #e2ddd4;
+  --border-strong: #cac3b5;
+  --text-primary: #181716;
+  --text-secondary: #454039;
+  --text-muted: #6e675d;
+  --accent-terracotta: #d85c2c;
+  --accent-terracotta-hover: #c44e20;
+  --accent-sage: #268b57;
+  --accent-amber: #b45309;
+}
+
 @layer base {
   * {
     border-color: var(--border-subtle);
@@ -89,6 +106,224 @@
 
 .nexora-glow-indigo {
   box-shadow: 0 0 20px -5px rgba(99, 102, 241, 0.15);
+}
+
+/* ========================================================
+   DAY MODE (LIGHT THEME) OVERRIDES & ADAPTATIONS
+   ======================================================== */
+html[data-theme="light"],
+html.light {
+  color-scheme: light;
+}
+
+html[data-theme="light"] body,
+html.light body {
+  background-color: #f8f6f0 !important;
+  color: #181716 !important;
+}
+
+/* Base Layout Backgrounds */
+html[data-theme="light"] [class*="bg-[#121110]"],
+html.light [class*="bg-[#121110]"] {
+  background-color: #f8f6f0 !important;
+}
+
+html[data-theme="light"] [class*="bg-[#161513]"],
+html.light [class*="bg-[#161513]"] {
+  background-color: #ffffff !important;
+}
+
+html[data-theme="light"] [class*="bg-[#141312]"],
+html.light [class*="bg-[#141312]"] {
+  background-color: #fbf9f5 !important;
+}
+
+html[data-theme="light"] [class*="bg-[#181715]"],
+html[data-theme="light"] [class*="bg-[#191816]"],
+html.light [class*="bg-[#181715]"],
+html.light [class*="bg-[#191816]"] {
+  background-color: #ffffff !important;
+}
+
+html[data-theme="light"] [class*="bg-[#1A1917]"],
+html[data-theme="light"] [class*="bg-[#1C1A17]"],
+html[data-theme="light"] [class*="bg-[#1E1C19]"],
+html.light [class*="bg-[#1A1917]"],
+html.light [class*="bg-[#1C1A17]"],
+html.light [class*="bg-[#1E1C19]"] {
+  background-color: #f4f0e8 !important;
+}
+
+html[data-theme="light"] [class*="bg-[#201E1B]"],
+html[data-theme="light"] [class*="bg-[#22201D]"],
+html[data-theme="light"] [class*="bg-[#24211D]"],
+html[data-theme="light"] [class*="bg-[#25221F]"],
+html[data-theme="light"] [class*="bg-[#25221E]"],
+html[data-theme="light"] [class*="bg-[#262420]"],
+html[data-theme="light"] [class*="bg-[#2A2724]"],
+html.light [class*="bg-[#201E1B]"],
+html.light [class*="bg-[#22201D]"],
+html.light [class*="bg-[#24211D]"],
+html.light [class*="bg-[#25221F]"],
+html.light [class*="bg-[#25221E]"],
+html.light [class*="bg-[#262420]"],
+html.light [class*="bg-[#2A2724]"] {
+  background-color: #ede8df !important;
+}
+
+/* Hover Backgrounds */
+html[data-theme="light"] [class*="hover:bg-[#201E1B]"]:hover,
+html[data-theme="light"] [class*="hover:bg-[#22201D]"]:hover,
+html[data-theme="light"] [class*="hover:bg-[#25221E]"]:hover,
+html[data-theme="light"] [class*="hover:bg-[#2A2723]"]:hover,
+html[data-theme="light"] [class*="hover:bg-[#2A2724]"]:hover,
+html.light [class*="hover:bg-[#201E1B]"]:hover,
+html.light [class*="hover:bg-[#22201D]"]:hover,
+html.light [class*="hover:bg-[#25221E]"]:hover,
+html.light [class*="hover:bg-[#2A2723]"]:hover,
+html.light [class*="hover:bg-[#2A2724]"]:hover {
+  background-color: #e5dfd4 !important;
+}
+
+/* Text Colors */
+html[data-theme="light"] [class*="text-[#FAF7F2]"],
+html.light [class*="text-[#FAF7F2]"] {
+  color: #181716 !important;
+}
+
+html[data-theme="light"] [class*="text-[#CDC5B6]"],
+html.light [class*="text-[#CDC5B6]"] {
+  color: #3f3a33 !important;
+}
+
+html[data-theme="light"] [class*="text-[#A89F91]"],
+html.light [class*="text-[#A89F91]"] {
+  color: #554f47 !important;
+}
+
+html[data-theme="light"] [class*="text-[#9C9384]"],
+html.light [class*="text-[#9C9384]"] {
+  color: #6c645a !important;
+}
+
+html[data-theme="light"] [class*="text-[#877E71]"],
+html[data-theme="light"] [class*="text-[#787165]"],
+html.light [class*="text-[#877E71]"],
+html.light [class*="text-[#787165]"] {
+  color: #7f776d !important;
+}
+
+html[data-theme="light"] [class*="hover:text-[#FAF7F2]"]:hover,
+html.light [class*="hover:text-[#FAF7F2]"]:hover {
+  color: #0f0e0d !important;
+}
+
+/* Borders */
+html[data-theme="light"] [class*="border-[#2D2925]"],
+html[data-theme="light"] [class*="border-[#2B2723]"],
+html[data-theme="light"] [class*="border-[#262420]"],
+html[data-theme="light"] [class*="border-[#302C28]"],
+html[data-theme="light"] [class*="border-[#332F2A]"],
+html[data-theme="light"] [class*="border-[#35312C]"],
+html[data-theme="light"] [class*="border-[#38332E]"],
+html[data-theme="light"] [class*="border-[#3A352F]"],
+html[data-theme="light"] [class*="border-[#3D3832]"],
+html[data-theme="light"] [class*="border-[#3F3B35]"],
+html[data-theme="light"] [class*="border-[#47423B]"],
+html.light [class*="border-[#2D2925]"],
+html.light [class*="border-[#2B2723]"],
+html.light [class*="border-[#262420]"],
+html.light [class*="border-[#302C28]"],
+html.light [class*="border-[#332F2A]"],
+html.light [class*="border-[#35312C]"],
+html.light [class*="border-[#38332E]"],
+html.light [class*="border-[#3A352F]"],
+html.light [class*="border-[#3D3832]"],
+html.light [class*="border-[#3F3B35]"],
+html.light [class*="border-[#47423B]"] {
+  border-color: #dfd9ce !important;
+}
+
+html[data-theme="light"] [class*="hover:border-[#38332E]"]:hover,
+html[data-theme="light"] [class*="hover:border-[#3D3833]"]:hover,
+html[data-theme="light"] [class*="hover:border-[#423D37]"]:hover,
+html[data-theme="light"] [class*="hover:border-[#47423B]"]:hover,
+html.light [class*="hover:border-[#38332E]"]:hover,
+html.light [class*="hover:border-[#3D3833]"]:hover,
+html.light [class*="hover:border-[#423D37]"]:hover,
+html.light [class*="hover:border-[#47423B]"]:hover {
+  border-color: #c5beb1 !important;
+}
+
+/* Card and Banner Shadows */
+html[data-theme="light"] .nexora-card,
+html[data-theme="light"] .nexora-card-interactive,
+html.light .nexora-card,
+html.light .nexora-card-interactive {
+  background-color: #ffffff !important;
+  border-color: #dfd9ce !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+}
+
+html[data-theme="light"] .nexora-card-interactive:hover,
+html.light .nexora-card-interactive:hover {
+  background-color: #fcfbfa !important;
+  border-color: #c5beb1 !important;
+}
+
+html[data-theme="light"] .nexora-banner,
+html.light .nexora-banner {
+  background: linear-gradient(135deg, #ffffff 0%, #f7f4ec 100%) !important;
+  border-color: #dfd9ce !important;
+}
+
+html[data-theme="light"] .shadow-xl,
+html[data-theme="light"] .shadow-2xl,
+html.light .shadow-xl,
+html.light .shadow-2xl {
+  box-shadow: 0 4px 20px -2px rgba(25, 20, 15, 0.06), 0 2px 6px -1px rgba(25, 20, 15, 0.03) !important;
+}
+
+/* Form inputs & controls in Day Mode */
+html[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html[data-theme="light"] textarea,
+html[data-theme="light"] select,
+html.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.light textarea,
+html.light select {
+  background-color: #ffffff !important;
+  color: #181716 !important;
+  border-color: #d6cfc3 !important;
+}
+
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder,
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #8c8478 !important;
+}
+
+/* Recharts Tooltips in Light Mode */
+html[data-theme="light"] .recharts-default-tooltip,
+html.light .recharts-default-tooltip {
+  background-color: #ffffff !important;
+  border-color: #dfd9ce !important;
+  color: #181716 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Scrollbars in Light Mode */
+html[data-theme="light"] ::-webkit-scrollbar-track,
+html.light ::-webkit-scrollbar-track {
+  background: #f0ece3;
+}
+html[data-theme="light"] ::-webkit-scrollbar-thumb,
+html.light ::-webkit-scrollbar-thumb {
+  background: #c5beb1;
+}
+html[data-theme="light"] ::-webkit-scrollbar-thumb:hover,
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #aca394;
 }
 
 @media print {

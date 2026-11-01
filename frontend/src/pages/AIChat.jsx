@@ -345,7 +345,9 @@ export const AIChat = () => {
 
   const scrollToBottom = (force = false) => {
     if (force || !userHasScrolledUp) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      if (typeof messagesEndRef.current?.scrollIntoView === "function") {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -376,7 +378,10 @@ export const AIChat = () => {
   };
 
   const fetchConversations = useCallback(async () => {
-    if (!accessToken) return;
+    if (!accessToken) {
+      setIsLoadingConversations(false);
+      return;
+    }
     setIsLoadingConversations(true);
     setError("");
 
@@ -400,7 +405,10 @@ export const AIChat = () => {
 
   const fetchMessages = useCallback(
     async (convId) => {
-      if (!accessToken || !convId) return;
+      if (!accessToken || !convId) {
+        setIsLoadingMessages(false);
+        return;
+      }
 
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
