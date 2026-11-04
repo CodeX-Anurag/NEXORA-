@@ -41,3 +41,6 @@ test-results/
 *.swp
 .DS_Store
 Thumbs.db
+
+# Generated user uploads
+backend/uploads/generated/
