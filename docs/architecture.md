@@ -1,73 +1,342 @@
-# NEXORA — System Architecture & Engineering Specification
+<div align="center">
 
-> **Current Phase:** Phase 5 — AI Foundation Implemented  
-> **Architecture Pattern:** Modular Monolith  
-> **Backend Language:** JavaScript (Node.js + Express.js)  
-> **Database:** MongoDB + Mongoose  
-> **Frontend:** React + Vite + Tailwind CSS + Recharts  
+<img src="docs/assets/banner.svg" alt="NEXORA — AI-Powered Student Productivity & Career Intelligence Platform" width="100%"/>
+
+<br/>
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Gemini](https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
+
+**[Features](#-features) · [Architecture](#-system-architecture) · [Tech Stack](#-technology-stack) · [Getting Started](#-getting-started) · [Roadmap](#-roadmap)**
+
+</div>
 
 ---
 
-## 1. System Architecture Overview
+## 📌 Overview
 
-NEXORA is designed as a **modular monolith**. All backend logic, business rules, security middleware, and AI context orchestration reside within a single version-controlled Node.js + Express application. The frontend is a React single-page application (SPA) built with Vite that interacts exclusively with the backend via a versioned REST API (`/api/v1`).
+Students often manage coursework, personal goals, projects, and career preparation across several disconnected tools.
 
+**NEXORA** brings these into a single workspace. It helps students plan tasks, log study sessions, track progress, explore career skills, build resumes, and learn with AI-powered support.
+
+It is a full-stack web application built with **React**, **Node.js + Express**, **MongoDB**, and the **Google Gemini API**.
+
+## 🎯 Problem & Solution
+
+| Challenge students face | How NEXORA helps |
+|---|---|
+| Juggling many tasks and deadlines | Prioritized task management and a unified dashboard |
+| Inconsistent study habits | Study tracker with progress review |
+| No clear view of progress | Analytics with charts |
+| Scattered projects and career prep | Projects portfolio, career intelligence, resume builder |
+| Limited access to learning support | AI Coach and AI Socratic Viva |
+
+## ✨ Features
+
+<div align="center">
+<img src="docs/assets/features.svg" alt="NEXORA feature overview" width="100%"/>
+</div>
+
+<br/>
+
+```mermaid
+mindmap
+  root((NEXORA))
+    Productivity
+      Dashboard
+      Task Management
+      Study Tracker
+      Analytics
+    Career
+      Career Intelligence
+      Projects Portfolio
+      Resume Builder
+    AI Learning
+      AI Coach
+      AI Socratic Viva
+      Memory and Privacy
+    Platform
+      JWT Authentication
 ```
-USER
-  │
-  ▼
-React + Vite + Tailwind CSS (frontend/src)
-  │
-  ▼ REST / JSON (versioned /api/v1)
-  │
-Node.js + Express Backend (backend/src)
-  │
-  ├──► Middleware (express.json, cookieParser, CORS, Auth, Error Handling)
-  │
-  ├──► Controllers (ai.controller.js, conversation.controller.js)
-  │
-  ├──► Services / Business Logic (ai.service.js, conversation.service.js)
-  │       │
-  │       ├──► AI Abstraction Layer (src/ai/)
-  │       │       ├──► PromptManager
-  │       │       ├──► LLMClient Factory (LLM_PROVIDER)
-  │       │       ├──► Provider Adapters (mock.provider.js, openai.provider.js)
-  │       │       └──► ResponseParser (Sanitizer)
-  │       │
-  │       └──► MongoDB / Mongoose (Conversation.model.js, Message.model.js)
-  │
-  ▼
-Hosted Pre-trained LLM Provider (API Call)
+
+| Module | Description |
+|---|---|
+| 📊 **Dashboard** | Central view of activities, workload, and progress |
+| ✅ **Task Management** | Create, organize, and prioritize tasks with deadlines |
+| 📚 **Study Tracker** | Record study activity and review learning progress |
+| 🧭 **Career Intelligence** | Explore career information, skills, and learning roadmaps |
+| 💻 **Projects Portfolio** | Organize and showcase technical projects |
+| 📄 **Resume Builder** | Create and manage resumes |
+| 📈 **Analytics** | Charts for productivity and learning trends |
+| 🤖 **AI Coach** | AI assistant for explanations, learning support, and guidance |
+| 🎓 **AI Socratic Viva** | Interactive question-driven practice to deepen understanding |
+| 🧠 **Memory & Privacy** | Manage AI memory and privacy settings |
+| 🔐 **Authentication** | JWT-based protected access |
+
+## 🖥️ Screenshots
+
+| Dashboard | Task Management |
+|---|---|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Tasks](docs/screenshots/tasks.png) |
+
+| AI Coach | Analytics |
+|---|---|
+| ![AI Coach](docs/screenshots/ai-coach.png) | ![Analytics](docs/screenshots/analytics.png) |
+
+## 🏗️ System Architecture
+
+NEXORA follows a **client–server architecture**. The React frontend talks to the Express backend over a REST API; the backend handles authentication, business logic, database access, and AI integration.
+
+<div align="center">
+<img src="docs/assets/architecture.svg" alt="NEXORA system architecture" width="100%"/>
+</div>
+
+<br/>
+
+```mermaid
+flowchart LR
+    User(["👤 Student"])
+
+    subgraph FE["Frontend · React + Vite"]
+        UI["UI & Modules"]
+        AIUI["AI Coach Interface"]
+    end
+
+    subgraph BE["Backend · Node.js + Express"]
+        API["REST API"]
+        Auth["JWT Auth & Middleware"]
+        Logic["Application Logic"]
+        AIS["AI Service"]
+    end
+
+    DB[("MongoDB Atlas")]
+    Gemini["Google Gemini API"]
+
+    User --> UI
+    User --> AIUI
+    UI --> API
+    AIUI --> API
+    API --> Auth --> Logic
+    Logic <--> DB
+    Logic --> AIS
+    AIS <--> Gemini
+
+    classDef fe fill:#eef2ff,stroke:#6366f1,color:#1e1b4b
+    classDef be fill:#ecfdf5,stroke:#10b981,color:#064e3b
+    classDef ext fill:#fff7ed,stroke:#f59e0b,color:#78350f
+    class UI,AIUI fe
+    class API,Auth,Logic,AIS be
+    class DB,Gemini ext
 ```
 
+| Layer | Responsibility |
+|---|---|
+| **Frontend** | Renders the interface and handles user interaction |
+| **Backend** | Validates requests and runs application logic |
+| **Authentication** | Protects routes using JWT |
+| **Database** | Persists application data in MongoDB |
+| **AI Integration** | Connects AI features to Google Gemini via API |
+
+## 🔄 How NEXORA Works
+
+### Standard request flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor S as Student
+    participant F as React Frontend
+    participant B as Express Backend
+    participant D as MongoDB
+
+    S->>F: Interact with the UI
+    F->>B: API request (JWT in header)
+    B->>B: Authenticate & validate
+    B->>D: Read / write data
+    D-->>B: Result
+    B-->>F: JSON response
+    F-->>S: Updated interface
+```
+
+### AI-powered request flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor S as Student
+    participant F as React Frontend
+    participant B as Express Backend
+    participant G as Gemini API
+
+    S->>F: Ask a question (AI Coach / Viva)
+    F->>B: Authenticated request
+    B->>B: Validate & build prompt
+    B->>G: Generate response
+    G-->>B: AI output
+    B-->>F: Response
+    F-->>S: Display answer
+```
+
+> The Gemini API key lives only on the backend and is never exposed to the browser.
+
+## 🛠️ Technology Stack
+
+| Category | Technology |
+|---|---|
+| Frontend | React, Vite |
+| Styling | Tailwind CSS |
+| Backend | Node.js, Express.js |
+| Database | MongoDB Atlas, Mongoose |
+| Authentication | JSON Web Tokens (JWT) |
+| AI Integration | Google Gemini API |
+| Visualization | Recharts |
+| Icons | Lucide |
+| Tooling | Git, GitHub |
+| Deployment | Render |
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) and npm
+- [Git](https://git-scm.com/)
+- A MongoDB database (e.g. [MongoDB Atlas](https://www.mongodb.com/atlas))
+- A [Gemini API key](https://aistudio.google.com/app/apikey)
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/CodeX-Anurag/NEXORA-.git
+cd NEXORA-
+```
+
+### 2. Set up the backend
+
+```bash
+cd backend
+npm install
+```
+
+Create `backend/.env`:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+Start the server:
+
+```bash
+npm start
+```
+
+### 3. Set up the frontend
+
+In a new terminal:
+
+```bash
+cd frontend
+npm install
+```
+
+Create `frontend/.env`:
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+Start the dev server:
+
+```bash
+npm run dev
+```
+
+Open the local URL printed by Vite (typically `http://localhost:5173`).
+
+### Environment variables
+
+| Variable | Location | Purpose |
+|---|---|---|
+| `PORT` | backend | Server port |
+| `MONGODB_URI` | backend | MongoDB connection string |
+| `JWT_SECRET` | backend | Secret used to sign JWTs |
+| `GEMINI_API_KEY` | backend | Google Gemini API key |
+| `VITE_API_URL` | frontend | Base URL of the backend API |
+
+## 🔐 Security
+
+- Keep `.env` files out of version control.
+- Never expose private API keys in frontend code.
+- Use long, random values for `JWT_SECRET`.
+- Restrict database network access to trusted sources.
+- Avoid logging passwords, tokens, or credentials.
+- Use separate configuration for development and production.
+
+## 🧪 Testing
+
+```bash
+npm test
+```
+
+Run this from the `backend` or `frontend` directory, according to the scripts defined in each `package.json`.
+
+## 🧠 AI Integration
+
+NEXORA calls Google Gemini through its API, so no model is hosted or trained locally. The backend sends requests to the provider and returns responses to the frontend.
+
+AI features are meant to **support** learning and productivity, not replace independent study or guarantee academic or career outcomes.
+
+## 🔮 Roadmap
+
+```mermaid
+timeline
+    title NEXORA Roadmap
+    section AI
+        Reliability : AI provider fallback : Improved quota handling
+        Learning : RAG over notes and documents : Personalized study plans : AI-generated quizzes
+    section Product
+        Insights : Improved study analytics
+        Career : More interview practice tools
+    section Platform
+        Operations : Monitoring : Deployment reliability
+```
+
+- [ ] AI provider fallback and improved quota handling
+- [ ] Retrieval-Augmented Generation (RAG) for notes and documents
+- [ ] Personalized AI study-plan generation
+- [ ] AI-generated quizzes and revision material
+- [ ] Improved study analytics and progress insights
+- [ ] Stronger monitoring and deployment reliability
+- [ ] Additional career preparation and interview practice tools
+
+## 🤝 Contributing
+
+Suggestions and improvements are welcome. Open an issue to discuss a change, or fork the repository and submit a pull request.
+
+## 👨‍💻 Author
+
+**Anurag Soni** — B.Tech, Computer Science & Engineering
+GitHub: [@CodeX-Anurag](https://github.com/CodeX-Anurag)
+
+## 🙏 Acknowledgements
+
+NEXORA was built as a student software project and learning experience, with implementation, testing, debugging, and refinement supported by AI-assisted development tools.
+
+## 📄 License
+
+No license has been specified yet. Add a `LICENSE` file (for example, MIT) to let others use, modify, or distribute the project.
+
 ---
 
-## 2. Implemented API Map
+<div align="center">
 
-| Module | Method | Endpoint | Access | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| **SYSTEM** | `GET` | `/api/v1/health` | Public | Liveness and readiness status check |
-| **AUTH** | `POST` | `/api/v1/auth/register` | Public | Register new user account |
-| **AUTH** | `POST` | `/api/v1/auth/login` | Public | Authenticate user & set httpOnly refresh cookie |
-| **AUTH** | `POST` | `/api/v1/auth/refresh` | Cookie | Rotate refresh session & issue access token |
-| **AUTH** | `POST` | `/api/v1/auth/logout` | Cookie | Revoke refresh session & clear cookie |
-| **AUTH** | `GET` | `/api/v1/auth/me` | Protected | Fetch current authenticated user context |
-| **USERS** | `GET/PUT/DELETE` | `/api/v1/users/me` | Protected | Profile management & cascade account deletion |
-| **TASKS** | `GET/POST/PUT/DELETE` | `/api/v1/tasks` | Protected | Task management & completion tracking |
-| **STUDY** | `GET/POST/DELETE` | `/api/v1/study/sessions` | Protected | Study session recording & subject focus |
-| **SKILLS** | `GET/POST/PUT/DELETE` | `/api/v1/skills` & `/users/me/skills` | Protected | Skill catalog & proficiency ratings |
-| **CAREER** | `GET/PUT` | `/api/v1/careers` & `/users/me/career` | Protected | Target role & deterministic skill gap analysis |
-| **PROJECTS**| `GET/POST/PUT/DELETE` | `/api/v1/projects` | Protected | Student portfolio projects |
-| **ANALYTICS**| `GET` | `/api/v1/analytics/dashboard` | Protected | Deterministic analytics overview |
-| **AI** | `POST` | `/api/v1/ai/chat` | Protected | Generate AI Coach response via LLMClient |
-| **CONVERSATIONS** | `GET/POST` | `/api/v1/conversations` | Protected | List and create chat conversation sessions |
-| **MESSAGES** | `GET/POST` | `/api/v1/conversations/:id/messages` | Protected | Fetch & append messages to conversation |
+**NEXORA — Your journey from student productivity to career readiness.**
 
----
-
-## 3. Provider-Agnostic AI Adapter Pipeline
-
-1. **Strict Abstraction:** All LLM calls pass through `LLMClient`. Components, services, and controllers **NEVER** import or reference provider SDKs directly.
-2. **Context Bounding:** `PromptManager.prepareContext()` restricts context window to the last 15 messages of the active chat.
-3. **Response Sanitization:** `ResponseParser.parse()` strips dangerous tags from model outputs before sending payload to the frontend.
-4. **Secret Isolation:** Provider credentials (`LLM_API_KEY`, `LLM_MODEL`) are kept strictly on the backend.
+</div>
