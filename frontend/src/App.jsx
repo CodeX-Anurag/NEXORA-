@@ -19,12 +19,16 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import Viva from "./pages/Viva";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import StartupSplash from "./components/common/StartupSplash";
 import healthService from "./services/health.service";
 
 export const App = () => {
   const [apiStatus, setApiStatus] = useState("checking");
+  const [showSplash, setShowSplash] = useState(true);
 
   const verifyHealth = async () => {
     setApiStatus("checking");
@@ -51,12 +55,15 @@ export const App = () => {
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
+          {showSplash && <StartupSplash onFinish={() => setShowSplash(false)} />}
           <PageLayout apiStatus={apiStatus} onRefreshHealth={verifyHealth}>
             <ErrorBoundary>
               <Routes>
               <Route path="/" element={<Home onRefreshHealth={verifyHealth} />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route
                 path="/dashboard"
                 element={

@@ -30,20 +30,22 @@ export const CodingStatsWidget = ({ leetcodeConnection, codeforcesConnection }) 
   const cfContribution = Number(cfData.contribution) || 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       {/* 1. LeetCode Card */}
       {hasLeetcode && (
-        <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4">
+        <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] space-y-4 shadow-[0_1px_3px_rgba(16,24,40,0.04)]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Terminal className="w-5 h-5 text-[#E0693B]" />
-              <h3 className="font-bold text-base text-[#FAF7F2] font-display">LeetCode Practice</h3>
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                <Terminal className="w-4 h-4" />
+              </div>
+              <h3 className="font-bold text-base text-[#172033] font-display">LeetCode Practice</h3>
             </div>
             <span
-              className={`px-2 py-0.5 rounded text-[10px] font-semibold flex items-center gap-1 ${
+              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1 ${
                 leetcodeConnection.verificationStatus === "api_verified"
-                  ? "bg-[#2EA366]/10 text-[#2EA366] border border-[#2EA366]/20"
-                  : "bg-amber-500/10 text-amber-300 border border-amber-500/20"
+                  ? "bg-[#ECFDF3] text-[#12B76A] border border-[#A6F4C5]"
+                  : "bg-[#FFFAEB] text-[#F79009] border border-[#FEDF89]"
               }`}
             >
               <CheckCircle2 className="w-2.5 h-2.5" />
@@ -53,37 +55,37 @@ export const CodingStatsWidget = ({ leetcodeConnection, codeforcesConnection }) 
 
           <div className="flex items-baseline justify-between">
             <div>
-              <span className="text-3xl font-extrabold font-mono text-[#FAF7F2]">{totalLc}</span>
-              <span className="text-xs text-[#9C9384] ml-2">Problems Solved</span>
+              <span className="text-3xl font-extrabold font-mono text-[#172033]">{totalLc}</span>
+              <span className="text-xs text-[#667085] ml-2 font-medium">Problems Solved</span>
             </div>
             {hasContestRating && (
               <div className="text-right">
-                <span className="text-sm font-bold font-mono text-[#E0693B]">{Math.round(contestRating)}</span>
-                <p className="text-[10px] text-[#787165]">Contest Rating</p>
+                <span className="text-sm font-bold font-mono text-[#4F7CFF]">{Math.round(contestRating)}</span>
+                <p className="text-[10px] text-[#667085]">Contest Rating</p>
               </div>
             )}
           </div>
 
           {/* Difficulty Progress Stack */}
-          <div className="w-full h-2.5 rounded-full bg-[#141312] overflow-hidden flex border border-[#2D2925]">
-            <div style={{ width: `${easyPct}%` }} className="bg-[#2EA366] h-full" title={`Easy: ${easy}`} />
-            <div style={{ width: `${medPct}%` }} className="bg-[#E0693B] h-full" title={`Medium: ${medium}`} />
-            <div style={{ width: `${hardPct}%` }} className="bg-rose-500 h-full" title={`Hard: ${hard}`} />
+          <div className="w-full h-2 rounded-full bg-[#F1F4F9] overflow-hidden flex border border-[#E7EAF0]">
+            <div style={{ width: `${easyPct}%` }} className="bg-[#12B76A] h-full" title={`Easy: ${easy}`} />
+            <div style={{ width: `${medPct}%` }} className="bg-[#F79009] h-full" title={`Medium: ${medium}`} />
+            <div style={{ width: `${hardPct}%` }} className="bg-[#F04438] h-full" title={`Hard: ${hard}`} />
           </div>
 
           {/* Detail Counters */}
           <div className="grid grid-cols-3 gap-2 pt-1 text-center text-xs">
-            <div className="p-2 rounded-lg bg-[#141312] border border-[#2D2925]">
-              <span className="text-[10px] text-[#2EA366] font-semibold block">Easy</span>
-              <span className="font-mono font-bold text-[#FAF7F2]">{easy}</span>
+            <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E7EAF0]">
+              <span className="text-[10px] text-[#12B76A] font-semibold block">Easy</span>
+              <span className="font-mono font-bold text-[#172033]">{easy}</span>
             </div>
-            <div className="p-2 rounded-lg bg-[#141312] border border-[#2D2925]">
-              <span className="text-[10px] text-[#E0693B] font-semibold block">Medium</span>
-              <span className="font-mono font-bold text-[#FAF7F2]">{medium}</span>
+            <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E7EAF0]">
+              <span className="text-[10px] text-[#F79009] font-semibold block">Medium</span>
+              <span className="font-mono font-bold text-[#172033]">{medium}</span>
             </div>
-            <div className="p-2 rounded-lg bg-[#141312] border border-[#2D2925]">
-              <span className="text-[10px] text-rose-400 font-semibold block">Hard</span>
-              <span className="font-mono font-bold text-[#FAF7F2]">{hard}</span>
+            <div className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E7EAF0]">
+              <span className="text-[10px] text-[#F04438] font-semibold block">Hard</span>
+              <span className="font-mono font-bold text-[#172033]">{hard}</span>
             </div>
           </div>
         </div>
@@ -91,41 +93,43 @@ export const CodingStatsWidget = ({ leetcodeConnection, codeforcesConnection }) 
 
       {/* 2. Codeforces Card */}
       {hasCodeforces && (
-        <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4">
+        <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] space-y-4 shadow-[0_1px_3px_rgba(16,24,40,0.04)]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-[#3B82F6]" />
-              <h3 className="font-bold text-base text-[#FAF7F2] font-display">Codeforces Rating</h3>
+              <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F7CFF] flex items-center justify-center">
+                <Trophy className="w-4 h-4" />
+              </div>
+              <h3 className="font-bold text-base text-[#172033] font-display">Codeforces Rating</h3>
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#2EA366]/10 text-[#2EA366] border border-[#2EA366]/20 flex items-center gap-1">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#ECFDF3] text-[#12B76A] border border-[#A6F4C5] flex items-center gap-1">
               <CheckCircle2 className="w-2.5 h-2.5" /> API-Verified
             </span>
           </div>
 
           <div className="flex items-baseline justify-between">
             <div>
-              <span className="text-3xl font-extrabold font-mono text-[#3B82F6]">{cfRating}</span>
-              <span className="text-xs text-[#CDC5B6] font-semibold ml-2 capitalize">({cfRank})</span>
+              <span className="text-3xl font-extrabold font-mono text-[#4F7CFF]">{cfRating}</span>
+              <span className="text-xs text-[#667085] font-semibold ml-2 capitalize">({cfRank})</span>
             </div>
             <div className="text-right">
-              <span className="text-xs font-mono text-[#9C9384]">Peak: {cfMaxRating}</span>
-              <p className="text-[10px] text-[#787165]">{cfContestCount} Contests</p>
+              <span className="text-xs font-mono text-[#172033] font-medium">Peak: {cfMaxRating}</span>
+              <p className="text-[10px] text-[#667085]">{cfContestCount} Contests</p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925] space-y-1 text-xs">
-            <div className="flex justify-between text-[#9C9384]">
+          <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E7EAF0] space-y-1.5 text-xs">
+            <div className="flex justify-between text-[#667085]">
               <span>Rank Tier:</span>
-              <span className="font-semibold text-[#FAF7F2] capitalize">{cfRank}</span>
+              <span className="font-semibold text-[#172033] capitalize">{cfRank}</span>
             </div>
-            <div className="flex justify-between text-[#9C9384]">
+            <div className="flex justify-between text-[#667085]">
               <span>Community Contribution:</span>
-              <span className="font-mono text-[#2EA366] font-medium">{cfContribution}</span>
+              <span className="font-mono text-[#12B76A] font-semibold">{cfContribution}</span>
             </div>
           </div>
 
-          <p className="text-[11px] text-[#787165]">
-            Live data synchronized directly from the official Codeforces REST API.
+          <p className="text-[11px] text-[#98A2B3]">
+            Live telemetry synchronized from the official Codeforces REST API.
           </p>
         </div>
       )}

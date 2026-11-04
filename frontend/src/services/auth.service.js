@@ -61,6 +61,30 @@ export const authService = {
     });
   },
 
+  // POST /api/v1/auth/forgot-password
+  forgotPassword: async (email) => {
+    return await authFetch("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ email })
+    });
+  },
+
+  // POST /api/v1/auth/verify-reset-token
+  verifyResetToken: async (token) => {
+    return await authFetch("/auth/verify-reset-token", {
+      method: "POST",
+      body: JSON.stringify({ token })
+    });
+  },
+
+  // POST /api/v1/auth/reset-password
+  resetPassword: async (token, password) => {
+    return await authFetch("/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify({ token, password })
+    });
+  },
+
   // POST /api/v1/auth/refresh
   refresh: async () => {
     return await authFetch("/auth/refresh", {

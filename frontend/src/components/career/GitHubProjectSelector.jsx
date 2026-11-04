@@ -116,20 +116,22 @@ export const GitHubProjectSelector = ({
   const selectedCount = Object.keys(selectedMap).length;
 
   return (
-    <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-5">
+    <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] space-y-5 shadow-[0_1px_3px_rgba(16,24,40,0.04)]">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#2D2925] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E7EAF0] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <FolderGit2 className="w-5 h-5 text-[#E0693B]" />
-            <h3 className="text-base font-bold text-[#FAF7F2] font-display">
+            <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4F7CFF] flex items-center justify-center">
+              <FolderGit2 className="w-4 h-4" />
+            </div>
+            <h3 className="text-base font-bold text-[#172033] font-display">
               GitHub Repositories for Resume & Portfolio
             </h3>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#E0693B]/10 text-[#E0693B] border border-[#E0693B]/25">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#EEF2FF] text-[#4F7CFF] border border-[#4F7CFF]/20">
               {selectedCount} Selected
             </span>
           </div>
-          <p className="text-xs text-[#9C9384] mt-1">
+          <p className="text-xs text-[#667085] mt-1">
             Select verified repositories to showcase on your ATS resume and NEXORA portfolio. You can customize descriptions and achievements.
           </p>
         </div>
@@ -140,7 +142,7 @@ export const GitHubProjectSelector = ({
             size="sm"
             onClick={handleSave}
             isLoading={isSaving}
-            className="text-xs flex items-center gap-1"
+            className="text-xs flex items-center gap-1.5"
           >
             <Save className="w-3.5 h-3.5" /> Save Selection
           </Button>
@@ -150,7 +152,7 @@ export const GitHubProjectSelector = ({
             size="sm"
             onClick={onSyncToResume}
             isLoading={isSyncing}
-            className="text-xs flex items-center gap-1"
+            className="text-xs flex items-center gap-1.5"
           >
             <Sparkles className="w-3.5 h-3.5" /> Sync to Resume Profile
           </Button>
@@ -158,7 +160,7 @@ export const GitHubProjectSelector = ({
       </div>
 
       {saveBanner && (
-        <div className="p-3 rounded-xl bg-[#2EA366]/10 border border-[#2EA366]/20 text-[#2EA366] text-xs flex items-center gap-2">
+        <div className="p-3 rounded-xl bg-[#ECFDF3] border border-[#A6F4C5] text-[#027A48] text-xs flex items-center gap-2">
           <Check className="w-4 h-4" /> {saveBanner}
         </div>
       )}
@@ -181,8 +183,8 @@ export const GitHubProjectSelector = ({
               key={repoId}
               className={`p-4 rounded-xl border transition-all ${
                 isSelected
-                  ? "bg-[#1C1A17] border-[#E0693B]/40 shadow-sm"
-                  : "bg-[#141312] border-[#2D2925] opacity-75 hover:opacity-100"
+                  ? "bg-[#EEF2FF]/30 border-[#4F7CFF]/40 shadow-xs"
+                  : "bg-white border-[#E7EAF0] hover:border-[#D0D5DD]"
               }`}
             >
               <div className="flex items-start justify-between gap-3">
@@ -192,24 +194,24 @@ export const GitHubProjectSelector = ({
                     id={`repo-chk-${repoId}`}
                     checked={isSelected}
                     onChange={() => toggleSelectRepo(repo, idx)}
-                    className="w-4 h-4 rounded border-[#2D2925] text-[#E0693B] focus:ring-0 cursor-pointer"
+                    className="w-4 h-4 rounded border-[#D0D5DD] text-[#4F7CFF] focus:ring-4 focus:ring-[#4F7CFF]/10 cursor-pointer"
                   />
                   <div>
                     <label
                       htmlFor={`repo-chk-${repoId}`}
-                      className="text-sm font-bold text-[#FAF7F2] font-display cursor-pointer hover:text-[#E0693B]"
+                      className="text-sm font-bold text-[#172033] font-display cursor-pointer hover:text-[#4F7CFF] transition-colors"
                     >
                       {itemData.title || repo.name || "Untitled Project"}
                     </label>
-                    <div className="flex items-center gap-3 text-[11px] text-[#9C9384] mt-0.5">
+                    <div className="flex items-center gap-3 text-[11px] text-[#667085] mt-0.5">
                       {repo.language && (
-                        <span className="font-mono text-[#E0693B] font-medium">{repo.language}</span>
+                        <span className="font-mono text-[#4F7CFF] font-semibold">{repo.language}</span>
                       )}
                       <span className="flex items-center gap-0.5">
-                        <Star className="w-3 h-3 text-amber-400" /> {Number(repo.stars) || 0}
+                        <Star className="w-3 h-3 text-amber-500" /> {Number(repo.stars) || 0}
                       </span>
                       <span className="flex items-center gap-0.5">
-                        <GitFork className="w-3 h-3 text-[#9C9384]" /> {Number(repo.forks) || 0}
+                        <GitFork className="w-3 h-3 text-[#98A2B3]" /> {Number(repo.forks) || 0}
                       </span>
                     </div>
                   </div>
@@ -221,7 +223,7 @@ export const GitHubProjectSelector = ({
                       href={safeUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-1 text-[#787165] hover:text-[#FAF7F2]"
+                      className="p-1 text-[#98A2B3] hover:text-[#172033] transition-colors"
                       title="View on GitHub"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -231,7 +233,7 @@ export const GitHubProjectSelector = ({
                     <button
                       type="button"
                       onClick={() => setExpandedId(isExpanded ? null : repoId)}
-                      className="p-1 text-[#787165] hover:text-[#E0693B]"
+                      className="p-1 text-[#98A2B3] hover:text-[#4F7CFF] transition-colors cursor-pointer"
                       title="Edit project details"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -241,27 +243,27 @@ export const GitHubProjectSelector = ({
               </div>
 
               {/* Description preview */}
-              <p className="text-xs text-[#9C9384] mt-2 line-clamp-2 leading-relaxed">
+              <p className="text-xs text-[#667085] mt-2 line-clamp-2 leading-relaxed">
                 {itemData.description || "No description provided."}
               </p>
 
-              {/* Expanded Inline Editor (When Selected & Expanded) */}
+              {/* Expanded Inline Editor */}
               {isSelected && isExpanded && (
-                <div className="mt-3 pt-3 border-t border-[#2D2925] space-y-2.5 text-xs animate-fade-in">
+                <div className="mt-3 pt-3 border-t border-[#E7EAF0] space-y-2.5 text-xs animate-fade-in">
                   <div>
-                    <label className="block text-[10px] uppercase font-bold text-[#787165] mb-1">
+                    <label className="block text-[10px] uppercase font-bold text-[#667085] mb-1">
                       Display Title
                     </label>
                     <input
                       type="text"
                       value={itemData.title || ""}
                       onChange={(e) => updateItemField(repoId, "title", e.target.value)}
-                      className="w-full bg-[#141312] border border-[#2D2925] rounded p-1.5 text-[#FAF7F2]"
+                      className="w-full bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-bold text-[#787165] mb-1">
+                    <label className="block text-[10px] uppercase font-bold text-[#667085] mb-1">
                       Tech Stack (comma-separated)
                     </label>
                     <input
@@ -274,12 +276,12 @@ export const GitHubProjectSelector = ({
                           e.target.value.split(",").map((s) => s.trim()).filter(Boolean)
                         )
                       }
-                      className="w-full bg-[#141312] border border-[#2D2925] rounded p-1.5 text-[#FAF7F2]"
+                      className="w-full bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase font-bold text-[#787165] mb-1">
+                    <label className="block text-[10px] uppercase font-bold text-[#667085] mb-1">
                       Resume Bullet Points (1 per line)
                     </label>
                     <textarea
@@ -288,7 +290,7 @@ export const GitHubProjectSelector = ({
                       onChange={(e) =>
                         updateItemField(repoId, "bulletPoints", e.target.value.split("\n"))
                       }
-                      className="w-full bg-[#141312] border border-[#2D2925] rounded p-1.5 text-[#FAF7F2] font-mono text-[11px]"
+                      className="w-full bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] font-mono text-[11px]"
                     />
                   </div>
                 </div>

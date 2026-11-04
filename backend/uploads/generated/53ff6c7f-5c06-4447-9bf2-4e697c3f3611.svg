@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0F19"/>
+      <stop offset="100%" stop-color="#161F30"/>
+    </linearGradient>
+    <radialGradient id="nodeGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </radialGradient>
+    <radialGradient id="rootGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#A78BFA"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#bg2)" rx="24"/>
+
+  <!-- Title -->
+  <text x="40" y="50" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="20" font-weight="bold">Binary Search Tree (BST)</text>
+  <text x="40" y="75" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12">Left Subtree &lt; Node &lt; Right Subtree | Binary Search Tree with balanced left and right subtrees</text>
+
+  <!-- Edges -->
+  <line x1="400" y1="120" x2="250" y2="200" stroke="#475569" stroke-width="3"/>
+  <line x1="400" y1="120" x2="550" y2="200" stroke="#475569" stroke-width="3"/>
+  <line x1="250" y1="200" x2="170" y2="300" stroke="#475569" stroke-width="3"/>
+  <line x1="250" y1="200" x2="330" y2="300" stroke="#475569" stroke-width="3"/>
+  <line x1="550" y1="200" x2="470" y2="300" stroke="#475569" stroke-width="3"/>
+  <line x1="550" y1="200" x2="630" y2="300" stroke="#475569" stroke-width="3"/>
+
+  <!-- Root Node (50) -->
+  <circle cx="400" cy="120" r="30" fill="url(#rootGrad)" stroke="#C4B5FD" stroke-width="2"/>
+  <text x="400" y="126" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" text-anchor="middle">50</text>
+  <text x="400" y="80" fill="#A78BFA" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle">Root</text>
+
+  <!-- Level 1 Nodes (30, 70) -->
+  <circle cx="250" cy="200" r="26" fill="url(#nodeGrad)" stroke="#93C5FD" stroke-width="2"/>
+  <text x="250" y="206" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">30</text>
+
+  <circle cx="550" cy="200" r="26" fill="url(#nodeGrad)" stroke="#93C5FD" stroke-width="2"/>
+  <text x="550" y="206" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">70</text>
+
+  <!-- Level 2 Nodes (20, 40, 60, 80) -->
+  <circle cx="170" cy="300" r="22" fill="#1E293B" stroke="#38BDF8" stroke-width="2"/>
+  <text x="170" y="306" fill="#38BDF8" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">20</text>
+
+  <circle cx="330" cy="300" r="22" fill="#1E293B" stroke="#38BDF8" stroke-width="2"/>
+  <text x="330" y="306" fill="#38BDF8" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">40</text>
+
+  <circle cx="470" cy="300" r="22" fill="#1E293B" stroke="#38BDF8" stroke-width="2"/>
+  <text x="470" y="306" fill="#38BDF8" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">60</text>
+
+  <circle cx="630" cy="300" r="22" fill="#1E293B" stroke="#38BDF8" stroke-width="2"/>
+  <text x="630" y="306" fill="#38BDF8" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">80</text>
+
+  <!-- Complexity Card -->
+  <rect x="40" y="380" width="720" height="80" rx="12" fill="#1E293B" stroke="#334155"/>
+  <text x="60" y="410" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">TIME COMPLEXITIES</text>
+  <text x="60" y="435" fill="#34D399" font-family="monospace" font-size="12">Search / Insert / Delete: O(log N) Average | O(N) Worst Case (skewed)</text>
+</svg>

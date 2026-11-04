@@ -1,14 +1,14 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Sparkles, Menu } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import Button from "../common/Button";
 import NotificationCenter from "../notifications/NotificationCenter";
 
-export const Navbar = ({ apiStatus, onToggleMobileMenu, onRefreshHealth }) => {
+export const Navbar = ({ apiStatus: _apiStatus, onToggleMobileMenu, onRefreshHealth: _onRefreshHealth }) => {
   const { user, isAuthenticated, logout } = useAuth();
-  const { theme, toggleTheme, isDay } = useTheme();
+  const { toggleTheme, isDay } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -16,105 +16,78 @@ export const Navbar = ({ apiStatus, onToggleMobileMenu, onRefreshHealth }) => {
     navigate("/login");
   };
 
+  const userInitials = user?.name
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "U";
+
   return (
-    <header className="h-16 bg-[#161513]/90 backdrop-blur-md border-b border-[#2B2723] px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 transition-all">
+    <header className="h-16 bg-white/85 dark:bg-[#111827]/85 backdrop-blur-md border-b border-[#E7EAF0] dark:border-[#1F2937] px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 transition-colors">
       {/* Brand & Mobile Toggle */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 sm:gap-4">
         {/* Mobile menu button */}
         <button
           type="button"
           onClick={onToggleMobileMenu}
-          className="lg:hidden p-2 rounded-lg text-[#9C9384] hover:text-[#FAF7F2] hover:bg-[#22201D] transition-colors focus:outline-none focus:ring-1 focus:ring-[#E0693B]"
+          className="lg:hidden p-2 rounded-xl text-[#667085] dark:text-slate-400 hover:text-[#172033] dark:hover:text-white hover:bg-[#F8FAFC] dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer"
           aria-label="Toggle navigation drawer"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <Menu size={20} />
         </button>
 
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#C5572C] to-[#E0693B] flex items-center justify-center text-white shadow-md shadow-[#E0693B]/20 group-hover:scale-105 transition-all">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/30 group-hover:scale-105 group-hover:shadow-md group-hover:shadow-indigo-500/30 transition-all duration-200">
+            <Sparkles size={17} className="animate-pulse" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-bold tracking-wider text-[#FAF7F2] font-display">
+            <span className="text-base sm:text-lg font-bold tracking-tight text-[#172033] dark:text-white font-display">
               NEXORA
             </span>
-            <span className="text-[9px] font-medium tracking-tight text-[#9C9384] -mt-1 hidden sm:block">
-              Career & Productivity Platform
+            <span className="text-[10px] font-medium tracking-tight text-[#667085] dark:text-slate-400 -mt-1 hidden sm:block">
+              Student Productivity Suite
             </span>
           </div>
         </Link>
       </div>
 
-      {/* Backend API Health & User Auth Section */}
-      <div className="flex items-center gap-2.5 sm:gap-4">
+      {/* User Auth & Theme Section */}
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* Day / Night Mode Toggle */}
         <button
           type="button"
           onClick={toggleTheme}
-          title={isDay ? "Switch to Night Mode (Dark)" : "Switch to Day Mode (Light)"}
-          className="flex items-center gap-1 p-1 rounded-full bg-[#1C1A17] hover:bg-[#25221E] border border-[#2D2925] hover:border-[#3D3833] transition-all cursor-pointer shadow-sm group"
+          title={isDay ? "Switch to Night Mode" : "Switch to Day Mode"}
           aria-label={isDay ? "Switch to Night Mode" : "Switch to Day Mode"}
+          className="w-9 h-9 flex items-center justify-center rounded-xl bg-[#F8FAFC] dark:bg-[#161F30] hover:bg-[#F1F4F9] dark:hover:bg-[#1E293B] border border-[#E7EAF0] dark:border-[#1F2937] hover:border-[#D0D5DD] dark:hover:border-slate-700 transition-all cursor-pointer shadow-2xs text-slate-600 dark:text-slate-300 active:scale-95"
         >
-          <span
-            className={`flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full transition-all duration-200 ${
-              isDay
-                ? "bg-[#E0693B] text-white shadow-sm shadow-[#E0693B]/30"
-                : "text-[#9C9384] group-hover:text-[#FAF7F2]"
-            }`}
-            title="Day Mode"
-          >
-            <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </span>
-          <span
-            className={`flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full transition-all duration-200 ${
-              !isDay
-                ? "bg-[#25221F] text-[#E0693B] border border-[#3D3833] shadow-sm"
-                : "text-[#9C9384] group-hover:text-[#FAF7F2]"
-            }`}
-            title="Night Mode"
-          >
-            <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </span>
-        </button>
-
-        {/* Health status badge */}
-        <button
-          type="button"
-          onClick={onRefreshHealth}
-          title="Click to refresh API connection status"
-          className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1C1A17] hover:bg-[#25221E] border border-[#2D2925] hover:border-[#3D3833] text-xs transition-all cursor-pointer"
-        >
-          <span
-            className={`w-2 h-2 rounded-full ${
-              apiStatus === "healthy"
-                ? "bg-[#2EA366] shadow-[0_0_8px_rgba(46,163,102,0.6)]"
-                : apiStatus === "checking"
-                ? "bg-[#D97706] animate-ping"
-                : "bg-rose-500"
-            }`}
-          />
-          <span className="text-[#9C9384]">
-            API:{" "}
-            <span
-              className={`font-semibold ${
-                apiStatus === "healthy" ? "text-[#2EA366]" : apiStatus === "checking" ? "text-[#D97706]" : "text-rose-400"
-              }`}
-            >
-              {apiStatus === "healthy" ? "Online" : apiStatus === "checking" ? "Checking..." : "Offline"}
-            </span>
-          </span>
+          {isDay ? (
+            <Sun size={17} className="text-amber-500 transition-transform duration-300 hover:rotate-45" />
+          ) : (
+            <Moon size={17} className="text-violet-400 transition-transform duration-300 hover:-rotate-12" />
+          )}
         </button>
 
         {isAuthenticated ? (
           <div className="flex items-center gap-2 sm:gap-3">
             <NotificationCenter />
-            <div className="text-right hidden md:block">
-              <p className="text-xs font-semibold text-[#FAF7F2] leading-tight">{user?.name}</p>
-              <p className="text-[10px] text-[#9C9384]">{user?.email}</p>
+            <div className="flex items-center gap-2.5 pl-1">
+              <div className="p-[1.5px] rounded-full bg-gradient-to-tr from-blue-500 via-indigo-500 to-violet-500 shadow-2xs">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white dark:bg-[#111827] text-blue-600 dark:text-blue-400 font-bold text-xs flex items-center justify-center">
+                  {userInitials}
+                </div>
+              </div>
+              <div className="text-left hidden md:block">
+                <p className="text-xs font-semibold text-[#172033] dark:text-slate-100 leading-tight truncate max-w-[120px]">
+                  {user?.name}
+                </p>
+                <p className="text-[10px] text-[#667085] dark:text-slate-400 truncate max-w-[120px]">
+                  {user?.role === "admin" ? "Admin" : "Student"}
+                </p>
+              </div>
             </div>
             <Button variant="secondary" size="sm" onClick={handleLogout}>
               Logout

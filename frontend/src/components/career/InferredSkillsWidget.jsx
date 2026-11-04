@@ -45,18 +45,20 @@ export const InferredSkillsWidget = ({
   if (inferredList.length === 0) return null;
 
   return (
-    <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4">
+    <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] space-y-4 shadow-[0_1px_3px_rgba(16,24,40,0.04)]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-[#E0693B]" />
-          <h3 className="font-bold text-base text-[#FAF7F2] font-display">
+          <div className="w-7 h-7 rounded-lg bg-[#EEF2FF] text-[#4F7CFF] flex items-center justify-center">
+            <Sparkles className="w-4 h-4" />
+          </div>
+          <h3 className="font-bold text-base text-[#172033] font-display">
             Inferred Technical Competencies
           </h3>
-          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#F5F3FF] text-[#7C6CFA] border border-[#7C6CFA]/20">
             AI-Inferred Suggestions
           </span>
         </div>
-        <p className="text-[11px] text-[#787165]">
+        <p className="text-[11px] text-[#667085]">
           Never automatically published to resumes without your explicit confirmation.
         </p>
       </div>
@@ -68,20 +70,20 @@ export const InferredSkillsWidget = ({
           return (
             <div
               key={item.name}
-              className="px-3 py-1.5 rounded-xl bg-[#141312] border border-[#2D2925] flex items-center gap-2 text-xs"
+              className="px-3 py-1.5 rounded-xl bg-[#F8FAFC] border border-[#E7EAF0] flex items-center gap-2 text-xs shadow-xs"
             >
-              <span className="font-medium text-[#FAF7F2]">{item.name}</span>
-              <span className="text-[10px] text-[#787165]">({item.source})</span>
+              <span className="font-semibold text-[#172033]">{item.name}</span>
+              <span className="text-[10px] text-[#98A2B3]">({item.source})</span>
 
               {isAdded ? (
-                <span className="text-[10px] text-[#2EA366] font-semibold flex items-center gap-0.5">
+                <span className="text-[10px] text-[#12B76A] font-semibold flex items-center gap-0.5">
                   <Check className="w-3 h-3" /> Confirmed
                 </span>
               ) : (
                 <button
                   type="button"
                   onClick={() => onAddSkill(item.name)}
-                  className="text-[10px] text-[#E0693B] hover:text-[#EB784B] font-semibold flex items-center gap-0.5 hover:underline"
+                  className="text-[10px] text-[#4F7CFF] hover:text-[#3E6AE1] font-semibold flex items-center gap-0.5 hover:underline cursor-pointer"
                 >
                   <Plus className="w-3 h-3" /> Add to Profile
                 </button>

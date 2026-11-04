@@ -110,12 +110,12 @@ export const TaskFocusModal = ({ isOpen, onClose, task, onFocusComplete }) => {
     >
       <div className="space-y-6 text-center">
         {/* Task Title Banner */}
-        <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262420] text-left">
-          <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase text-[#E0693B] font-bold">
-            <Flame className="w-3.5 h-3.5" /> Active Focus Target
+        <div className="p-3.5 rounded-xl bg-[#EEF2FF] border border-[#4F7CFF]/20 text-left">
+          <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase text-[#4F7CFF] font-bold">
+            <Flame className="w-3.5 h-3.5 text-[#7C6CFA]" /> Active Focus Target
           </div>
-          <h4 className="text-sm font-bold text-[#FAF7F2] truncate mt-0.5">{task.title}</h4>
-          <span className="text-[11px] text-[#9C9384] font-mono">
+          <h4 className="text-sm font-bold text-[#172033] truncate mt-0.5">{task.title}</h4>
+          <span className="text-[11px] text-[#667085] font-mono">
             {task.category || "General"} • {task.priority} priority
           </span>
         </div>
@@ -128,10 +128,10 @@ export const TaskFocusModal = ({ isOpen, onClose, task, onFocusComplete }) => {
                 key={m}
                 type="button"
                 onClick={() => handleSelectDuration(m)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
                   selectedMinutes === m
-                    ? "bg-[#E0693B] text-white shadow-md shadow-[#E0693B]/20"
-                    : "bg-[#141312] text-[#9C9384] hover:text-[#FAF7F2] border border-[#2D2925]"
+                    ? "bg-[#4F7CFF] text-white shadow-sm shadow-[#4F7CFF]/25"
+                    : "bg-white text-[#667085] hover:text-[#172033] border border-[#E7EAF0] shadow-2xs"
                 }`}
               >
                 {m}m
@@ -141,20 +141,20 @@ export const TaskFocusModal = ({ isOpen, onClose, task, onFocusComplete }) => {
         )}
 
         {/* Timer Box */}
-        <div className="p-8 rounded-2xl bg-[#141312] border border-[#2D2925] space-y-4">
-          <div className="text-6xl font-black text-[#FAF7F2] font-mono tracking-wider">
+        <div className="p-8 rounded-2xl bg-[#F8FAFC] border border-[#E7EAF0] space-y-4">
+          <div className="text-6xl font-black text-[#172033] font-mono tracking-wider">
             {minutesDisplay}:{secondsDisplay}
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full h-2 rounded-full bg-[#1E1C19] border border-[#2B2723] overflow-hidden">
+          <div className="w-full h-2 rounded-full bg-[#EAECF0] overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[#C5572C] to-[#E0693B] transition-all"
+              className="h-full bg-gradient-to-r from-[#4F7CFF] to-[#7C6CFA] transition-all"
               style={{ width: `${Math.round(progressRatio * 100)}%` }}
             />
           </div>
 
-          <p className="text-xs text-[#9C9384]">
+          <p className="text-xs text-[#667085]">
             {isActive
               ? "Deep Focus Active — Eliminate distractions and execute this task."
               : isCompleted
@@ -169,7 +169,7 @@ export const TaskFocusModal = ({ isOpen, onClose, task, onFocusComplete }) => {
             <button
               type="button"
               onClick={() => setIsActive((prev) => !prev)}
-              className="px-6 py-3 rounded-xl bg-[#E0693B] hover:bg-[#EB784B] text-white font-bold text-sm shadow-lg shadow-[#E0693B]/25 flex items-center gap-2 transition-all cursor-pointer"
+              className="px-6 py-3 rounded-xl bg-[#4F7CFF] hover:bg-[#3D68E5] text-white font-bold text-sm shadow-sm shadow-[#4F7CFF]/25 flex items-center gap-2 transition-all cursor-pointer active:scale-[0.98]"
             >
               {isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
               <span>{isActive ? "Pause Session" : "Start Focus"}</span>
@@ -178,7 +178,7 @@ export const TaskFocusModal = ({ isOpen, onClose, task, onFocusComplete }) => {
             <button
               type="button"
               onClick={handleReset}
-              className="p-3 rounded-xl bg-[#25221F] hover:bg-[#2D2925] text-[#CDC5B6] hover:text-[#FAF7F2] border border-[#38332E] transition-colors"
+              className="p-3 rounded-xl bg-white hover:bg-[#F8FAFC] text-[#667085] hover:text-[#172033] border border-[#E7EAF0] transition-colors cursor-pointer shadow-xs"
               title="Reset Timer"
             >
               <RotateCcw className="w-4 h-4" />
@@ -188,7 +188,7 @@ export const TaskFocusModal = ({ isOpen, onClose, task, onFocusComplete }) => {
               <button
                 type="button"
                 onClick={handleFinishEarly}
-                className="px-4 py-3 rounded-xl bg-[#25221F] hover:bg-[#2D2925] text-xs font-semibold text-[#2EA366] border border-[#38332E] transition-colors"
+                className="px-4 py-3 rounded-xl bg-[#ECFDF3] hover:bg-[#D1FADF] text-xs font-semibold text-[#027A48] border border-[#A6F4C5] transition-colors cursor-pointer"
               >
                 Finish Early
               </button>
@@ -197,7 +197,7 @@ export const TaskFocusModal = ({ isOpen, onClose, task, onFocusComplete }) => {
         ) : (
           /* Completed Session Notes */
           <div className="space-y-3 text-left">
-            <label className="text-xs font-semibold text-[#CDC5B6] uppercase tracking-wider block">
+            <label className="text-xs font-semibold text-[#172033] tracking-normal block">
               Session Takeaway / Notes
             </label>
             <textarea
@@ -205,7 +205,7 @@ export const TaskFocusModal = ({ isOpen, onClose, task, onFocusComplete }) => {
               value={focusNotes}
               onChange={(e) => setFocusNotes(e.target.value)}
               placeholder="What did you accomplish during this focus block?..."
-              className="w-full text-xs text-[#CDC5B6] bg-[#141312] border border-[#2D2925] rounded-xl p-3 focus:outline-none focus:border-[#E0693B]"
+              className="w-full text-xs text-[#172033] bg-white border border-[#E7EAF0] rounded-xl p-3 focus:outline-none focus:border-[#4F7CFF] placeholder-[#98A2B3]"
             />
           </div>
         )}

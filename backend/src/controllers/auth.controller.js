@@ -92,10 +92,43 @@ const getMe = async (req, res, next) => {
   }
 };
 
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const result = await authService.forgotPassword(email);
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const verifyResetToken = async (req, res, next) => {
+  try {
+    const { token } = req.body;
+    const result = await authService.verifyResetToken(token);
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+    const result = await authService.resetPassword({ token, password });
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
   refresh,
   logout,
-  getMe
+  getMe,
+  forgotPassword,
+  verifyResetToken,
+  resetPassword
 };

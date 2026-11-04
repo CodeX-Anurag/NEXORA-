@@ -64,6 +64,10 @@ ${boundedMemories.length > 0 ? boundedMemories.map((m, idx) => `[Memory ${idx + 
 `;
     }
 
+    if (conversationOptions.documentContext) {
+      systemContext += `\n<attached_document_context>\n${conversationOptions.documentContext.slice(0, 4000)}\n</attached_document_context>\n`;
+    }
+
     // 5. Bounded recent conversation context (last 15 messages)
     let boundedMessages = messages.slice(-15).map((m) => ({
       role: m.role,

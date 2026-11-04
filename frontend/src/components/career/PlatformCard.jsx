@@ -19,21 +19,27 @@ const PLATFORM_CONFIG = {
   github: {
     name: "GitHub",
     icon: Github,
-    color: "#FAF7F2",
+    color: "#24292F",
+    accentBg: "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-700",
+    topBar: "bg-slate-800 dark:bg-slate-300",
     placeholder: "username or https://github.com/username",
     description: "Official GitHub API: Imports public repositories, stars, languages & contributions."
   },
   leetcode: {
     name: "LeetCode",
     icon: Terminal,
-    color: "#E0693B",
+    color: "#F59E0B",
+    accentBg: "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/40",
+    topBar: "bg-amber-500",
     placeholder: "username or https://leetcode.com/u/username",
     description: "Permitted GraphQL query with self-confirmed problem stats fallback."
   },
   codeforces: {
     name: "Codeforces",
     icon: Trophy,
-    color: "#3B82F6",
+    color: "#06B6D4",
+    accentBg: "bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-800/40",
+    topBar: "bg-cyan-500",
     placeholder: "handle (e.g. tourist)",
     description: "Official Codeforces REST API: Imports rating, rank, and contest participation."
   },
@@ -41,13 +47,17 @@ const PLATFORM_CONFIG = {
     name: "LinkedIn",
     icon: Linkedin,
     color: "#0A66C2",
+    accentBg: "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800/40",
+    topBar: "bg-blue-600",
     placeholder: "https://linkedin.com/in/username",
     description: "User-controlled profile link & verified career headline registration."
   },
   portfolio: {
     name: "Portfolio Website",
     icon: Globe,
-    color: "#2EA366",
+    color: "#10B981",
+    accentBg: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40",
+    topBar: "bg-emerald-500",
     placeholder: "https://myportfolio.dev",
     description: "Safe SSRF-guarded site validation & meta tech extraction."
   }
@@ -99,18 +109,16 @@ export const PlatformCard = ({
 
     if (platformKey === "leetcode" && isManualLeetCode) {
       payload = {
-        username: inputVal,
-        profileUrl: inputVal,
+        ...payload,
         isManual: true,
         easy: Number(lcEasy) || 0,
         medium: Number(lcMedium) || 0,
         hard: Number(lcHard) || 0,
-        contestRating: lcRating ? Number(lcRating) : null
+        contestRating: lcRating ? Number(lcRating) : undefined
       };
     } else if (platformKey === "linkedin") {
       payload = {
-        profileUrl: inputVal,
-        username: inputVal,
+        ...payload,
         headline: linkedinHeadline
       };
     }
@@ -160,20 +168,20 @@ export const PlatformCard = ({
   const getBadge = () => {
     if (!isConnected || !connection) {
       return (
-        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#22201D] text-[#9C9384] border border-[#2D2925]">
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#F8FAFC] text-[#98A2B3] border border-[#E7EAF0]">
           Not Connected
         </span>
       );
     }
     if (connection.verificationStatus === "api_verified") {
       return (
-        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#2EA366]/10 text-[#2EA366] border border-[#2EA366]/30 flex items-center gap-1">
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#ECFDF3] text-[#12B76A] border border-[#A6F4C5] flex items-center gap-1">
           <CheckCircle2 className="w-2.5 h-2.5" /> API-Verified
         </span>
       );
     }
     return (
-      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+      <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#FFFAEB] text-[#F79009] border border-[#FEDF89] flex items-center gap-1">
         <CheckCircle2 className="w-2.5 h-2.5" /> User-Confirmed
       </span>
     );
@@ -182,27 +190,30 @@ export const PlatformCard = ({
   const profileHref = getProfileHref();
 
   return (
-    <div className="p-5 rounded-2xl bg-[#191816] border border-[#2D2925] flex flex-col justify-between space-y-4 hover:border-[#38332E] transition-all shadow-md">
+    <div className="relative p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#111827] border border-[#E7EAF0] dark:border-[#1F2937] flex flex-col justify-between space-y-4 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-lg transition-all shadow-sm overflow-hidden group hover:-translate-y-1">
+      {/* Top accent highlight */}
+      <div className={`absolute top-0 left-0 right-0 h-1 ${cfg.topBar}`} />
+
       {/* Top Bar: Icon, Name, Status */}
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-3 pt-1">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-[#141312] border border-[#2D2925] text-[#FAF7F2]">
+          <div className={`p-2.5 rounded-2xl border ${cfg.accentBg} shadow-2xs`}>
             <Icon className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-bold text-sm text-[#FAF7F2] font-display">{cfg.name}</h3>
+            <h3 className="font-bold text-sm text-[#172033] dark:text-white font-display">{cfg.name}</h3>
             {isConnected && profileHref ? (
               <a
                 href={profileHref}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[11px] text-[#9C9384] hover:text-[#E0693B] flex items-center gap-1 underline underline-offset-2"
+                className="text-[11px] text-[#667085] dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 underline underline-offset-2"
               >
                 <span>@{connection.username || "profile"}</span>
                 <ExternalLink className="w-2.5 h-2.5" />
               </a>
             ) : (
-              <p className="text-[11px] text-[#787165]">No profile connected</p>
+              <p className="text-[11px] text-[#98A2B3] dark:text-slate-500">No profile connected</p>
             )}
           </div>
         </div>
@@ -215,35 +226,34 @@ export const PlatformCard = ({
         {isConnected && connection ? (
           <>
             <div className="flex items-baseline justify-between">
-              <span className="text-sm font-bold font-mono text-[#FAF7F2]">
+              <span className="text-sm font-bold font-mono text-[#172033]">
                 {connection.summary?.primaryMetric || "Connected"}
               </span>
-              {connection.summary?.secondaryMetric && (
-                <span className="text-[11px] font-mono text-[#E0693B]">
-                  {connection.summary.secondaryMetric}
-                </span>
-              )}
+              <span className="text-[11px] text-[#667085]">
+                {connection.summary?.secondaryMetric || ""}
+              </span>
             </div>
-            {connection.summary?.headline && (
-              <p className="text-xs text-[#9C9384] line-clamp-1">{connection.summary.headline}</p>
-            )}
-            <p className="text-[10px] text-[#787165]">
-              Last synced: {formattedSyncDate()}
+            <p className="text-[11px] text-[#98A2B3] flex items-center justify-between">
+              <span>Synced: {formattedSyncDate()}</span>
+              {connection.retrievalMethod === "user_input" && (
+                <span className="text-amber-500 font-mono text-[10px]">Manual Entry</span>
+              )}
             </p>
           </>
         ) : (
-          <p className="text-xs text-[#9C9384] leading-relaxed">{cfg.description}</p>
+          <p className="text-xs text-[#667085] leading-relaxed">{cfg.description}</p>
         )}
 
         {isError && (
-          <p className="text-[11px] text-rose-400 flex items-center gap-1">
-            <AlertCircle className="w-3 h-3 shrink-0" /> {connection?.syncError || "Sync failed. Try refreshing."}
-          </p>
+          <div className="flex items-center gap-1.5 text-xs text-rose-500 pt-1 font-medium">
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">{connection?.syncError || "Sync failed. Retry below."}</span>
+          </div>
         )}
       </div>
 
-      {/* Bottom Action Bar */}
-      <div className="pt-2 border-t border-[#22201D] flex items-center justify-between">
+      {/* Bottom Actions */}
+      <div className="pt-3 border-t border-[#E7EAF0] flex items-center justify-between gap-2">
         {isConnected ? (
           <>
             <div className="flex items-center gap-2">
@@ -252,28 +262,27 @@ export const PlatformCard = ({
                 size="sm"
                 onClick={handleRefresh}
                 isLoading={isProcessing}
-                className="text-xs flex items-center gap-1 py-1"
-                title="Sync latest data"
+                className="text-xs flex items-center gap-1.5"
+                title="Fetch latest data from platform"
               >
                 <RefreshCw className="w-3 h-3" /> Refresh
               </Button>
               <Button
-                variant="ghost"
+                variant="secondary"
                 size="sm"
                 onClick={handleOpenConnect}
-                className="text-xs text-[#9C9384] hover:text-[#FAF7F2] py-1"
+                className="text-xs"
               >
                 Edit
               </Button>
             </div>
 
             <button
-              type="button"
               onClick={handleDisconnect}
-              className="text-[#787165] hover:text-rose-400 p-1.5 rounded-lg hover:bg-[#1E1C19] transition-colors"
+              className="p-1.5 text-[#98A2B3] hover:text-rose-500 rounded-lg hover:bg-[#FEF3F2] transition-colors cursor-pointer"
               title="Disconnect platform"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-4 h-4" />
             </button>
           </>
         ) : (
@@ -281,91 +290,83 @@ export const PlatformCard = ({
             variant="primary"
             size="sm"
             onClick={handleOpenConnect}
-            isLoading={isProcessing}
-            className="w-full text-xs flex items-center justify-center gap-1.5 py-1.5"
+            className="w-full text-xs flex items-center justify-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" /> Connect {cfg.name}
           </Button>
         )}
       </div>
 
-      {/* Connect Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={`Connect ${cfg.name}`}>
-        <form onSubmit={handleSubmitConnect} className="space-y-4 text-xs">
-          <p className="text-[#9C9384] leading-relaxed">{cfg.description}</p>
-
+      {/* Connect / Edit Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={`${isConnected ? "Update" : "Connect"} ${cfg.name}`}
+      >
+        <form onSubmit={handleSubmitConnect} className="space-y-4">
           <div>
-            <label className="block text-[11px] font-medium text-[#CDC5B6] mb-1">
-              {platformKey === "portfolio" ? "Portfolio Website URL" : "Username or Profile URL"} *
+            <label className="block text-xs font-semibold text-[#172033] mb-1.5">
+              {platformKey === "github" ? "GitHub Username or URL" : cfg.placeholder}
             </label>
             <input
               type="text"
               required
-              placeholder={cfg.placeholder}
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
-              className="w-full bg-[#141312] border border-[#2D2925] rounded-xl px-3 py-2 text-[#FAF7F2] focus:outline-none focus:border-[#E0693B]"
+              placeholder={cfg.placeholder}
+              className="w-full px-3.5 py-2 text-sm bg-white border border-[#E7EAF0] focus:border-[#4F7CFF] focus:ring-4 focus:ring-[#4F7CFF]/10 rounded-xl text-[#172033] placeholder-[#98A2B3] focus:outline-none transition-all"
             />
           </div>
 
-          {/* Special case: LeetCode Manual Toggle */}
           {platformKey === "leetcode" && (
-            <div className="space-y-3 p-3.5 rounded-xl bg-[#141312] border border-[#2D2925]">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-[#FAF7F2]">Self-Confirmed Statistics Mode</span>
+            <div className="space-y-3 pt-2 border-t border-[#E7EAF0]">
+              <label className="flex items-center gap-2 text-xs text-[#667085] cursor-pointer">
                 <input
                   type="checkbox"
-                  id="lc-manual-toggle"
                   checked={isManualLeetCode}
                   onChange={(e) => setIsManualLeetCode(e.target.checked)}
-                  className="rounded border-[#2D2925] text-[#E0693B] focus:ring-0"
+                  className="rounded border-[#D0D5DD] text-[#4F7CFF] focus:ring-0"
                 />
-              </div>
-              <p className="text-[11px] text-[#787165]">
-                Enable if LeetCode GraphQL is blocked by Cloudflare or if your profile is private.
-              </p>
+                <span>API rate-limited? Input stats manually (User-Confirmed)</span>
+              </label>
 
               {isManualLeetCode && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-[#9C9384] mb-0.5">Easy</label>
+                    <label className="text-[11px] text-[#667085] block mb-1">Easy Solved</label>
                     <input
                       type="number"
-                      min="0"
                       value={lcEasy}
                       onChange={(e) => setLcEasy(e.target.value)}
-                      className="w-full bg-[#191816] border border-[#2D2925] rounded p-1.5 text-[#2EA366] font-mono"
+                      className="w-full px-2.5 py-1.5 bg-white border border-[#E7EAF0] rounded-lg text-[#172033]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-[#9C9384] mb-0.5">Medium</label>
+                    <label className="text-[11px] text-[#667085] block mb-1">Medium Solved</label>
                     <input
                       type="number"
-                      min="0"
                       value={lcMedium}
                       onChange={(e) => setLcMedium(e.target.value)}
-                      className="w-full bg-[#191816] border border-[#2D2925] rounded p-1.5 text-[#E0693B] font-mono"
+                      className="w-full px-2.5 py-1.5 bg-white border border-[#E7EAF0] rounded-lg text-[#172033]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-[#9C9384] mb-0.5">Hard</label>
+                    <label className="text-[11px] text-[#667085] block mb-1">Hard Solved</label>
                     <input
                       type="number"
-                      min="0"
                       value={lcHard}
                       onChange={(e) => setLcHard(e.target.value)}
-                      className="w-full bg-[#191816] border border-[#2D2925] rounded p-1.5 text-rose-400 font-mono"
+                      className="w-full px-2.5 py-1.5 bg-white border border-[#E7EAF0] rounded-lg text-[#172033]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-[#9C9384] mb-0.5">Contest Rating</label>
+                    <label className="text-[11px] text-[#667085] block mb-1">Contest Rating</label>
                     <input
                       type="number"
-                      min="0"
-                      placeholder="e.g. 1750"
                       value={lcRating}
                       onChange={(e) => setLcRating(e.target.value)}
-                      className="w-full bg-[#191816] border border-[#2D2925] rounded p-1.5 text-[#FAF7F2] font-mono"
+                      placeholder="e.g. 1850"
+                      className="w-full px-2.5 py-1.5 bg-white border border-[#E7EAF0] rounded-lg text-[#172033]"
                     />
                   </div>
                 </div>
@@ -373,28 +374,27 @@ export const PlatformCard = ({
             </div>
           )}
 
-          {/* Special case: LinkedIn Headline */}
           {platformKey === "linkedin" && (
             <div>
-              <label className="block text-[11px] font-medium text-[#CDC5B6] mb-1">
-                Professional Headline (e.g. Software Engineer at Tech Corp)
+              <label className="block text-xs font-semibold text-[#172033] mb-1.5">
+                Current Headline / Role
               </label>
               <input
                 type="text"
-                placeholder="Software Engineer | Full Stack | Open Source"
                 value={linkedinHeadline}
                 onChange={(e) => setLinkedinHeadline(e.target.value)}
-                className="w-full bg-[#141312] border border-[#2D2925] rounded-xl px-3 py-2 text-[#FAF7F2] focus:outline-none focus:border-[#E0693B]"
+                placeholder="e.g. Computer Science Student at Stanford"
+                className="w-full px-3.5 py-2 text-sm bg-white border border-[#E7EAF0] rounded-xl text-[#172033] placeholder-[#98A2B3]"
               />
             </div>
           )}
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-[#22201D]">
-            <Button variant="ghost" size="sm" type="button" onClick={() => setIsModalOpen(false)}>
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <Button variant="secondary" size="sm" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
             <Button variant="primary" size="sm" type="submit" isLoading={isProcessing}>
-              Connect & Verify
+              {isConnected ? "Update & Sync" : "Connect Platform"}
             </Button>
           </div>
         </form>

@@ -10,17 +10,17 @@ export const Loader = ({ text = "Loading NEXORA...", size = "md", fullScreen = f
   const loaderContent = (
     <div className="flex flex-col items-center justify-center gap-3">
       <div
-        className={`${sizeMap[size] || sizeMap.md} border-[#E0693B] border-t-transparent rounded-full animate-spin`}
+        className={`${sizeMap[size] || sizeMap.md} border-[#4F7CFF] dark:border-blue-400 border-t-transparent rounded-full animate-spin`}
         role="status"
         aria-label="loading"
       />
-      {text && <p className="text-sm font-medium text-[#CDC5B6] animate-pulse">{text}</p>}
+      {text && <p className="text-sm font-medium text-[#667085] dark:text-slate-400 animate-pulse">{text}</p>}
     </div>
   );
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#121110]/90 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-[#0B0F19]/80 backdrop-blur-sm">
         {loaderContent}
       </div>
     );

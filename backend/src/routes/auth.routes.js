@@ -11,6 +11,15 @@ router.post("/register", authLimiter, authController.register);
 // POST /api/v1/auth/login (Guarded by authLimiter for brute-force protection)
 router.post("/login", authLimiter, authController.login);
 
+// POST /api/v1/auth/forgot-password (Guarded by authLimiter for brute-force protection)
+router.post("/forgot-password", authLimiter, authController.forgotPassword);
+
+// POST /api/v1/auth/verify-reset-token
+router.post("/verify-reset-token", authLimiter, authController.verifyResetToken);
+
+// POST /api/v1/auth/reset-password (Guarded by authLimiter for brute-force protection)
+router.post("/reset-password", authLimiter, authController.resetPassword);
+
 // POST /api/v1/auth/refresh
 router.post("/refresh", authController.refresh);
 

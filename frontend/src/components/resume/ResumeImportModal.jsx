@@ -78,12 +78,12 @@ export const ResumeImportModal = ({
     <Modal isOpen={isOpen} onClose={handleClose} title="Import Existing Resume">
       {step === "upload" ? (
         <div className="space-y-5">
-          <p className="text-xs text-[#9C9384] leading-relaxed">
+          <p className="text-xs text-[#667085] leading-relaxed">
             Upload your existing PDF or DOCX resume. NEXORA will extract your details into structured fields. You can review and edit every field before applying it to your profile.
           </p>
 
           {/* Drag & Drop Box */}
-          <div className="border-2 border-dashed border-[#2D2925] hover:border-[#E0693B] rounded-2xl p-8 text-center bg-[#141312] transition-colors">
+          <div className="border-2 border-dashed border-[#E7EAF0] hover:border-[#4F7CFF] rounded-2xl p-8 text-center bg-[#F7F8FC] hover:bg-blue-50/20 transition-colors">
             <input
               type="file"
               id="resume-file-input"
@@ -92,20 +92,20 @@ export const ResumeImportModal = ({
               className="hidden"
             />
             <label htmlFor="resume-file-input" className="cursor-pointer flex flex-col items-center space-y-3">
-              <div className="p-3.5 rounded-full bg-[#1F1D1A] text-[#E0693B]">
+              <div className="p-3.5 rounded-full bg-blue-50 text-[#4F7CFF]">
                 <UploadCloud className="w-8 h-8" />
               </div>
               <div className="space-y-1">
-                <span className="text-sm font-semibold text-[#FAF7F2]">
+                <span className="text-sm font-semibold text-[#172033]">
                   {file ? file.name : "Click to select or drag and drop your resume"}
                 </span>
-                <p className="text-xs text-[#787165]">Supported formats: PDF (.pdf), Word (.docx) — Max 5MB</p>
+                <p className="text-xs text-[#667085]">Supported formats: PDF (.pdf), Word (.docx) — Max 5MB</p>
               </div>
             </label>
           </div>
 
           {error && (
-            <div className="p-3 rounded-xl bg-rose-950/30 border border-rose-800/40 text-rose-300 text-xs flex items-center gap-2">
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -129,7 +129,7 @@ export const ResumeImportModal = ({
       ) : (
         /* Review Screen Before Saving */
         <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-1">
-          <div className="p-3 rounded-xl bg-[#2EA366]/10 border border-[#2EA366]/20 text-[#2EA366] text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>Extracted successfully! Review the parsed details below before updating your profile.</span>
           </div>
@@ -137,24 +137,24 @@ export const ResumeImportModal = ({
           {/* Extracted Details Preview */}
           <div className="space-y-4 text-xs">
             {/* Contact */}
-            <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925] space-y-2">
-              <h4 className="font-bold text-[#FAF7F2] font-display text-sm">Extracted Personal Info</h4>
-              <div className="grid grid-cols-2 gap-2 text-[#CDC5B6]">
-                <p><span className="text-[#9C9384]">Name:</span> {extractedData?.personalInfo?.fullName || "Not found"}</p>
-                <p><span className="text-[#9C9384]">Email:</span> {extractedData?.personalInfo?.email || "Not found"}</p>
-                <p><span className="text-[#9C9384]">Phone:</span> {extractedData?.personalInfo?.phone || "Not found"}</p>
-                <p><span className="text-[#9C9384]">Location:</span> {extractedData?.personalInfo?.location || "Not found"}</p>
+            <div className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-2">
+              <h4 className="font-bold text-[#172033] font-display text-sm">Extracted Personal Info</h4>
+              <div className="grid grid-cols-2 gap-2 text-[#172033]">
+                <p><span className="text-[#667085]">Name:</span> {extractedData?.personalInfo?.fullName || "Not found"}</p>
+                <p><span className="text-[#667085]">Email:</span> {extractedData?.personalInfo?.email || "Not found"}</p>
+                <p><span className="text-[#667085]">Phone:</span> {extractedData?.personalInfo?.phone || "Not found"}</p>
+                <p><span className="text-[#667085]">Location:</span> {extractedData?.personalInfo?.location || "Not found"}</p>
               </div>
             </div>
 
             {/* Skills */}
-            <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925] space-y-2">
-              <h4 className="font-bold text-[#FAF7F2] font-display text-sm">
+            <div className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-2">
+              <h4 className="font-bold text-[#172033] font-display text-sm">
                 Extracted Skills ({extractedData?.skills?.length || 0})
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {extractedData?.skills?.map((s, idx) => (
-                  <span key={idx} className="px-2 py-0.5 rounded text-[11px] font-mono bg-[#1F1D1A] text-[#FAF7F2] border border-[#2D2925]">
+                  <span key={idx} className="px-2 py-0.5 rounded text-[11px] font-mono bg-white text-[#172033] border border-[#E7EAF0]">
                     {typeof s === "string" ? s : s.name}
                   </span>
                 ))}
@@ -162,33 +162,33 @@ export const ResumeImportModal = ({
             </div>
 
             {/* Experience */}
-            <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925] space-y-2">
-              <h4 className="font-bold text-[#FAF7F2] font-display text-sm">
+            <div className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-2">
+              <h4 className="font-bold text-[#172033] font-display text-sm">
                 Extracted Work Experience ({extractedData?.experience?.length || 0})
               </h4>
               {extractedData?.experience?.map((exp, idx) => (
-                <div key={idx} className="border-b border-[#22201D] pb-2 last:border-0">
-                  <p className="font-semibold text-[#FAF7F2]">{exp.title} — {exp.company}</p>
-                  <p className="text-[11px] text-[#9C9384]">{exp.startDate} – {exp.endDate}</p>
+                <div key={idx} className="border-b border-[#E7EAF0] pb-2 last:border-0">
+                  <p className="font-semibold text-[#172033]">{exp.title} — {exp.company}</p>
+                  <p className="text-[11px] text-[#667085]">{exp.startDate} – {exp.endDate}</p>
                 </div>
               ))}
             </div>
 
             {/* Projects */}
-            <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925] space-y-2">
-              <h4 className="font-bold text-[#FAF7F2] font-display text-sm">
+            <div className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-2">
+              <h4 className="font-bold text-[#172033] font-display text-sm">
                 Extracted Projects ({extractedData?.projects?.length || 0})
               </h4>
               {extractedData?.projects?.map((p, idx) => (
-                <div key={idx} className="border-b border-[#22201D] pb-2 last:border-0">
-                  <p className="font-semibold text-[#FAF7F2]">{p.title}</p>
-                  {p.description && <p className="text-[11px] text-[#9C9384] line-clamp-1">{p.description}</p>}
+                <div key={idx} className="border-b border-[#E7EAF0] pb-2 last:border-0">
+                  <p className="font-semibold text-[#172033]">{p.title}</p>
+                  {p.description && <p className="text-[11px] text-[#667085] line-clamp-1">{p.description}</p>}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="flex justify-between items-center pt-2 border-t border-[#2D2925]">
+          <div className="flex justify-between items-center pt-2 border-t border-[#E7EAF0]">
             <Button variant="ghost" size="sm" onClick={() => setStep("upload")}>
               ← Back to Upload
             </Button>

@@ -103,9 +103,9 @@ export const ObservabilityDashboard = () => {
 
   // Status Distribution Chart Data
   const statusChartData = [
-    { name: "2xx Success", count: reqs.statusDistribution?.["2xx"] || 0, color: "#2EA366" },
-    { name: "4xx Client Err", count: reqs.statusDistribution?.["4xx"] || 0, color: "#D97706" },
-    { name: "5xx Server Err", count: reqs.statusDistribution?.["5xx"] || 0, color: "#E04848" }
+    { name: "2xx Success", count: reqs.statusDistribution?.["2xx"] || 0, color: "#10B981" },
+    { name: "4xx Client Err", count: reqs.statusDistribution?.["4xx"] || 0, color: "#F59E0B" },
+    { name: "5xx Server Err", count: reqs.statusDistribution?.["5xx"] || 0, color: "#EF4444" }
   ];
 
   // Latency Percentiles Chart Data
@@ -115,59 +115,61 @@ export const ObservabilityDashboard = () => {
     { metric: "P99 Latency", ms: lat.p99Ms || 0 }
   ];
 
-  // Memory Usage Chart Data with warm terracotta, amber, and charcoal
+  // Memory Usage Chart Data with modern primary/secondary palette
   const memoryChartData = [
-    { name: "Heap Used", mb: sys.memoryUsage?.heapUsedMB || 0, fill: "#E0693B" },
-    { name: "Heap Total", mb: sys.memoryUsage?.heapTotalMB || 0, fill: "#D97706" },
-    { name: "RSS Memory", mb: sys.memoryUsage?.rssMB || 0, fill: "#38332D" }
+    { name: "Heap Used", mb: sys.memoryUsage?.heapUsedMB || 0, fill: "#4F7CFF" },
+    { name: "Heap Total", mb: sys.memoryUsage?.heapTotalMB || 0, fill: "#7C6CFA" },
+    { name: "RSS Memory", mb: sys.memoryUsage?.rssMB || 0, fill: "#94A3B8" }
   ];
 
   const tooltipStyle = {
-    backgroundColor: "#191816",
-    borderColor: "#332F2A",
+    backgroundColor: "#FFFFFF",
+    borderColor: "#E7EAF0",
     borderRadius: "12px",
-    color: "#FAF7F2",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.5)"
+    color: "#172033",
+    boxShadow: "0 10px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04)"
   };
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-fade-in pb-12">
       {/* Header & Polling Toolbar */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-[#191816] border border-[#2D2925] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
+      <div className="relative p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#111827] border border-blue-200/60 dark:border-blue-900/40 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-500" />
+
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#E0693B] font-display">Engineering Console</span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#2EA366]/10 text-[#2EA366] border border-[#2EA366]/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2EA366] mr-1.5 animate-pulse"></span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 font-display">Engineering Console</span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/40">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
               Live Telemetry
             </span>
           </div>
-          <h1 className="text-2xl font-bold text-[#FAF7F2] font-display">System Observability & Telemetry</h1>
-          <p className="text-xs text-[#9C9384] max-w-2xl leading-relaxed">
+          <h1 className="text-2xl font-bold text-[#172033] dark:text-slate-100 font-display">System Observability &amp; Telemetry</h1>
+          <p className="text-xs text-[#667085] dark:text-slate-400 max-w-2xl leading-relaxed">
             Real-time diagnostics tracking API latency percentiles, error rates, AI usage costs, quality metrics, and background jobs.
           </p>
         </div>
 
         {/* Polling & Refresh Controls */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="flex items-center gap-2 bg-[#141312] px-3.5 py-2 rounded-xl border border-[#2D2925]">
-            <span className="text-[11px] text-[#9C9384] font-medium">Auto Refresh:</span>
+          <div className="flex items-center gap-2 bg-[#F7F8FC] dark:bg-slate-900 px-3.5 py-2 rounded-xl border border-[#E7EAF0] dark:border-slate-800">
+            <span className="text-[11px] text-[#667085] dark:text-slate-400 font-medium">Auto Refresh:</span>
             <select
               value={pollIntervalSec}
               onChange={(e) => setPollIntervalSec(Number(e.target.value))}
-              className="bg-transparent text-xs font-semibold text-[#FAF7F2] focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-semibold text-[#172033] dark:text-slate-200 focus:outline-none cursor-pointer"
             >
-              <option value={5} className="bg-[#191816]">5 seconds</option>
-              <option value={10} className="bg-[#191816]">10 seconds</option>
-              <option value={30} className="bg-[#191816]">30 seconds</option>
-              <option value={0} className="bg-[#191816]">Off</option>
+              <option value={5} className="bg-white dark:bg-slate-900">5 seconds</option>
+              <option value={10} className="bg-white dark:bg-slate-900">10 seconds</option>
+              <option value={30} className="bg-white dark:bg-slate-900">30 seconds</option>
+              <option value={0} className="bg-white dark:bg-slate-900">Off</option>
             </select>
           </div>
 
           <button
             onClick={() => fetchDiagnostics(false)}
             disabled={isRefreshing}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#E0693B] hover:bg-[#EB784B] text-white text-xs font-semibold transition-colors disabled:opacity-50 shadow-sm"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors disabled:opacity-50 shadow-xs cursor-pointer"
           >
             <svg
               className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`}
@@ -183,7 +185,7 @@ export const ObservabilityDashboard = () => {
       </div>
 
       {lastUpdated && (
-        <div className="text-right text-[11px] text-[#787165] font-mono">
+        <div className="text-right text-[11px] text-[#667085] font-mono">
           Last updated: {lastUpdated.toLocaleTimeString()}
         </div>
       )}
@@ -192,57 +194,57 @@ export const ObservabilityDashboard = () => {
 
       {/* SECTION 1: SYSTEM OVERVIEW KPI CARDS */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="p-4 rounded-xl bg-[#191816] border border-[#2D2925] space-y-1">
-          <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">API Liveness</span>
-          <p className="text-lg font-bold text-[#2EA366] flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#2EA366]"></span> 200 OK
+        <div className="p-4 rounded-xl bg-white border border-[#E7EAF0] shadow-xs space-y-1">
+          <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">API Liveness</span>
+          <p className="text-lg font-bold text-emerald-600 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span> 200 OK
           </p>
-          <p className="text-[10px] text-[#787165]">Node {sys.nodeVersion || "v20"}</p>
+          <p className="text-[10px] text-[#667085]">Node {sys.nodeVersion || "v20"}</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#191816] border border-[#2D2925] space-y-1">
-          <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">Database Readiness</span>
-          <p className="text-lg font-bold text-[#2EA366] capitalize">{db.status || "connected"}</p>
-          <p className="text-[10px] text-[#787165]">ReadyState {db.readyState ?? 1}</p>
+        <div className="p-4 rounded-xl bg-white border border-[#E7EAF0] shadow-xs space-y-1">
+          <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">Database Readiness</span>
+          <p className="text-lg font-bold text-emerald-600 capitalize">{db.status || "connected"}</p>
+          <p className="text-[10px] text-[#667085]">ReadyState {db.readyState ?? 1}</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#191816] border border-[#2D2925] space-y-1">
-          <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">Process Uptime</span>
-          <p className="text-sm font-extrabold text-[#E0693B] font-mono">{formatUptime(sys.uptimeSeconds)}</p>
-          <p className="text-[10px] text-[#787165]">Active server process</p>
+        <div className="p-4 rounded-xl bg-white border border-[#E7EAF0] shadow-xs space-y-1">
+          <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">Process Uptime</span>
+          <p className="text-sm font-extrabold text-[#4F7CFF] font-mono">{formatUptime(sys.uptimeSeconds)}</p>
+          <p className="text-[10px] text-[#667085]">Active server process</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#191816] border border-[#2D2925] space-y-1">
-          <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">Total Requests</span>
-          <p className="text-xl font-bold text-[#FAF7F2] font-mono">{reqs.total || 0}</p>
-          <p className="text-[10px] text-[#787165]">In-memory tracking</p>
+        <div className="p-4 rounded-xl bg-white border border-[#E7EAF0] shadow-xs space-y-1">
+          <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">Total Requests</span>
+          <p className="text-xl font-bold text-[#172033] font-mono">{reqs.total || 0}</p>
+          <p className="text-[10px] text-[#667085]">In-memory tracking</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#191816] border border-[#2D2925] space-y-1">
-          <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">HTTP Error Rate</span>
-          <p className={`text-xl font-bold font-mono ${(reqs.errorRatePercent || 0) > 5 ? "text-rose-400" : "text-[#2EA366]"}`}>
+        <div className="p-4 rounded-xl bg-white border border-[#E7EAF0] shadow-xs space-y-1">
+          <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">HTTP Error Rate</span>
+          <p className={`text-xl font-bold font-mono ${(reqs.errorRatePercent || 0) > 5 ? "text-rose-500" : "text-emerald-600"}`}>
             {reqs.errorRatePercent || 0}%
           </p>
-          <p className="text-[10px] text-[#787165]">4xx + 5xx percentage</p>
+          <p className="text-[10px] text-[#667085]">4xx + 5xx percentage</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#191816] border border-[#2D2925] space-y-1">
-          <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">Average Latency</span>
-          <p className="text-xl font-bold text-[#D97706] font-mono">{lat.avgMs || 0} ms</p>
-          <p className="text-[10px] text-[#787165]">500-sample reservoir</p>
+        <div className="p-4 rounded-xl bg-white border border-[#E7EAF0] shadow-xs space-y-1">
+          <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">Average Latency</span>
+          <p className="text-xl font-bold text-amber-600 font-mono">{lat.avgMs || 0} ms</p>
+          <p className="text-[10px] text-[#667085]">500-sample reservoir</p>
         </div>
       </div>
 
       {/* SECTION 2: REQUEST PERFORMANCE & LATENCY CHARTS */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Status Distribution Pie Chart */}
-        <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4 shadow-xl">
+        <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] space-y-4 shadow-xs">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-semibold text-[#FAF7F2] font-display">HTTP Status Distribution</h3>
-              <p className="text-xs text-[#9C9384]">Classified response statuses (2xx, 4xx, 5xx)</p>
+              <h3 className="text-base font-semibold text-[#172033] font-display">HTTP Status Distribution</h3>
+              <p className="text-xs text-[#667085]">Classified response statuses (2xx, 4xx, 5xx)</p>
             </div>
-            <span className="text-xs font-mono font-semibold text-[#CDC5B6]">Total: {reqs.total || 0}</span>
+            <span className="text-xs font-mono font-semibold text-[#667085]">Total: {reqs.total || 0}</span>
           </div>
 
           <div className="h-64">
@@ -260,20 +262,20 @@ export const ObservabilityDashboard = () => {
         </div>
 
         {/* Latency Percentiles Bar Chart */}
-        <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4 shadow-xl">
+        <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] space-y-4 shadow-xs">
           <div>
-            <h3 className="text-base font-semibold text-[#FAF7F2] font-display">Latency Percentiles (ms)</h3>
-            <p className="text-xs text-[#9C9384]">Average, P95, and P99 exact reservoir calculations</p>
+            <h3 className="text-base font-semibold text-[#172033] font-display">Latency Percentiles (ms)</h3>
+            <p className="text-xs text-[#667085]">Average, P95, and P99 exact reservoir calculations</p>
           </div>
 
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={latencyChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2D2925" />
-                <XAxis dataKey="metric" stroke="#9C9384" fontSize={11} />
-                <YAxis stroke="#9C9384" fontSize={11} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E7EAF0" />
+                <XAxis dataKey="metric" stroke="#667085" fontSize={11} />
+                <YAxis stroke="#667085" fontSize={11} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Bar dataKey="ms" fill="#E0693B" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="ms" fill="#4F7CFF" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -281,58 +283,58 @@ export const ObservabilityDashboard = () => {
       </div>
 
       {/* SECTION 3: AI COST & QUALITY INTELLIGENCE */}
-      <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-6 shadow-xl">
-        <div className="flex items-center justify-between border-b border-[#2D2925] pb-4">
+      <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] space-y-6 shadow-xs">
+        <div className="flex items-center justify-between border-b border-[#E7EAF0] pb-4">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#E0693B] font-display">AI Telemetry</span>
-            <h3 className="text-lg font-bold text-[#FAF7F2] font-display">AI Cost, Token & Quality Intelligence</h3>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#4F7CFF] font-display">AI Telemetry</span>
+            <h3 className="text-lg font-bold text-[#172033] font-display">AI Cost, Token & Quality Intelligence</h3>
           </div>
-          <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-[#E0693B]/10 text-[#E0693B] border border-[#E0693B]/20">
+          <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#4F7CFF] border border-blue-200">
             {ai.totalRequests || 0} AI Operations
           </span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="p-4 rounded-xl bg-[#141312] border border-[#2D2925] space-y-1">
-            <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">Total AI Tokens</span>
-            <p className="text-2xl font-extrabold text-[#E0693B] font-mono">{(ai.totalTokens || 0).toLocaleString()}</p>
-            <p className="text-[10px] text-[#787165]">Prompt + Completion</p>
+          <div className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-1">
+            <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">Total AI Tokens</span>
+            <p className="text-2xl font-extrabold text-[#4F7CFF] font-mono">{(ai.totalTokens || 0).toLocaleString()}</p>
+            <p className="text-[10px] text-[#667085]">Prompt + Completion</p>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#141312] border border-[#2D2925] space-y-1">
-            <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">Estimated USD Cost</span>
-            <p className="text-2xl font-extrabold text-[#2EA366] font-mono">${(ai.totalEstimatedCostUSD || 0).toFixed(4)}</p>
-            <p className="text-[10px] text-[#787165]">Model pricing</p>
+          <div className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-1">
+            <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">Estimated USD Cost</span>
+            <p className="text-2xl font-extrabold text-emerald-600 font-mono">${(ai.totalEstimatedCostUSD || 0).toFixed(4)}</p>
+            <p className="text-[10px] text-[#667085]">Model pricing</p>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#141312] border border-[#2D2925] space-y-1">
-            <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">Avg Quality Score</span>
-            <p className="text-2xl font-extrabold text-[#D97706] font-mono">{ai.avgQualityScore ?? 100}/100</p>
-            <p className="text-[10px] text-[#787165]">Deterministic scoring</p>
+          <div className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-1">
+            <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">Avg Quality Score</span>
+            <p className="text-2xl font-extrabold text-amber-600 font-mono">{ai.avgQualityScore ?? 100}/100</p>
+            <p className="text-[10px] text-[#667085]">Deterministic scoring</p>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#141312] border border-[#2D2925] space-y-1">
-            <span className="text-[10px] font-semibold text-[#9C9384] uppercase tracking-wider font-display">Quality Success Rate</span>
-            <p className="text-2xl font-extrabold text-[#FAF7F2] font-mono">{ai.qualitySuccessRatePercent ?? 100}%</p>
-            <p className="text-[10px] text-[#787165]">Schema compliance</p>
+          <div className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-1">
+            <span className="text-[10px] font-semibold text-[#667085] uppercase tracking-wider font-display">Quality Success Rate</span>
+            <p className="text-2xl font-extrabold text-[#172033] font-mono">{ai.qualitySuccessRatePercent ?? 100}%</p>
+            <p className="text-[10px] text-[#667085]">Schema compliance</p>
           </div>
         </div>
 
         {/* Diagnostic Counts */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-          <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925] flex items-center justify-between">
-            <span className="text-xs text-[#9C9384]">Schema Validation Failures:</span>
-            <span className="text-sm font-bold font-mono text-[#D97706]">{ai.schemaValidationFailures || 0}</span>
+          <div className="p-3.5 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] flex items-center justify-between">
+            <span className="text-xs text-[#667085]">Schema Validation Failures:</span>
+            <span className="text-sm font-bold font-mono text-amber-600">{ai.schemaValidationFailures || 0}</span>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925] flex items-center justify-between">
-            <span className="text-xs text-[#9C9384]">Fallback Activations:</span>
-            <span className="text-sm font-bold font-mono text-[#E0693B]">{ai.fallbackCount || 0}</span>
+          <div className="p-3.5 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] flex items-center justify-between">
+            <span className="text-xs text-[#667085]">Fallback Activations:</span>
+            <span className="text-sm font-bold font-mono text-[#4F7CFF]">{ai.fallbackCount || 0}</span>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925] flex items-center justify-between">
-            <span className="text-xs text-[#9C9384]">Average AI Latency:</span>
-            <span className="text-sm font-bold font-mono text-[#CDC5B6]">{ai.avgLatencyMs || 0} ms</span>
+          <div className="p-3.5 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] flex items-center justify-between">
+            <span className="text-xs text-[#667085]">Average AI Latency:</span>
+            <span className="text-sm font-bold font-mono text-[#172033]">{ai.avgLatencyMs || 0} ms</span>
           </div>
         </div>
       </div>
@@ -340,55 +342,55 @@ export const ObservabilityDashboard = () => {
       {/* SECTION 4: BACKGROUND JOBS & MEMORY FOOTPRINT */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Background Jobs & Scheduler Health */}
-        <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4 shadow-xl">
+        <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] space-y-4 shadow-xs">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#E0693B] font-display">Scheduler</span>
-              <h3 className="text-base font-semibold text-[#FAF7F2] font-display">Background Job Health</h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#4F7CFF] font-display">Scheduler</span>
+              <h3 className="text-base font-semibold text-[#172033] font-display">Background Job Health</h3>
             </div>
-            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${bg.isRunning ? "bg-[#2EA366]/10 text-[#2EA366] border-[#2EA366]/25" : "bg-rose-500/10 text-rose-400 border-rose-500/20"}`}>
+            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${bg.isRunning ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-rose-50 text-rose-600 border-rose-200"}`}>
               {bg.isRunning ? "Scheduler Active" : "Stopped"}
             </span>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925]">
-              <span className="text-[10px] text-[#9C9384] uppercase font-display">Total Job Runs</span>
-              <p className="text-xl font-bold font-mono text-[#FAF7F2]">{bg.metrics?.totalJobRuns || 0}</p>
+            <div className="p-3.5 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0]">
+              <span className="text-[10px] text-[#667085] uppercase font-display">Total Job Runs</span>
+              <p className="text-xl font-bold font-mono text-[#172033]">{bg.metrics?.totalJobRuns || 0}</p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925]">
-              <span className="text-[10px] text-[#9C9384] uppercase font-display">Successful Runs</span>
-              <p className="text-xl font-bold font-mono text-[#2EA366]">{bg.metrics?.successfulRuns || 0}</p>
+            <div className="p-3.5 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0]">
+              <span className="text-[10px] text-[#667085] uppercase font-display">Successful Runs</span>
+              <p className="text-xl font-bold font-mono text-emerald-600">{bg.metrics?.successfulRuns || 0}</p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925]">
-              <span className="text-[10px] text-[#9C9384] uppercase font-display">Notifications Created</span>
-              <p className="text-xl font-bold font-mono text-[#E0693B]">{bg.metrics?.notificationsCreated || 0}</p>
+            <div className="p-3.5 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0]">
+              <span className="text-[10px] text-[#667085] uppercase font-display">Notifications Created</span>
+              <p className="text-xl font-bold font-mono text-[#4F7CFF]">{bg.metrics?.notificationsCreated || 0}</p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#141312] border border-[#2D2925]">
-              <span className="text-[10px] text-[#9C9384] uppercase font-display">Duplicates Skipped</span>
-              <p className="text-xl font-bold font-mono text-[#D97706]">{bg.metrics?.duplicatesSkipped || 0}</p>
+            <div className="p-3.5 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0]">
+              <span className="text-[10px] text-[#667085] uppercase font-display">Duplicates Skipped</span>
+              <p className="text-xl font-bold font-mono text-amber-600">{bg.metrics?.duplicatesSkipped || 0}</p>
             </div>
           </div>
         </div>
 
         {/* Node Process Memory Footprint */}
-        <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4 shadow-xl">
+        <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] space-y-4 shadow-xs">
           <div>
-            <h3 className="text-base font-semibold text-[#FAF7F2] font-display">Node Process Memory Footprint (MB)</h3>
-            <p className="text-xs text-[#9C9384]">RSS, Heap Total, and Heap Used RAM breakdown</p>
+            <h3 className="text-base font-semibold text-[#172033] font-display">Node Process Memory Footprint (MB)</h3>
+            <p className="text-xs text-[#667085]">RSS, Heap Total, and Heap Used RAM breakdown</p>
           </div>
 
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={memoryChartData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#2D2925" />
-                <XAxis type="number" stroke="#9C9384" fontSize={11} />
-                <YAxis dataKey="name" type="category" stroke="#9C9384" fontSize={11} width={80} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E7EAF0" />
+                <XAxis type="number" stroke="#667085" fontSize={11} />
+                <YAxis dataKey="name" type="category" stroke="#667085" fontSize={11} width={80} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Bar dataKey="mb" fill="#E0693B" radius={[0, 6, 6, 0]} />
+                <Bar dataKey="mb" fill="#4F7CFF" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

@@ -57,8 +57,22 @@ const VivaSessionSchema = new mongoose.Schema(
     },
     difficulty: {
       type: String,
-      enum: ["Beginner", "Intermediate", "Advanced"],
+      enum: ["Beginner", "Intermediate", "Advanced", "Easy", "Medium", "Hard"],
       default: "Intermediate"
+    },
+    focusArea: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    language: {
+      type: String,
+      default: "en-US"
+    },
+    answerMode: {
+      type: String,
+      enum: ["voice", "text", "hybrid"],
+      default: "hybrid"
     },
     status: {
       type: String,

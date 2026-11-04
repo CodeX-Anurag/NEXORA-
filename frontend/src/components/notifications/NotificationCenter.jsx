@@ -185,31 +185,31 @@ export const NotificationCenter = () => {
       case "TASK_REMINDER":
       case "DEADLINE_APPROACHING":
         return (
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-400 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
             <Clock className="w-4 h-4" />
           </div>
         );
       case "TASK_OVERDUE":
         return (
-          <div className="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/25 text-rose-400 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center shrink-0">
             <AlertTriangle className="w-4 h-4" />
           </div>
         );
       case "TASK_COMPLETED":
         return (
-          <div className="w-8 h-8 rounded-lg bg-[#2EA366]/10 border border-[#2EA366]/25 text-[#2EA366] flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-[#12B76A]/10 border border-[#12B76A]/20 text-[#12B76A] flex items-center justify-center shrink-0">
             <Check className="w-4 h-4" />
           </div>
         );
       case "STUDY_REMINDER":
         return (
-          <div className="w-8 h-8 rounded-lg bg-[#2EA366]/10 border border-[#2EA366]/25 text-[#2EA366] flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-400 flex items-center justify-center shrink-0">
             <BookOpen className="w-4 h-4" />
           </div>
         );
       default:
         return (
-          <div className="w-8 h-8 rounded-lg bg-[#E0693B]/10 border border-[#E0693B]/25 text-[#E0693B] flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
             <Info className="w-4 h-4" />
           </div>
         );
@@ -221,13 +221,13 @@ export const NotificationCenter = () => {
       {/* Bell Button */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="relative p-2.5 rounded-xl bg-[#1C1A17] border border-[#2D2925] text-[#CDC5B6] hover:text-[#FAF7F2] hover:bg-[#25221E] transition-colors focus:outline-none focus:ring-1 focus:ring-[#E0693B] cursor-pointer"
+        className="relative p-2 sm:p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#161F30] border border-[#E7EAF0] dark:border-[#1F2937] text-[#667085] dark:text-slate-400 hover:text-[#172033] dark:hover:text-white hover:bg-[#F1F4F9] dark:hover:bg-[#1E293B] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer shadow-2xs"
         title="Notifications"
         aria-label="View notifications"
       >
         <Bell className="w-4 h-4" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4.5 min-w-[1.125rem] px-1 items-center justify-center rounded-full bg-[#E0693B] text-[10px] font-bold text-white shadow-md shadow-[#E0693B]/40 animate-pulse">
+          <span className="absolute -top-1 -right-1 flex h-4 min-w-[1rem] px-1 items-center justify-center rounded-full bg-gradient-to-tr from-blue-600 to-violet-600 text-[10px] font-bold text-white shadow-xs animate-pulse">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -235,13 +235,13 @@ export const NotificationCenter = () => {
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-[#191816] border border-[#332F2A] shadow-2xl z-50 overflow-hidden animate-fade-in">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#111827] border border-[#E7EAF0] dark:border-[#1F2937] shadow-xl z-50 overflow-hidden animate-fade-in">
           {/* Panel Header */}
-          <div className="p-4 bg-[#1E1C19] border-b border-[#2D2925] flex items-center justify-between">
+          <div className="p-4 bg-white dark:bg-[#111827] border-b border-[#E7EAF0] dark:border-[#1F2937] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-[#FAF7F2] font-display">Notifications</h3>
+              <h3 className="text-sm font-bold text-[#172033] dark:text-white font-display">Notifications</h3>
               {unreadCount > 0 && (
-                <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[#E0693B]/15 text-[#E0693B] border border-[#E0693B]/30 font-mono">
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/40 font-mono">
                   {unreadCount} new
                 </span>
               )}
@@ -252,16 +252,16 @@ export const NotificationCenter = () => {
                 onClick={handleCheckReminders}
                 disabled={isCheckingReminders}
                 title="Scan task deadlines and refresh reminders"
-                className="p-1 rounded-lg hover:bg-[#25221F] text-[#9C9384] hover:text-[#FAF7F2] transition-colors text-xs flex items-center gap-1 cursor-pointer"
+                className="p-1 rounded-lg hover:bg-[#F8FAFC] dark:hover:bg-slate-800 text-[#667085] dark:text-slate-400 hover:text-[#172033] dark:hover:text-white transition-colors text-xs flex items-center gap-1 cursor-pointer"
               >
-                <RefreshCw className={`w-3 h-3 ${isCheckingReminders ? "animate-spin text-[#E0693B]" : ""}`} />
+                <RefreshCw className={`w-3 h-3 ${isCheckingReminders ? "animate-spin text-blue-500" : ""}`} />
                 <span className="text-[10px] hidden sm:inline">Scan Reminders</span>
               </button>
 
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllAsRead}
-                  className="text-[11px] font-semibold text-[#E0693B] hover:text-[#EB784B] transition-colors cursor-pointer"
+                  className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors cursor-pointer"
                 >
                   Mark all read
                 </button>
@@ -270,13 +270,13 @@ export const NotificationCenter = () => {
           </div>
 
           {/* Filter Tabs */}
-          <div className="px-4 py-2 bg-[#161513] border-b border-[#2D2925] flex items-center gap-4 text-xs">
+          <div className="px-4 py-2 bg-[#F8FAFC] dark:bg-[#161F30] border-b border-[#E7EAF0] dark:border-[#1F2937] flex items-center gap-4 text-xs">
             <button
               onClick={() => setActiveTab("all")}
               className={`pb-1 font-medium transition-colors border-b-2 cursor-pointer ${
                 activeTab === "all"
-                  ? "text-[#E0693B] border-[#E0693B] font-semibold"
-                  : "text-[#9C9384] border-transparent hover:text-[#FAF7F2]"
+                  ? "text-blue-600 dark:text-blue-400 border-blue-500 font-semibold"
+                  : "text-[#667085] dark:text-slate-400 border-transparent hover:text-[#172033] dark:hover:text-white"
               }`}
             >
               All
@@ -285,8 +285,8 @@ export const NotificationCenter = () => {
               onClick={() => setActiveTab("unread")}
               className={`pb-1 font-medium transition-colors border-b-2 cursor-pointer ${
                 activeTab === "unread"
-                  ? "text-[#E0693B] border-[#E0693B] font-semibold"
-                  : "text-[#9C9384] border-transparent hover:text-[#FAF7F2]"
+                  ? "text-blue-600 dark:text-blue-400 border-blue-500 font-semibold"
+                  : "text-[#667085] dark:text-slate-400 border-transparent hover:text-[#172033] dark:hover:text-white"
               }`}
             >
               Unread ({unreadCount})
@@ -295,8 +295,8 @@ export const NotificationCenter = () => {
               onClick={() => setActiveTab("archived")}
               className={`pb-1 font-medium transition-colors border-b-2 cursor-pointer ${
                 activeTab === "archived"
-                  ? "text-[#E0693B] border-[#E0693B] font-semibold"
-                  : "text-[#9C9384] border-transparent hover:text-[#FAF7F2]"
+                  ? "text-blue-600 dark:text-blue-400 border-blue-500 font-semibold"
+                  : "text-[#667085] dark:text-slate-400 border-transparent hover:text-[#172033] dark:hover:text-white"
               }`}
             >
               Archived
@@ -304,18 +304,18 @@ export const NotificationCenter = () => {
           </div>
 
           {/* Notification List Body */}
-          <div className="max-h-80 overflow-y-auto divide-y divide-[#262420]">
+          <div className="max-h-80 overflow-y-auto divide-y divide-[#E7EAF0]">
             {isLoading ? (
-              <div className="p-6 text-center text-xs text-[#9C9384]">Loading notifications...</div>
+              <div className="p-6 text-center text-xs text-[#667085]">Loading notifications...</div>
             ) : error ? (
-              <div className="p-6 text-center text-xs text-rose-400">{error}</div>
+              <div className="p-6 text-center text-xs text-rose-500">{error}</div>
             ) : notifications.length === 0 ? (
               <div className="p-8 text-center space-y-2">
-                <div className="w-10 h-10 mx-auto rounded-full bg-[#22201D] flex items-center justify-center text-[#787165]">
-                  <Bell className="w-4 h-4 opacity-40" />
+                <div className="w-10 h-10 mx-auto rounded-full bg-[#F8FAFC] flex items-center justify-center text-[#98A2B3]">
+                  <Bell className="w-4 h-4 opacity-50" />
                 </div>
-                <p className="text-xs font-medium text-[#CDC5B6]">No notifications here.</p>
-                <p className="text-[10px] text-[#877E71]">
+                <p className="text-xs font-medium text-[#172033]">No notifications here.</p>
+                <p className="text-[10px] text-[#667085]">
                   {activeTab === "unread"
                     ? "You've read all your notifications."
                     : activeTab === "archived"
@@ -330,56 +330,53 @@ export const NotificationCenter = () => {
                   onClick={() => handleNotificationClick(item)}
                   className={`p-3.5 flex items-start gap-3 transition-colors cursor-pointer group ${
                     !item.isRead
-                      ? "bg-[#E0693B]/5 hover:bg-[#E0693B]/10 border-l-2 border-[#E0693B]"
-                      : "hover:bg-[#201E1B] opacity-80"
+                      ? "bg-[#EEF2FF]/40 hover:bg-[#EEF2FF]/70 border-l-2 border-[#4F7CFF]"
+                      : "hover:bg-[#F8FAFC]"
                   }`}
                 >
                   {renderTypeIcon(item.type)}
 
                   <div className="flex-1 space-y-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-xs font-semibold text-[#FAF7F2] truncate flex items-center gap-1">
+                      <p className="text-xs font-semibold text-[#172033] truncate flex items-center gap-1">
                         {item.title}
                         {item.relatedEntityType === "Task" && (
-                          <ExternalLink className="w-2.5 h-2.5 text-[#E0693B] opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <ExternalLink className="w-2.5 h-2.5 text-[#4F7CFF] opacity-0 group-hover:opacity-100 transition-opacity" />
                         )}
                       </p>
-                      <span className="text-[10px] text-[#877E71] shrink-0 font-mono">
+                      <span className="text-[10px] text-[#98A2B3] shrink-0 font-mono">
                         {formatRelativeTime(item.createdAt)}
                       </span>
                     </div>
-                    <p className="text-[11px] text-[#CDC5B6] line-clamp-2 leading-relaxed">{item.message}</p>
 
-                    {/* Quick Item Actions */}
+                    <p className="text-[11px] text-[#667085] leading-relaxed line-clamp-2">
+                      {item.message}
+                    </p>
+
+                    {/* Action buttons on hover */}
                     <div className="flex items-center gap-2 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       {!item.isRead && (
                         <button
                           onClick={(e) => handleMarkAsRead(item._id, e)}
-                          className="text-[10px] text-[#E0693B] hover:underline flex items-center gap-0.5 cursor-pointer"
+                          className="text-[10px] text-[#4F7CFF] hover:underline flex items-center gap-0.5 cursor-pointer"
                         >
                           <Check className="w-2.5 h-2.5" /> Mark read
                         </button>
                       )}
-                      {!item.isArchived && (
-                        <button
-                          onClick={(e) => handleArchive(item._id, e)}
-                          className="text-[10px] text-[#9C9384] hover:text-[#FAF7F2] flex items-center gap-0.5 cursor-pointer"
-                        >
-                          <Archive className="w-2.5 h-2.5" /> Archive
-                        </button>
-                      )}
+                      <button
+                        onClick={(e) => handleArchive(item._id, e)}
+                        className="text-[10px] text-[#667085] hover:text-[#172033] flex items-center gap-0.5 cursor-pointer"
+                      >
+                        <Archive className="w-2.5 h-2.5" /> Archive
+                      </button>
                       <button
                         onClick={(e) => handleDelete(item._id, e)}
-                        className="text-[10px] text-rose-400/80 hover:text-rose-400 flex items-center gap-0.5 ml-auto cursor-pointer"
+                        className="text-[10px] text-rose-500 hover:text-rose-600 flex items-center gap-0.5 cursor-pointer ml-auto"
                       >
-                        <Trash2 className="w-2.5 h-2.5" /> Delete
+                        <Trash2 className="w-2.5 h-2.5" />
                       </button>
                     </div>
                   </div>
-
-                  {!item.isRead && (
-                    <span className="w-2 h-2 rounded-full bg-[#E0693B] shrink-0 mt-1.5" title="Unread" />
-                  )}
                 </div>
               ))
             )}

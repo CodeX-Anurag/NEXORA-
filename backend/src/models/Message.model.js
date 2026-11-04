@@ -23,6 +23,31 @@ const messageSchema = new mongoose.Schema(
       type: String,
       required: [true, "Message content is required"],
       trim: true
+    },
+    attachments: [
+      {
+        name: { type: String, trim: true },
+        url: { type: String, trim: true },
+        mimeType: { type: String, trim: true },
+        size: { type: Number, default: 0 }
+      }
+    ],
+    metadata: {
+      responseMode: { type: String, default: "detailed" },
+      chartSpec: { type: mongoose.Schema.Types.Mixed, default: null },
+      imagePrompt: { type: String, default: null },
+      imageUrl: { type: String, default: null },
+      toolType: { type: String, default: null },
+      isError: { type: Boolean, default: false }
+    },
+    feedback: {
+      type: String,
+      enum: ["helpful", "not_useful", null],
+      default: null
+    },
+    saved: {
+      type: Boolean,
+      default: false
     }
   },
   {

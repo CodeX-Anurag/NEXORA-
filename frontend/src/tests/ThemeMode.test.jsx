@@ -30,21 +30,21 @@ describe("ThemeContext Day & Night Mode Suite", () => {
     vi.restoreAllMocks();
   });
 
-  it("defaults to dark (Night Mode) initially", () => {
+  it("defaults to light (Day Mode) initially for clean SaaS interface", () => {
     render(
       <ThemeProvider>
         <ThemeConsumer />
       </ThemeProvider>
     );
 
-    expect(screen.getByTestId("theme-value").textContent).toBe("dark");
-    expect(screen.getByTestId("is-day").textContent).toBe("false");
-    expect(screen.getByTestId("is-night").textContent).toBe("true");
-    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
-    expect(document.documentElement.classList.contains("dark")).toBe(true);
+    expect(screen.getByTestId("theme-value").textContent).toBe("light");
+    expect(screen.getByTestId("is-day").textContent).toBe("true");
+    expect(screen.getByTestId("is-night").textContent).toBe("false");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+    expect(document.documentElement.classList.contains("light")).toBe(true);
   });
 
-  it("toggles from Night Mode to Day Mode and persists to localStorage", () => {
+  it("toggles from Day Mode to Night Mode and persists to localStorage", () => {
     render(
       <ThemeProvider>
         <ThemeConsumer />
@@ -56,25 +56,25 @@ describe("ThemeContext Day & Night Mode Suite", () => {
       fireEvent.click(button);
     });
 
-    expect(screen.getByTestId("theme-value").textContent).toBe("light");
-    expect(screen.getByTestId("is-day").textContent).toBe("true");
-    expect(screen.getByTestId("is-night").textContent).toBe("false");
-    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
-    expect(document.documentElement.classList.contains("light")).toBe(true);
-    expect(localStorage.getItem("nexora_theme")).toBe("light");
+    expect(screen.getByTestId("theme-value").textContent).toBe("dark");
+    expect(screen.getByTestId("is-day").textContent).toBe("false");
+    expect(screen.getByTestId("is-night").textContent).toBe("true");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
+    expect(localStorage.getItem("nexora_theme")).toBe("dark");
 
-    // Toggle back to Night Mode
+    // Toggle back to Day Mode
     act(() => {
       fireEvent.click(button);
     });
 
-    expect(screen.getByTestId("theme-value").textContent).toBe("dark");
-    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
-    expect(localStorage.getItem("nexora_theme")).toBe("dark");
+    expect(screen.getByTestId("theme-value").textContent).toBe("light");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+    expect(localStorage.getItem("nexora_theme")).toBe("light");
   });
 
-  it("restores stored light theme from localStorage on load", () => {
-    localStorage.setItem("nexora_theme", "light");
+  it("restores stored dark theme from localStorage on load", () => {
+    localStorage.setItem("nexora_theme", "dark");
 
     render(
       <ThemeProvider>
@@ -82,8 +82,8 @@ describe("ThemeContext Day & Night Mode Suite", () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByTestId("theme-value").textContent).toBe("light");
-    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+    expect(screen.getByTestId("theme-value").textContent).toBe("dark");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
   });
 
   it("renders Day/Night toggle button in Navbar and toggles state", () => {
@@ -97,15 +97,15 @@ describe("ThemeContext Day & Night Mode Suite", () => {
       </ThemeProvider>
     );
 
-    const toggleBtn = screen.getByLabelText(/switch to day mode/i);
+    const toggleBtn = screen.getByLabelText(/switch to night mode/i);
     expect(toggleBtn).toBeInTheDocument();
 
     act(() => {
       fireEvent.click(toggleBtn);
     });
 
-    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
-    expect(screen.getByLabelText(/switch to night mode/i)).toBeInTheDocument();
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+    expect(screen.getByLabelText(/switch to day mode/i)).toBeInTheDocument();
   });
 
   it("renders Day/Night toggle button in Sidebar footer", () => {
@@ -119,14 +119,14 @@ describe("ThemeContext Day & Night Mode Suite", () => {
       </ThemeProvider>
     );
 
-    const sidebarToggle = screen.getByTitle(/switch to day mode/i);
+    const sidebarToggle = screen.getByTitle(/switch to night mode/i);
     expect(sidebarToggle).toBeInTheDocument();
 
     act(() => {
       fireEvent.click(sidebarToggle);
     });
 
-    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
-    expect(screen.getByTitle(/switch to night mode/i)).toBeInTheDocument();
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+    expect(screen.getByTitle(/switch to day mode/i)).toBeInTheDocument();
   });
 });

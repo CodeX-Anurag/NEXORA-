@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0F19"/>
+      <stop offset="100%" stop-color="#161F30"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="blueAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4F7CFF"/>
+      <stop offset="100%" stop-color="#7C6CFA"/>
+    </linearGradient>
+    <linearGradient id="emeraldAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bg)" rx="24"/>
+  <rect x="20" y="20" width="760" height="560" fill="none" stroke="#1E293B" stroke-width="2" rx="20"/>
+
+  <!-- Title Badge -->
+  <rect x="50" y="45" width="260" height="34" rx="8" fill="#1E293B" stroke="#334155"/>
+  <text x="65" y="67" fill="#60A5FA" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" letter-spacing="1">CENTRAL PROCESSING UNIT</text>
+  <text x="50" y="110" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="20" font-weight="bold">Von Neumann CPU Architecture</text>
+  <text x="50" y="132" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12">Von Neumann CPU architecture diagram</text>
+
+  <!-- Control Unit -->
+  <rect x="50" y="160" width="320" height="150" rx="16" fill="url(#cardGrad)" stroke="#4F7CFF" stroke-width="2" filter="url(#glow)"/>
+  <rect x="50" y="160" width="320" height="6" fill="url(#blueAccent)"/>
+  <text x="75" y="195" fill="#60A5FA" font-family="system-ui, sans-serif" font-size="16" font-weight="bold">CONTROL UNIT (CU)</text>
+  <text x="75" y="220" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12">• Instruction Register (IR)</text>
+  <text x="75" y="242" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12">• Program Counter (PC)</text>
+  <text x="75" y="264" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12">• Instruction Decoder &amp; Sequencer</text>
+  <text x="75" y="286" fill="#10B981" font-family="monospace" font-size="11">Clock Sync: 3.80 GHz</text>
+
+  <!-- ALU -->
+  <rect x="430" y="160" width="320" height="150" rx="16" fill="url(#cardGrad)" stroke="#10B981" stroke-width="2"/>
+  <rect x="430" y="160" width="320" height="6" fill="url(#emeraldAccent)"/>
+  <text x="455" y="195" fill="#34D399" font-family="system-ui, sans-serif" font-size="16" font-weight="bold">ARITHMETIC LOGIC UNIT (ALU)</text>
+  <text x="455" y="220" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12">• Accumulator (ACC)</text>
+  <text x="455" y="242" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12">• Arithmetic Operations (+, -, *, /)</text>
+  <text x="455" y="264" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12">• Logical Operations (AND, OR, NOT, XOR)</text>
+  <text x="455" y="286" fill="#F59E0B" font-family="monospace" font-size="11">Status Flags: Zero, Carry, Overflow</text>
+
+  <!-- Internal Bus -->
+  <line x1="370" y1="235" x2="430" y2="235" stroke="#F59E0B" stroke-width="4" stroke-dasharray="6,4"/>
+  <text x="382" y="225" fill="#FBBF24" font-family="monospace" font-size="10" font-weight="bold">INTERNAL BUS</text>
+
+  <!-- Registers Grid -->
+  <rect x="50" y="340" width="700" height="100" rx="16" fill="#1E293B" stroke="#334155"/>
+  <text x="75" y="370" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="14" font-weight="bold">REGISTER FILE &amp; ON-DIE L1/L2 CACHE</text>
+  <rect x="75" y="385" width="130" height="40" rx="8" fill="#0F172A" stroke="#475569"/>
+  <text x="95" y="410" fill="#93C5FD" font-family="monospace" font-size="12">MAR (Address)</text>
+  <rect x="225" y="385" width="130" height="40" rx="8" fill="#0F172A" stroke="#475569"/>
+  <text x="250" y="410" fill="#93C5FD" font-family="monospace" font-size="12">MDR (Data)</text>
+  <rect x="375" y="385" width="150" height="40" rx="8" fill="#0F172A" stroke="#475569"/>
+  <text x="395" y="410" fill="#93C5FD" font-family="monospace" font-size="12">General Regs (R0-R7)</text>
+  <rect x="545" y="385" width="180" height="40" rx="8" fill="#0F172A" stroke="#475569"/>
+  <text x="565" y="410" fill="#34D399" font-family="monospace" font-size="12">L1 Cache (32KB/32KB)</text>
+
+  <!-- External System Bus & Main Memory -->
+  <rect x="50" y="470" width="700" height="75" rx="16" fill="url(#cardGrad)" stroke="#7C6CFA" stroke-width="1.5"/>
+  <text x="75" y="500" fill="#A78BFA" font-family="system-ui, sans-serif" font-size="13" font-weight="bold">SYSTEM INTERCONNECT (CONTROL, ADDRESS &amp; DATA BUSES)</text>
+  <text x="75" y="525" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="11">Communicating with RAM (Main Memory), Secondary Storage (NVMe), and I/O Peripherals</text>
+</svg>

@@ -38,37 +38,37 @@ export class ErrorBoundaryClass extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="max-w-2xl mx-auto my-12 p-8 rounded-2xl bg-[#191816] border border-[#2D2925] text-center space-y-6 shadow-2xl animate-fade-in">
-          <div className="w-16 h-16 mx-auto rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+        <div className="max-w-2xl mx-auto my-12 p-8 rounded-2xl bg-white border border-[#E7EAF0] text-center space-y-6 shadow-xs animate-fade-in">
+          <div className="w-16 h-16 mx-auto rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-500">
             <AlertTriangle className="w-8 h-8" />
           </div>
 
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[10px] font-mono uppercase font-bold tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-[10px] font-mono uppercase font-bold tracking-wider">
               Application Recovery
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#FAF7F2] font-display">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#172033] font-display">
               Something went wrong in this module
             </h2>
-            <p className="text-xs sm:text-sm text-[#9C9384] max-w-md mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#667085] max-w-md mx-auto leading-relaxed">
               An unexpected client runtime error occurred while rendering this view. You can retry or safely return to the dashboard.
             </p>
           </div>
 
           {/* Development-only error inspection drawer */}
           {import.meta.env.DEV && this.state.error && (
-            <div className="text-left bg-[#141312] p-4 rounded-xl border border-rose-900/40 text-xs font-mono text-rose-300 space-y-2 overflow-x-auto max-h-60">
-              <p className="font-bold text-rose-400 text-[11px] uppercase tracking-wider">
+            <div className="text-left bg-[#F7F8FC] p-4 rounded-xl border border-rose-200 text-xs font-mono text-rose-700 space-y-2 overflow-x-auto max-h-60">
+              <p className="font-bold text-rose-600 text-[11px] uppercase tracking-wider">
                 [Dev Diagnostics — Visible Only in Development]
               </p>
               <p className="font-semibold">{this.state.error.toString()}</p>
               {this.state.error.stack && (
-                <pre className="text-[10px] text-[#A89F91] whitespace-pre-wrap leading-tight mt-1">
+                <pre className="text-[10px] text-[#667085] whitespace-pre-wrap leading-tight mt-1">
                   {this.state.error.stack}
                 </pre>
               )}
               {this.state.errorInfo?.componentStack && (
-                <pre className="text-[10px] text-[#787165] whitespace-pre-wrap leading-tight mt-2 border-t border-[#262420] pt-1">
+                <pre className="text-[10px] text-[#667085] whitespace-pre-wrap leading-tight mt-2 border-t border-[#E7EAF0] pt-1">
                   Component Stack:{this.state.errorInfo.componentStack}
                 </pre>
               )}

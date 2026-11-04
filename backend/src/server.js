@@ -1,8 +1,10 @@
-const dns = require("dns");
+const dns = require("node:dns");
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 if (typeof dns.setDefaultResultOrder === "function") {
   dns.setDefaultResultOrder("ipv4first");
 }
-
 const app = require("./app");
 const { PORT } = require("./config/env");
 const { connectDB, disconnectDB } = require("./config/db");

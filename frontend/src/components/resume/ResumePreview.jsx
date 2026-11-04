@@ -4,9 +4,9 @@ import { ExternalLink, Mail, Phone, MapPin, Globe, Linkedin, Github } from "luci
 export const ResumePreview = ({ resumeData, template = "modern", id = "resume-preview-sheet" }) => {
   if (!resumeData) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center text-[#787165] bg-[#141312] rounded-xl border border-[#2D2925] h-full min-h-[500px]">
-        <p className="text-sm font-medium">No resume content generated yet.</p>
-        <p className="text-xs text-[#9C9384] mt-1">Select your profile data and click Generate to preview your resume.</p>
+      <div className="flex flex-col items-center justify-center p-12 text-center text-[#667085] bg-white rounded-2xl border border-dashed border-[#E7EAF0] h-full min-h-[500px] shadow-xs">
+        <p className="text-sm font-semibold text-[#172033]">No resume content generated yet.</p>
+        <p className="text-xs text-[#667085] mt-1">Select your profile data and click Generate to preview your resume.</p>
       </div>
     );
   }
@@ -26,7 +26,7 @@ export const ResumePreview = ({ resumeData, template = "modern", id = "resume-pr
     ? "text-slate-900 border-slate-700"
     : isTechnical
     ? "text-emerald-700 border-emerald-600"
-    : "text-[#E0693B] border-[#E0693B]";
+    : "text-[#4F7CFF] border-[#4F7CFF]";
 
   const headerAlign = isClassic ? "text-center" : "text-left";
 
@@ -44,21 +44,24 @@ export const ResumePreview = ({ resumeData, template = "modern", id = "resume-pr
   const isArraySkills = Array.isArray(skills);
 
   return (
-    <div className="w-full flex justify-center bg-[#100F0E] p-2 sm:p-4 rounded-xl border border-[#2D2925] overflow-auto">
+    <div className="w-full flex justify-center bg-[#F1F4F9] dark:bg-slate-950 p-3 sm:p-6 rounded-2xl border border-[#E7EAF0] dark:border-slate-800 overflow-auto shadow-xs">
       {/* Simulated 8.5x11 high-contrast printable document sheet */}
       <div
         id={id}
-        className={`w-full max-w-[850px] min-h-[1050px] bg-white text-slate-900 shadow-2xl p-8 sm:p-12 text-[13px] leading-relaxed select-text ${fontFamily}`}
-        style={{ colorScheme: "light" }}
+        className={`w-full max-w-[850px] min-h-[1050px] !bg-white !text-slate-900 shadow-xl border border-[#E7EAF0] p-8 sm:p-12 text-[13px] leading-relaxed select-text ${fontFamily}`}
+        style={{ colorScheme: "light", backgroundColor: "#FFFFFF", color: "#0F172A" }}
       >
-        {/* Document Header */}
-        <header className={`border-b pb-4 mb-5 ${headerAlign} border-slate-300`}>
+        {/* Document Header - Guaranteed transparent in both day and night mode */}
+        <header
+          className={`resume-header-block border-b pb-4 mb-5 ${headerAlign} border-slate-300 !bg-transparent`}
+          style={{ backgroundColor: "transparent", backdropFilter: "none" }}
+        >
           <h1 className={`text-2xl sm:text-3xl font-extrabold uppercase tracking-wide text-slate-950 ${isClassic ? "tracking-widest" : ""}`}>
             {pInfo.fullName || pInfo.name || "Candidate Name"}
           </h1>
 
           {resumeData.targetRole && (
-            <p className={`text-sm font-semibold mt-1 ${isTechnical ? "text-emerald-800" : isClassic ? "text-slate-700 italic" : "text-[#E0693B]"}`}>
+            <p className={`text-sm font-semibold mt-1 ${isTechnical ? "text-emerald-800" : isClassic ? "text-slate-700 italic" : "text-[#4F7CFF]"}`}>
               {resumeData.targetRole}
             </p>
           )}
@@ -196,7 +199,7 @@ export const ResumePreview = ({ resumeData, template = "modern", id = "resume-pr
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-bold text-slate-950 text-sm">{proj.title}</span>
                       {Array.isArray(proj.techStack) && proj.techStack.length > 0 && (
-                        <span className="text-[11px] font-mono text-[#E0693B] font-medium">
+                        <span className="text-[11px] font-mono text-[#4F7CFF] font-medium">
                           [{proj.techStack.join(", ")}]
                         </span>
                       )}

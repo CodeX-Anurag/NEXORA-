@@ -12,7 +12,19 @@ const MAX_PROMPT_LENGTH = 5000;
 /**
  * AI Service: Manages AI chat generation flow with memory & context building
  */
-const generateChatResponse = async (userId, { conversationId, messageContent, isFreshChat = false }, llmClientOverride = null) => {
+const generateChatResponse = async (
+  userId,
+  {
+    conversationId,
+    messageContent,
+    isFreshChat = false,
+    responseMode = "detailed",
+    language = "auto",
+    documentContext = "",
+    attachments = []
+  },
+  llmClientOverride = null
+) => {
   if (!messageContent || !messageContent.trim()) {
     const err = new Error("Message content is required.");
     err.statusCode = 400;
@@ -38,7 +50,9 @@ const generateChatResponse = async (userId, { conversationId, messageContent, is
     conversation = await Conversation.create({
       userId,
       title: titleSnippet ? `${titleSnippet}...` : "New AI Coach Session",
-      isFreshChat
+      isFreshChat,
+      responseMode,
+      language
     });
   }
 
@@ -47,22 +61,29 @@ const generateChatResponse = async (userId, { conversationId, messageContent, is
     conversationId: conversation._id,
     userId,
     role: "user",
-    content: messageContent.trim()
+    content: messageContent.trim(),
+    attachments: attachments || []
   });
 
   // 2. Load recent messages for conversation
   const previousMessages = await Message.find({ conversationId: conversation._id })
     .sort({ createdAt: 1 });
 
-  // 3. Build multi-source context (semantic memories, career readiness, study activity)
+  // 3. Build multi-source context (semantic memories, career readiness, study activity, document context)
   const { systemContext, boundedMessages } = await ContextBuilder.buildContext(
     userId,
     messageContent.trim(),
     previousMessages,
-    { isFreshChat: conversation.isFreshChat }
+    { isFreshChat: conversation.isFreshChat, documentContext }
   );
 
-  const baseSystemPrompt = PromptManager.getSystemPrompt();
+  const activeMode = responseMode || conversation.responseMode || "detailed";
+  const activeLang = language || conversation.language || "auto";
+  const baseSystemPrompt = PromptManager.getSystemPrompt({
+    responseMode: activeMode,
+    language: activeLang,
+    hasDocuments: !!documentContext
+  });
   const combinedSystemPrompt = `${baseSystemPrompt}\n\n${systemContext}`;
 
   // 4. Call LLM Provider through LLMClient
@@ -102,7 +123,11 @@ const generateChatResponse = async (userId, { conversationId, messageContent, is
     conversationId: conversation._id,
     userId,
     role: "assistant",
-    content: parsed.content
+    content: parsed.content,
+    metadata: {
+      responseMode: activeMode,
+      toolType: "coach"
+    }
   });
 
   return {
@@ -117,7 +142,16 @@ const generateChatResponse = async (userId, { conversationId, messageContent, is
  */
 const generateStreamingChatResponse = async (
   userId,
-  { conversationId, messageContent, isFreshChat = false, onStart = null },
+  {
+    conversationId,
+    messageContent,
+    isFreshChat = false,
+    responseMode = "detailed",
+    language = "auto",
+    documentContext = "",
+    attachments = [],
+    onStart = null
+  },
   onTokenChunk,
   signal,
   llmClientOverride = null
@@ -147,7 +181,9 @@ const generateStreamingChatResponse = async (
     conversation = await Conversation.create({
       userId,
       title: titleSnippet ? `${titleSnippet}...` : "New AI Coach Session",
-      isFreshChat
+      isFreshChat,
+      responseMode,
+      language
     });
   }
 
@@ -156,7 +192,8 @@ const generateStreamingChatResponse = async (
     conversationId: conversation._id,
     userId,
     role: "user",
-    content: messageContent.trim()
+    content: messageContent.trim(),
+    attachments: attachments || []
   });
 
   if (typeof onStart === "function") {
@@ -173,15 +210,21 @@ const generateStreamingChatResponse = async (
   // 2. Load recent messages for conversation
   const previousMessages = await Message.find({ conversationId: conversation._id }).sort({ createdAt: 1 });
 
-  // 3. Build multi-source context with Phase 8B Semantic Memory vector search
+  // 3. Build multi-source context with Phase 8B Semantic Memory vector search & document context
   const { systemContext, boundedMessages } = await ContextBuilder.buildContext(
     userId,
     messageContent.trim(),
     previousMessages,
-    { isFreshChat: conversation.isFreshChat }
+    { isFreshChat: conversation.isFreshChat, documentContext }
   );
 
-  const baseSystemPrompt = PromptManager.getSystemPrompt();
+  const activeMode = responseMode || conversation.responseMode || "detailed";
+  const activeLang = language || conversation.language || "auto";
+  const baseSystemPrompt = PromptManager.getSystemPrompt({
+    responseMode: activeMode,
+    language: activeLang,
+    hasDocuments: !!documentContext
+  });
   const combinedSystemPrompt = `${baseSystemPrompt}\n\n${systemContext}`;
 
   // 4. Stream tokens via LLMClient and accumulate assistant text server-side
@@ -237,8 +280,13 @@ const generateStreamingChatResponse = async (
     });
   }
 
-  // If accumulatedText is empty, fallback to rawResult.content
-  const finalContent = accumulatedText || rawResult?.content || "Response generation complete.";
+  // If accumulatedText is empty, fallback to rawResult.content or reject empty response
+  const finalContent = (accumulatedText && accumulatedText.trim()) || (rawResult?.content && rawResult.content.trim());
+  if (!finalContent) {
+    const emptyErr = new Error("AI provider returned an empty response. Please retry your question.");
+    emptyErr.statusCode = 502;
+    throw emptyErr;
+  }
   const parsed = ResponseParser.parse({ content: finalContent });
 
   // 5. Persist ONE complete assistant Message document after successful generation
@@ -246,7 +294,11 @@ const generateStreamingChatResponse = async (
     conversationId: conversation._id,
     userId,
     role: "assistant",
-    content: parsed.content
+    content: parsed.content,
+    metadata: {
+      responseMode: activeMode,
+      toolType: "coach"
+    }
   });
 
   return {

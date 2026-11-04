@@ -6,17 +6,23 @@ const VivaService = require("../services/viva.service");
  */
 const startSession = async (req, res, next) => {
   try {
-    const { topic, difficulty, maxRounds } = req.body;
+    const { topic, difficulty, maxRounds, focusArea, answerMode, language } = req.body;
     const session = await VivaService.startSession(req.userId, {
       topic,
       difficulty,
-      maxRounds
+      maxRounds,
+      focusArea,
+      answerMode,
+      language
     });
+
+    const activeRound = session.rounds?.[session.currentRound - 1] || session.rounds?.[0] || null;
 
     return res.status(201).json({
       success: true,
       message: `Viva examination on "${session.topic}" initialized successfully.`,
-      session
+      session,
+      activeRound
     });
   } catch (error) {
     next(error);
@@ -30,13 +36,19 @@ const startSession = async (req, res, next) => {
 const submitAnswer = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { answer } = req.body;
+    const answer = req.body.answer || req.body.studentAnswer;
 
     const result = await VivaService.submitAnswer(req.userId, id, { answer });
+    const isFinished = Boolean(result.isCompleted || result.session?.status === "completed");
+    const nextRound = isFinished
+      ? null
+      : (result.session?.rounds?.[result.session.currentRound - 1] || null);
 
     return res.status(200).json({
       success: true,
-      ...result
+      ...result,
+      isFinished,
+      nextRound
     });
   } catch (error) {
     next(error);
@@ -53,7 +65,8 @@ const getHistory = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       count: history.length,
-      history
+      history,
+      sessions: history
     });
   } catch (error) {
     next(error);
@@ -90,7 +103,8 @@ const convertRecommendationsToTasks = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: `Successfully created ${result.count} study task(s) from your viva review recommendations.`,
-      tasks: result.tasks
+      tasks: result.tasks,
+      tasksCreatedCount: result.count
     });
   } catch (error) {
     next(error);

@@ -12,21 +12,21 @@ export const Button = ({
   ...props
 }) => {
   const baseStyle =
-    "inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#121110] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]";
+    "inline-flex items-center justify-center font-medium transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-[#111827] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98] cursor-pointer hover:-translate-y-0.5 active:translate-y-0 disabled:transform-none disabled:shadow-none";
 
   const variants = {
     primary:
-      "bg-[#E0693B] hover:bg-[#EB784B] active:bg-[#C5572C] text-white shadow-sm shadow-[#E0693B]/20 focus:ring-[#E0693B]",
+      "bg-[#4F7CFF] hover:bg-[#3E6AE1] active:bg-[#3258C7] text-white shadow-sm shadow-[#4F7CFF]/20 hover:shadow-md hover:shadow-[#4F7CFF]/35 hover:brightness-105 focus:ring-[#4F7CFF]",
     secondary:
-      "bg-[#22201D] hover:bg-[#2A2724] text-[#FAF7F2] border border-[#35312C] hover:border-[#47423B] focus:ring-[#CDC5B6]",
+      "bg-white dark:bg-[#1A2333] hover:bg-[#F8FAFC] dark:hover:bg-[#243047] active:bg-[#F1F4F9] text-[#172033] dark:text-slate-100 border border-[#E7EAF0] dark:border-[#2D3B55] hover:border-[#4F7CFF]/40 hover:text-[#4F7CFF] dark:hover:text-[#6B93FF] shadow-2xs hover:shadow-md hover:shadow-black/5 focus:ring-[#4F7CFF]",
     outline:
-      "border border-[#E0693B]/50 text-[#E0693B] hover:bg-[#E0693B]/10 hover:border-[#E0693B] focus:ring-[#E0693B]",
+      "border border-[#4F7CFF] text-[#4F7CFF] hover:bg-[#EEF2FF] dark:hover:bg-blue-950/40 hover:border-[#3E6AE1] hover:shadow-sm hover:shadow-[#4F7CFF]/20 active:bg-[#E0E7FF] focus:ring-[#4F7CFF]",
     danger:
-      "bg-[#DC3838] hover:bg-[#C52B2B] text-white shadow-sm shadow-rose-900/30 focus:ring-rose-500",
+      "bg-[#F04438] hover:bg-[#D92D20] active:bg-[#B42318] text-white shadow-sm shadow-rose-500/20 hover:shadow-md hover:shadow-rose-500/35 hover:brightness-105 focus:ring-[#F04438]",
     success:
-      "bg-[#2EA366] hover:bg-[#268B57] text-white shadow-sm shadow-emerald-900/30 focus:ring-[#2EA366]",
+      "bg-[#12B76A] hover:bg-[#039855] active:bg-[#027A48] text-white shadow-sm shadow-emerald-500/20 hover:shadow-md hover:shadow-emerald-500/35 hover:brightness-105 focus:ring-[#12B76A]",
     ghost:
-      "bg-transparent hover:bg-[#22201D] text-[#CDC5B6] hover:text-[#FAF7F2] focus:ring-[#47423B]"
+      "bg-transparent hover:bg-[#F1F4F9] dark:hover:bg-slate-800 text-[#667085] dark:text-slate-400 hover:text-[#172033] dark:hover:text-white hover:shadow-2xs focus:ring-[#D0D5DD]"
   };
 
   const sizes = {

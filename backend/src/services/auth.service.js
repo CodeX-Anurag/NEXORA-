@@ -2,7 +2,7 @@ const User = require("../models/User.model");
 const AuthSession = require("../models/AuthSession.model");
 const { hashPassword, comparePassword, hashToken, generateRandomToken } = require("../utils/hashing");
 const { generateAccessToken } = require("../utils/jwt");
-const { NODE_ENV, REFRESH_TOKEN_EXPIRES_DAYS } = require("../config/env");
+const { NODE_ENV, REFRESH_TOKEN_EXPIRES_DAYS, CLIENT_URL } = require("../config/env");
 const crypto = require("crypto");
 
 const REFRESH_COOKIE_NAME = "nexora_refreshToken";
@@ -234,11 +234,133 @@ const logout = async (rawRefreshToken) => {
   }
 };
 
+/**
+ * Generate password reset token & instructions
+ */
+const forgotPassword = async (email) => {
+  if (!email) {
+    const err = new Error("Email address is required.");
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const normalizedEmail = email.toLowerCase().trim();
+  const user = await User.findOne({ email: normalizedEmail });
+
+  // For security, do not leak whether account exists to prevent email enumeration
+  if (!user) {
+    return {
+      success: true,
+      message: "If an account exists with this email address, you will receive password reset instructions."
+    };
+  }
+
+  // Generate 64-char crypto secure hex token
+  const rawToken = crypto.randomBytes(32).toString("hex");
+  const hashedToken = hashToken(rawToken);
+
+  // Expiration: 1 hour from generation
+  user.passwordResetToken = hashedToken;
+  user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000);
+  await user.save();
+
+  const clientBase = (CLIENT_URL || "http://localhost:5173").replace(/\/$/, "");
+  const resetUrl = `${clientBase}/reset-password?token=${rawToken}&email=${encodeURIComponent(user.email)}`;
+
+  console.log(`[AUTH] Password reset requested for ${user.email}. Token generated.`);
+  console.log(`[AUTH] Reset Link: ${resetUrl}`);
+
+  return {
+    success: true,
+    message: "Password reset instructions have been generated.",
+    // Include resetUrl and token in non-production environments to allow immediate UI testing
+    ...(NODE_ENV !== "production" ? { resetUrl, resetToken: rawToken } : {})
+  };
+};
+
+/**
+ * Verify whether a reset token is valid and unexpired
+ */
+const verifyResetToken = async (rawToken) => {
+  if (!rawToken) {
+    return { valid: false, message: "Reset token is required." };
+  }
+
+  const hashedToken = hashToken(rawToken);
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: new Date() }
+  }).select("+passwordResetToken +passwordResetExpires");
+
+  if (!user) {
+    return {
+      valid: false,
+      message: "Password reset link is invalid or has expired. Please request a new one."
+    };
+  }
+
+  return {
+    valid: true,
+    email: user.email
+  };
+};
+
+/**
+ * Reset user password with token
+ */
+const resetPassword = async ({ token, password }) => {
+  if (!token) {
+    const err = new Error("Reset token is required.");
+    err.statusCode = 400;
+    throw err;
+  }
+
+  if (!password || password.length < 8) {
+    const err = new Error("Password must be at least 8 characters long.");
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const hashedToken = hashToken(token);
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: new Date() }
+  }).select("+passwordResetToken +passwordResetExpires");
+
+  if (!user) {
+    const err = new Error("Password reset link is invalid or has expired. Please request a new one.");
+    err.statusCode = 400;
+    throw err;
+  }
+
+  // Update password and clear reset fields
+  user.passwordHash = await hashPassword(password);
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
+
+  // Security: Revoke all existing sessions for this user so any compromised tokens are invalidated
+  await AuthSession.updateMany(
+    { userId: user._id },
+    { $set: { revokedAt: new Date() } }
+  );
+
+  console.log(`[AUTH] Password successfully reset for user ${user.email}. Sessions invalidated.`);
+
+  return {
+    success: true,
+    message: "Your password has been reset successfully. You can now log in with your new password."
+  };
+};
+
 module.exports = {
   register,
   login,
   refreshSession,
   logout,
+  forgotPassword,
+  verifyResetToken,
+  resetPassword,
   setRefreshCookie,
   clearRefreshCookie,
   REFRESH_COOKIE_NAME

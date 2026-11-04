@@ -13,22 +13,33 @@ export const ThemeProvider = ({ children }) => {
     try {
       const stored = localStorage.getItem("nexora_theme");
       if (stored === "light" || stored === "dark") return stored;
-      return "dark"; // Default to dark / night mode
+      return "light"; // Default to light / day mode for clean SaaS aesthetic
     } catch {
-      return "dark";
+      return "light";
     }
   });
 
   useEffect(() => {
     const root = document.documentElement;
+    const body = typeof document !== "undefined" ? document.body : null;
     if (theme === "light") {
       root.classList.add("light");
       root.classList.remove("dark");
       root.setAttribute("data-theme", "light");
+      if (body) {
+        body.classList.add("light");
+        body.classList.remove("dark");
+        body.setAttribute("data-theme", "light");
+      }
     } else {
       root.classList.add("dark");
       root.classList.remove("light");
       root.setAttribute("data-theme", "dark");
+      if (body) {
+        body.classList.add("dark");
+        body.classList.remove("light");
+        body.setAttribute("data-theme", "dark");
+      }
     }
     try {
       localStorage.setItem("nexora_theme", theme);

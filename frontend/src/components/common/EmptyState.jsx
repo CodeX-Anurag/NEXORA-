@@ -49,7 +49,7 @@ export function EmptyState({
     }
     if (typeof icon === 'function' || (typeof icon === 'object' && icon !== null)) {
       const IconComponent = icon;
-      return <IconComponent className="w-6 h-6 text-[#9C9384]" size={24} />;
+      return <IconComponent className="w-6 h-6 text-[#98A2B3]" size={24} />;
     }
     return null;
   };
@@ -60,7 +60,7 @@ export function EmptyState({
     >
       {icon && (
         <div
-          className={`flex items-center justify-center rounded-2xl bg-[#22201D] border border-[#2D2925] ${s.iconBox}`}
+          className={`flex items-center justify-center rounded-2xl bg-[#F8FAFC] dark:bg-[#1A2333] border border-[#E7EAF0] dark:border-[#2D3B55] text-[#4F7CFF] dark:text-[#6B93FF] shadow-sm ${s.iconBox}`}
         >
           {renderIcon()}
         </div>
@@ -68,14 +68,14 @@ export function EmptyState({
 
       {title && (
         <p
-          className={`font-display font-semibold text-[#FAF7F2] ${s.title} mt-1`}
+          className={`font-display font-semibold text-[#172033] dark:text-slate-100 ${s.title} mt-1`}
         >
           {title}
         </p>
       )}
 
       {description && (
-        <p className={`text-[#9C9384] max-w-xs ${s.desc}`}>{description}</p>
+        <p className={`text-[#667085] dark:text-slate-400 max-w-xs ${s.desc} leading-relaxed`}>{description}</p>
       )}
 
       {action && <div className="mt-2">{action}</div>}

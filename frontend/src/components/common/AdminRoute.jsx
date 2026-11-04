@@ -16,8 +16,8 @@ export const AdminRoute = ({ children }) => {
 
   if (user?.role !== "admin") {
     return (
-      <div className="max-w-xl mx-auto my-16 p-8 rounded-2xl bg-[#191816] border border-[#2D2925] text-center space-y-6 animate-fade-in shadow-2xl">
-        <div className="w-16 h-16 mx-auto rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+      <div className="max-w-xl mx-auto my-16 p-8 rounded-2xl bg-white border border-[#E7EAF0] text-center space-y-6 animate-fade-in shadow-xs">
+        <div className="w-16 h-16 mx-auto rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-500">
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -29,16 +29,16 @@ export const AdminRoute = ({ children }) => {
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-xl font-bold text-[#FAF7F2] font-display">403 — Access Denied</h2>
-          <p className="text-sm text-[#9C9384] leading-relaxed">
-            System Observability Telemetry is restricted to Administrator accounts. Your account (<span className="text-[#E0693B] font-mono">{user?.email}</span>) does not have administrative privileges.
+          <h2 className="text-xl font-bold text-[#172033] font-display">403 — Access Denied</h2>
+          <p className="text-sm text-[#667085] leading-relaxed">
+            System Observability Telemetry is restricted to Administrator accounts. Your account (<span className="text-[#4F7CFF] font-mono">{user?.email}</span>) does not have administrative privileges.
           </p>
         </div>
 
         <div className="pt-2">
           <Link
             to="/dashboard"
-            className="inline-flex items-center px-4 py-2 rounded-xl bg-[#E0693B] hover:bg-[#EB784B] text-white text-xs font-semibold transition-colors shadow-sm"
+            className="inline-flex items-center px-4 py-2 rounded-xl bg-[#4F7CFF] hover:bg-[#3D68E8] text-white text-xs font-semibold transition-colors shadow-xs"
           >
             Return to Student Dashboard
           </Link>

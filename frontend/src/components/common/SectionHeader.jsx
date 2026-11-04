@@ -3,6 +3,8 @@
  * Props: eyebrow, title, description, action, className
  */
 
+import React from 'react';
+
 export function SectionHeader({
   eyebrow,
   title,
@@ -15,17 +17,17 @@ export function SectionHeader({
       {/* Text block */}
       <div className="flex flex-col gap-1 min-w-0">
         {eyebrow && (
-          <span className="text-[10px] font-mono font-semibold uppercase tracking-widest text-[#E0693B]">
+          <span className="text-[11px] font-sans font-bold uppercase tracking-wider text-[#4F7CFF]">
             {eyebrow}
           </span>
         )}
         {title && (
-          <h2 className="font-display font-bold text-[#FAF7F2] text-lg leading-tight">
+          <h2 className="font-display font-bold text-[#172033] text-xl sm:text-2xl leading-tight">
             {title}
           </h2>
         )}
         {description && (
-          <p className="text-xs text-[#9C9384] font-sans leading-relaxed max-w-prose">
+          <p className="text-xs sm:text-sm text-[#667085] font-sans leading-relaxed max-w-prose">
             {description}
           </p>
         )}

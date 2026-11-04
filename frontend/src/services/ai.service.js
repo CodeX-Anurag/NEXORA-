@@ -21,16 +21,48 @@ const aiFetch = async (endpoint, accessToken, options = {}) => {
 };
 
 export const aiService = {
-  // Phase 5 AI Chat & Conversation Endpoints
-  sendChatMessage: async (accessToken, { conversationId, message }) => {
+  // Phase 5 & 2.0 AI Chat Endpoints
+  sendChatMessage: async (
+    accessToken,
+    {
+      conversationId,
+      message,
+      isFreshChat = false,
+      responseMode = "detailed",
+      language = "auto",
+      documentContext = "",
+      attachments = []
+    }
+  ) => {
     return await aiFetch("/ai/chat", accessToken, {
       method: "POST",
-      body: JSON.stringify({ conversationId, message })
+      body: JSON.stringify({
+        conversationId,
+        message,
+        isFreshChat,
+        responseMode,
+        language,
+        documentContext,
+        attachments
+      })
     });
   },
 
   // Phase 8D Frontend SSE Streaming Integration
-  streamChatMessage: async (accessToken, { conversationId, message, isFreshChat = false }, onEvent, signal) => {
+  streamChatMessage: async (
+    accessToken,
+    {
+      conversationId,
+      message,
+      isFreshChat = false,
+      responseMode = "detailed",
+      language = "auto",
+      documentContext = "",
+      attachments = []
+    },
+    onEvent,
+    signal
+  ) => {
     const url = `${API_BASE_URL}/ai/chat/stream`;
     const response = await fetch(url, {
       method: "POST",
@@ -38,7 +70,15 @@ export const aiService = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`
       },
-      body: JSON.stringify({ conversationId, message, isFreshChat }),
+      body: JSON.stringify({
+        conversationId,
+        message,
+        isFreshChat,
+        responseMode,
+        language,
+        documentContext,
+        attachments
+      }),
       credentials: "include",
       signal
     });
@@ -105,6 +145,29 @@ export const aiService = {
               }
             } catch {
               // Ignore partial JSON parsing errors
+            }
+          }
+        }
+      }
+
+      // Process any trailing lines in buffer after stream completes
+      if (buffer.trim()) {
+        const remainingLines = buffer.split(/\r?\n/);
+        for (const rLine of remainingLines) {
+          const trimmed = rLine.trim();
+          if (trimmed.startsWith("event: ")) {
+            currentEvent = trimmed.slice(7).trim();
+            continue;
+          }
+          if (trimmed.startsWith("data: ")) {
+            try {
+              const parsedData = JSON.parse(trimmed.slice(6).trim());
+              const eventType = currentEvent || "token";
+              if (typeof onEvent === "function") {
+                onEvent({ type: eventType, data: parsedData });
+              }
+            } catch {
+              // ignore
             }
           }
         }
@@ -178,6 +241,106 @@ export const aiService = {
 
   giveAnotherRecommendation: async (accessToken) => {
     return await aiFetch("/ai/recommendations/give-another", accessToken, { method: "POST" });
+  },
+
+  // Multimodal 2.0: Image Generation
+  generateImage: async (accessToken, { prompt, conversationId }) => {
+    return await aiFetch("/ai/generate-image", accessToken, {
+      method: "POST",
+      body: JSON.stringify({ prompt, conversationId })
+    });
+  },
+
+  // Multimodal 2.0: Audio Speech-to-Text Transcription
+  transcribeAudio: async (accessToken, { audioBlob, language = "auto" }) => {
+    const formData = new FormData();
+    formData.append("audio", audioBlob, "recording.webm");
+    formData.append("language", language);
+
+    const url = `${API_BASE_URL}/ai/audio/transcribe`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: formData,
+      credentials: "include"
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to transcribe audio.");
+    }
+    return data;
+  },
+
+  // Multimodal 2.0: Speech Synthesis Metadata
+  synthesizeSpeech: async (accessToken, { text, voice, speed }) => {
+    return await aiFetch("/ai/audio/synthesize", accessToken, {
+      method: "POST",
+      body: JSON.stringify({ text, voice, speed })
+    });
+  },
+
+  // Multimodal 2.0: Document Attachment Upload & Extraction
+  uploadDocument: async (accessToken, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const url = `${API_BASE_URL}/ai/documents/upload`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: formData,
+      credentials: "include"
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to upload and parse document.");
+    }
+    return data;
+  },
+
+  // Message Actions: Helpful / Not Useful Feedback
+  submitMessageFeedback: async (accessToken, messageId, feedback) => {
+    return await aiFetch(`/ai/messages/${messageId}/feedback`, accessToken, {
+      method: "PUT",
+      body: JSON.stringify({ feedback })
+    });
+  },
+
+  // Message Actions: Toggle Bookmark / Saved
+  toggleSaveMessage: async (accessToken, messageId) => {
+    return await aiFetch(`/ai/messages/${messageId}/save`, accessToken, {
+      method: "PUT"
+    });
+  },
+
+  // Educational Tools: Interactive Quiz Generator
+  generateQuiz: async (accessToken, { topic, count = 3, difficulty = "Medium" }) => {
+    return await aiFetch("/ai/tools/quiz", accessToken, {
+      method: "POST",
+      body: JSON.stringify({ topic, count, difficulty })
+    });
+  },
+
+  // Educational Tools: Flashcard Generator
+  generateFlashcards: async (accessToken, { topic, count = 5, difficulty = "Medium" }) => {
+    return await aiFetch("/ai/tools/flashcards", accessToken, {
+      method: "POST",
+      body: JSON.stringify({ topic, count, difficulty })
+    });
+  },
+
+  // Educational Tools: Code Complexity & Review
+  reviewCode: async (accessToken, { code, language = "javascript" }) => {
+    return await aiFetch("/ai/tools/code-review", accessToken, {
+      method: "POST",
+      body: JSON.stringify({ code, language })
+    });
   }
 };
 

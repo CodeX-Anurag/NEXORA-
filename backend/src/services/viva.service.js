@@ -44,7 +44,7 @@ class VivaService {
   /**
    * Initializes a new Socratic Viva Exam and generates Question 1
    */
-  static async startSession(userId, { topic, difficulty = "Intermediate", maxRounds = 5 }) {
+  static async startSession(userId, { topic, difficulty = "Intermediate", maxRounds = 5, focusArea = "", answerMode = "hybrid", language = "en-US" }) {
     if (!topic || !topic.trim()) {
       const err = new Error("Viva topic is required.");
       err.statusCode = 400;
@@ -52,13 +52,23 @@ class VivaService {
     }
 
     const cleanTopic = topic.trim();
-    const cleanDiff = ["Beginner", "Intermediate", "Advanced"].includes(difficulty)
-      ? difficulty
-      : "Intermediate";
+    const diffMap = {
+      Easy: "Beginner",
+      Medium: "Intermediate",
+      Hard: "Advanced",
+      Beginner: "Beginner",
+      Intermediate: "Intermediate",
+      Advanced: "Advanced"
+    };
+    const cleanDiff = diffMap[difficulty] || "Intermediate";
     const totalRounds = Math.min(Math.max(parseInt(maxRounds, 10) || 5, 3), 10);
+    const cleanFocus = (focusArea || "").trim();
+    const cleanLang = (language || "en-US").trim();
+    const cleanMode = ["voice", "text", "hybrid"].includes(answerMode) ? answerMode : "hybrid";
 
     const prompt = [
       `You are an elite, fair, and encouraging technical examiner conducting an oral Socratic viva on "${cleanTopic}" (${cleanDiff} level).`,
+      cleanFocus ? `SPECIFIC FOCUS DOMAIN: "${cleanFocus}"` : "",
       "",
       "TASK: Generate Question 1 for this oral technical viva.",
       "GUIDELINES:",
@@ -70,10 +80,10 @@ class VivaService {
       JSON.stringify({
         question: `Why is ${cleanTopic} important, and what core problem does it solve in modern applications?`
       })
-    ].join("\n");
+    ].filter(Boolean).join("\n");
 
     const llmClient = new LLMClient();
-    let questionText = `Can you explain the foundational concept of ${cleanTopic} and how you would use it in a project?`;
+    let questionText = `Can you explain the foundational concept of ${cleanTopic}${cleanFocus ? ` with emphasis on ${cleanFocus}` : ""} and how you would use it in a project?`;
 
     try {
       const res = await llmClient.generateResponse({
@@ -92,6 +102,9 @@ class VivaService {
       userId,
       topic: cleanTopic,
       difficulty: cleanDiff,
+      focusArea: cleanFocus,
+      language: cleanLang,
+      answerMode: cleanMode,
       maxRounds: totalRounds,
       currentRound: 1,
       rounds: [
@@ -144,14 +157,16 @@ class VivaService {
       `IS FINAL ROUND: ${isFinalRound}`,
       "",
       "EVALUATION CRITERIA:",
-      "1. Score from 1 to 10 based on technical accuracy, depth, and clarity.",
-      "2. Feedback: 2-3 concise, encouraging, direct sentences explaining what was correct and what was missing.",
-      "3. Strengths: 1-2 specific concepts the student explained well.",
-      "4. Improvements: 1-2 points or nuances the student missed.",
-      "5. KeyTakeaway: The ideal 1-sentence model answer.",
+      "1. Score from 1 to 10 based on technical correctness, conceptual understanding, explanation quality, and practical reasoning.",
+      "2. Do NOT evaluate an answer as incorrect solely because its wording or syntax differs from a textbook definition; reward practical reasoning and genuine comprehension.",
+      "3. If the answer is delivered in Hinglish or conversational English, evaluate the technical substance fairly without penalizing phrasing.",
+      "4. Feedback: 2-3 concise, constructive, direct sentences explaining what was conceptually correct and what was missing or needs improvement.",
+      "5. Strengths: 1-2 specific concepts the student demonstrated well.",
+      "6. Improvements: 1-2 important missing points or nuances to improve.",
+      "7. KeyTakeaway: The ideal 1-2 sentence model answer emphasizing trade-offs.",
       isFinalRound
-        ? "6. SummaryReport: overallFeedback, strengthsSummary (3 bullets), recommendedTopics (3-4 study topics to master), readinessAssessment."
-        : "6. NextQuestion: A Socratic follow-up question that builds directly on the student's answer or tests a deeper related nuance.",
+        ? "8. SummaryReport: overallFeedback, strengthsSummary (3 bullets), recommendedTopics (3-4 study topics to master), readinessAssessment."
+        : "8. NextQuestion: A Socratic follow-up question that builds directly on the student's answer or probes a deeper related nuance.",
       "",
       "Respond strictly with valid JSON conforming to this schema:",
       JSON.stringify({

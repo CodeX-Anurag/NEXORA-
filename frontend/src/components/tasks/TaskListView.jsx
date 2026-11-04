@@ -57,28 +57,28 @@ const formatDueDate = (dateString) => {
 
 const priorityStyles = {
   urgent: {
-    badge: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+    badge: "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800/40",
     dot: "bg-rose-500 animate-pulse"
   },
   high: {
-    badge: "bg-rose-950/40 text-rose-300 border-rose-800/40",
-    dot: "bg-rose-400"
+    badge: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/40",
+    dot: "bg-amber-500"
   },
   medium: {
-    badge: "bg-amber-950/40 text-amber-300 border-amber-800/40",
-    dot: "bg-amber-400"
+    badge: "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800/40",
+    dot: "bg-blue-500"
   },
   low: {
-    badge: "bg-[#22201D] text-[#9C9384] border-[#332F2A]",
-    dot: "bg-[#787165]"
+    badge: "bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700",
+    dot: "bg-slate-400"
   }
 };
 
 const statusStyles = {
-  todo: "bg-[#22201D] text-[#9C9384] border-[#332F2A]",
-  in_progress: "bg-[#E0693B]/10 text-[#E0693B] border-[#E0693B]/30",
-  in_review: "bg-purple-500/10 text-purple-300 border-purple-500/30",
-  completed: "bg-[#2EA366]/10 text-[#2EA366] border-[#2EA366]/30"
+  todo: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700",
+  in_progress: "bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800/40",
+  in_review: "bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-800/40",
+  completed: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/40"
 };
 
 export const TaskListView = ({
@@ -121,20 +121,20 @@ export const TaskListView = ({
   if (displayedTasks.length === 0) {
     if (totalAllTasks === 0) {
       return (
-        <div className="p-8 sm:p-10 rounded-2xl bg-[#191816] border border-dashed border-[#2D2925] text-center space-y-3.5 animate-fade-in">
-          <div className="w-11 h-11 rounded-full bg-[#201E1B] border border-[#332F2A] flex items-center justify-center text-[#9C9384] mx-auto">
-            <CheckCircle2 className="w-5 h-5 text-[#2EA366]" />
+        <div className="p-8 sm:p-10 rounded-2xl bg-white border border-dashed border-[#E7EAF0] text-center space-y-3.5 shadow-xs animate-fade-in">
+          <div className="w-12 h-12 rounded-full bg-[#ECFDF3] border border-[#A6F4C5] flex items-center justify-center text-[#12B76A] mx-auto">
+            <CheckCircle2 className="w-6 h-6 text-[#12B76A]" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-sm font-bold text-[#FAF7F2] font-display">No tasks created yet</h3>
-            <p className="text-xs text-[#9C9384] max-w-sm mx-auto">
+            <h3 className="text-sm font-bold text-[#172033] font-display">No tasks created yet</h3>
+            <p className="text-xs text-[#667085] max-w-sm mx-auto">
               Get started by creating your first task or using the AI Assistant to break down your goals.
             </p>
           </div>
           <button
             type="button"
             onClick={onCreateTask}
-            className="px-4 py-2 rounded-xl bg-[#E0693B] hover:bg-[#EB784B] text-white text-xs font-semibold shadow-md transition-all cursor-pointer inline-flex items-center gap-1.5"
+            className="px-4 py-2 rounded-xl bg-[#4F7CFF] hover:bg-[#3D68E5] text-white text-xs font-semibold shadow-sm shadow-[#4F7CFF]/25 transition-all cursor-pointer inline-flex items-center gap-1.5 active:scale-[0.98]"
           >
             <span>+ Create Task</span>
           </button>
@@ -144,20 +144,20 @@ export const TaskListView = ({
 
     if (searchQuery) {
       return (
-        <div className="p-8 sm:p-10 rounded-2xl bg-[#191816] border border-dashed border-[#2D2925] text-center space-y-3.5 animate-fade-in">
-          <div className="w-11 h-11 rounded-full bg-[#201E1B] border border-[#332F2A] flex items-center justify-center text-[#787165] mx-auto">
-            <Search className="w-5 h-5" />
+        <div className="p-8 sm:p-10 rounded-2xl bg-white border border-dashed border-[#E7EAF0] text-center space-y-3.5 shadow-xs animate-fade-in">
+          <div className="w-12 h-12 rounded-full bg-[#F8FAFC] border border-[#E7EAF0] flex items-center justify-center text-[#98A2B3] mx-auto">
+            <Search className="w-6 h-6" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-sm font-bold text-[#FAF7F2] font-display">No matching search results</h3>
-            <p className="text-xs text-[#9C9384] max-w-sm mx-auto">
-              No tasks matched <span className="text-[#FAF7F2] font-semibold font-mono">"{searchQuery}"</span>.
+            <h3 className="text-sm font-bold text-[#172033] font-display">No matching search results</h3>
+            <p className="text-xs text-[#667085] max-w-sm mx-auto">
+              No tasks matched <span className="text-[#172033] font-semibold font-mono">"{searchQuery}"</span>.
             </p>
           </div>
           <button
             type="button"
             onClick={onResetFilters}
-            className="px-3.5 py-1.5 rounded-xl bg-[#25221F] hover:bg-[#2D2925] text-[#FAF7F2] border border-[#38332E] text-xs font-semibold transition-all cursor-pointer"
+            className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#F8FAFC] text-[#172033] border border-[#E7EAF0] text-xs font-semibold transition-all cursor-pointer shadow-xs"
           >
             Clear Search & Filters
           </button>
@@ -167,13 +167,13 @@ export const TaskListView = ({
 
     if (!showCompleted && completedCount > 0 && tasks.length === completedCount) {
       return (
-        <div className="p-8 sm:p-10 rounded-2xl bg-[#191816] border border-dashed border-[#2D2925] text-center space-y-3.5 animate-fade-in">
-          <div className="w-11 h-11 rounded-full bg-[#2EA366]/10 border border-[#2EA366]/20 flex items-center justify-center text-[#2EA366] mx-auto">
-            <CheckCircle2 className="w-5 h-5" />
+        <div className="p-8 sm:p-10 rounded-2xl bg-white border border-dashed border-[#E7EAF0] text-center space-y-3.5 shadow-xs animate-fade-in">
+          <div className="w-12 h-12 rounded-full bg-[#ECFDF3] border border-[#A6F4C5] flex items-center justify-center text-[#12B76A] mx-auto">
+            <CheckCircle2 className="w-6 h-6 text-[#12B76A]" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-sm font-bold text-[#FAF7F2] font-display">All tasks completed!</h3>
-            <p className="text-xs text-[#9C9384] max-w-sm mx-auto">
+            <h3 className="text-sm font-bold text-[#172033] font-display">All tasks completed!</h3>
+            <p className="text-xs text-[#667085] max-w-sm mx-auto">
               You have completed all {completedCount} tasks in this view.
             </p>
           </div>
@@ -181,14 +181,14 @@ export const TaskListView = ({
             <button
               type="button"
               onClick={onToggleShowCompleted}
-              className="px-3.5 py-1.5 rounded-xl bg-[#25221F] hover:bg-[#2D2925] text-[#FAF7F2] border border-[#38332E] text-xs font-semibold transition-all cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#F8FAFC] text-[#172033] border border-[#E7EAF0] text-xs font-semibold transition-all cursor-pointer shadow-xs"
             >
               Show Completed ({completedCount})
             </button>
             <button
               type="button"
               onClick={onCreateTask}
-              className="px-3.5 py-1.5 rounded-xl bg-[#E0693B] hover:bg-[#EB784B] text-white text-xs font-semibold transition-all cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-[#4F7CFF] hover:bg-[#3D68E5] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
             >
               + Create New Task
             </button>
@@ -198,20 +198,20 @@ export const TaskListView = ({
     }
 
     return (
-      <div className="p-8 sm:p-10 rounded-2xl bg-[#191816] border border-dashed border-[#2D2925] text-center space-y-3.5 animate-fade-in">
-        <div className="w-11 h-11 rounded-full bg-[#201E1B] border border-[#332F2A] flex items-center justify-center text-[#787165] mx-auto">
-          <ListTodo className="w-5 h-5" />
+      <div className="p-8 sm:p-10 rounded-2xl bg-white border border-dashed border-[#E7EAF0] text-center space-y-3.5 shadow-xs animate-fade-in">
+        <div className="w-12 h-12 rounded-full bg-[#F8FAFC] border border-[#E7EAF0] flex items-center justify-center text-[#98A2B3] mx-auto">
+          <ListTodo className="w-6 h-6" />
         </div>
         <div className="space-y-1">
-          <h3 className="text-sm font-bold text-[#FAF7F2] font-display">No tasks match current filters</h3>
-          <p className="text-xs text-[#9C9384] max-w-sm mx-auto">
+          <h3 className="text-sm font-bold text-[#172033] font-display">No tasks match current filters</h3>
+          <p className="text-xs text-[#667085] max-w-sm mx-auto">
             Try adjusting your status, priority, category, or due date filters.
           </p>
         </div>
         <button
           type="button"
           onClick={onResetFilters}
-          className="px-3.5 py-1.5 rounded-xl bg-[#25221F] hover:bg-[#2D2925] text-[#FAF7F2] border border-[#38332E] text-xs font-semibold transition-all cursor-pointer"
+          className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#F8FAFC] text-[#172033] border border-[#E7EAF0] text-xs font-semibold transition-all cursor-pointer shadow-xs"
         >
           Reset Filters
         </button>
@@ -223,7 +223,7 @@ export const TaskListView = ({
     <div className="space-y-2">
       {/* Sub-header: Count & Show/Hide Completed Toggle */}
       <div className="flex items-center justify-between px-1 pb-1 text-xs">
-        <span className="text-[#9C9384] font-mono text-[11px]">
+        <span className="text-[#667085] font-mono text-[11px]">
           Showing {displayedTasks.length} {displayedTasks.length === 1 ? "task" : "tasks"}
         </span>
 
@@ -231,16 +231,16 @@ export const TaskListView = ({
           <button
             type="button"
             onClick={onToggleShowCompleted}
-            className="flex items-center gap-1.5 text-[11px] font-medium text-[#9C9384] hover:text-[#FAF7F2] transition-colors cursor-pointer select-none"
+            className="flex items-center gap-1.5 text-[11px] font-medium text-[#667085] hover:text-[#172033] transition-colors cursor-pointer select-none"
           >
             {showCompleted ? (
               <>
-                <EyeOff className="w-3.5 h-3.5 text-[#787165]" />
+                <EyeOff className="w-3.5 h-3.5 text-[#98A2B3]" />
                 <span>Hide completed ({completedCount})</span>
               </>
             ) : (
               <>
-                <Eye className="w-3.5 h-3.5 text-[#E0693B]" />
+                <Eye className="w-3.5 h-3.5 text-[#4F7CFF]" />
                 <span>Show completed ({completedCount})</span>
               </>
             )}
@@ -260,10 +260,10 @@ export const TaskListView = ({
           <div
             key={task._id}
             onClick={() => onSelectTask(task)}
-            className={`p-3 sm:p-3.5 rounded-xl bg-[#191816] border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 group relative ${
+            className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 group relative ${
               isCompleted
-                ? "border-[#24211D] bg-[#161513]/60 opacity-75 hover:opacity-100 hover:border-[#332F2A]"
-                : "border-[#2D2925] hover:border-[#3E3832] hover:bg-[#1E1C19]"
+                ? "border-[#E7EAF0] bg-[#F8FAFC]/75 opacity-75 hover:opacity-100 hover:border-[#D0D5DD]"
+                : "bg-white border-[#E7EAF0] hover:border-[#D0D5DD] hover:shadow-[0_2px_8px_rgba(16,24,40,0.04)]"
             }`}
           >
             {/* Left Section: Checkbox + Title + Attributes */}
@@ -277,8 +277,8 @@ export const TaskListView = ({
                 }}
                 className={`mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center transition-all shrink-0 cursor-pointer ${
                   isCompleted
-                    ? "bg-[#2EA366] border-[#2EA366] text-white shadow-xs"
-                    : "border-[#3A352F] hover:border-[#E0693B] bg-[#141312] group-hover:border-[#4D463F]"
+                    ? "bg-[#12B76A] border-[#12B76A] text-white shadow-xs"
+                    : "border-[#D0D5DD] hover:border-[#4F7CFF] bg-white group-hover:border-[#98A2B3]"
                 }`}
                 aria-label={isCompleted ? "Mark task as incomplete" : "Mark task as complete"}
               >
@@ -291,8 +291,8 @@ export const TaskListView = ({
                   <h4
                     className={`text-xs sm:text-sm font-semibold truncate ${
                       isCompleted
-                        ? "line-through text-[#787165]"
-                        : "text-[#FAF7F2] group-hover:text-[#E0693B] transition-colors"
+                        ? "line-through text-[#98A2B3]"
+                        : "text-[#172033] group-hover:text-[#4F7CFF] transition-colors"
                     }`}
                   >
                     {task.title}
@@ -319,18 +319,18 @@ export const TaskListView = ({
                   {task.recurrence && task.recurrence !== "none" && (
                     <span
                       title={`Recurring: ${task.recurrence}`}
-                      className="px-1.5 py-0.5 text-[10px] rounded font-mono bg-[#1E1C19] text-[#CDC5B6] border border-[#2D2925] flex items-center gap-1"
+                      className="px-1.5 py-0.5 text-[10px] rounded font-mono bg-[#F8FAFC] text-[#667085] border border-[#E7EAF0] flex items-center gap-1"
                     >
-                      <Repeat className="w-2.5 h-2.5 text-[#E0693B]" />
+                      <Repeat className="w-2.5 h-2.5 text-[#4F7CFF]" />
                       <span className="capitalize">{task.recurrence}</span>
                     </span>
                   )}
                 </div>
 
                 {/* Sub-row: Category, Subtasks, Due Date, Est. Minutes (Only displayed when fields exist) */}
-                <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#9C9384]">
+                <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#667085]">
                   {task.category && task.category.trim() && (
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[#141312] text-[#CDC5B6] border border-[#2D2925]">
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[#F8FAFC] text-[#667085] border border-[#E7EAF0]">
                       {task.category}
                     </span>
                   )}
@@ -338,9 +338,9 @@ export const TaskListView = ({
                   {/* Subtask Progress (Shown ONLY if task has subtasks) */}
                   {subtasks.length > 0 && (
                     <div className="flex items-center gap-1.5" title={`${completedSubtasksCount} of ${subtasks.length} subtasks completed`}>
-                      <div className="w-12 h-1.5 rounded-full bg-[#141312] border border-[#2D2925] overflow-hidden">
+                      <div className="w-12 h-1.5 rounded-full bg-[#EAECF0] overflow-hidden">
                         <div
-                          className="h-full bg-[#2EA366] transition-all"
+                          className="h-full bg-[#12B76A] transition-all"
                           style={{ width: `${(completedSubtasksCount / subtasks.length) * 100}%` }}
                         />
                       </div>
@@ -353,10 +353,10 @@ export const TaskListView = ({
                   {/* Estimated / Actual Duration (Shown ONLY if > 0) */}
                   {task.estimatedMinutes > 0 && (
                     <span className="flex items-center gap-1 font-mono text-[10px]">
-                      <Clock className="w-3 h-3 text-[#787165]" />
+                      <Clock className="w-3 h-3 text-[#98A2B3]" />
                       <span>{task.estimatedMinutes}m est</span>
                       {task.actualMinutes > 0 && (
-                        <span className="text-[#E0693B]">({task.actualMinutes}m logged)</span>
+                        <span className="text-[#4F7CFF] font-semibold">({task.actualMinutes}m logged)</span>
                       )}
                     </span>
                   )}
@@ -366,10 +366,10 @@ export const TaskListView = ({
                     <span
                       className={`flex items-center gap-1 font-mono text-[10px] ${
                         dueInfo.isOverdue && !isCompleted
-                          ? "text-rose-400 font-bold"
+                          ? "text-rose-600 font-bold"
                           : dueInfo.isToday && !isCompleted
-                          ? "text-amber-400 font-bold"
-                          : "text-[#CDC5B6]"
+                          ? "text-amber-600 font-bold"
+                          : "text-[#667085]"
                       }`}
                     >
                       {dueInfo.isOverdue && !isCompleted && <AlertCircle className="w-3 h-3" />}
@@ -393,8 +393,8 @@ export const TaskListView = ({
                   title={task.isMyDay ? "Remove from My Day" : "Add to My Day"}
                   className={`p-1.5 rounded-lg border transition-all text-xs cursor-pointer ${
                     task.isMyDay
-                      ? "bg-[#E0693B]/20 text-[#E0693B] border-[#E0693B]/40"
-                      : "bg-[#25221F] hover:bg-[#2D2925] text-[#787165] hover:text-[#CDC5B6] border-[#332F2A] opacity-0 group-hover:opacity-100"
+                      ? "bg-[#EEF2FF] text-[#4F7CFF] border-[#4F7CFF]/30"
+                      : "bg-white hover:bg-[#F8FAFC] text-[#98A2B3] hover:text-[#172033] border-[#E7EAF0] opacity-0 group-hover:opacity-100"
                   }`}
                 >
                   <Sun className={`w-3.5 h-3.5 ${task.isMyDay ? "fill-current" : ""}`} />
@@ -407,7 +407,7 @@ export const TaskListView = ({
                   type="button"
                   onClick={() => onStartFocus(task)}
                   title="Start Focus Session"
-                  className="p-1.5 rounded-lg bg-[#25221F] hover:bg-[#E0693B]/20 text-[#CDC5B6] hover:text-[#E0693B] border border-[#332F2A] hover:border-[#E0693B]/30 transition-all text-xs cursor-pointer opacity-0 group-hover:opacity-100"
+                  className="p-1.5 rounded-lg bg-white hover:bg-[#EEF2FF] text-[#667085] hover:text-[#4F7CFF] border border-[#E7EAF0] hover:border-[#4F7CFF]/30 transition-all text-xs cursor-pointer opacity-0 group-hover:opacity-100"
                 >
                   <Play className="w-3.5 h-3.5" />
                 </button>
@@ -419,13 +419,13 @@ export const TaskListView = ({
                   type="button"
                   onClick={() => setOpenMenuId(isMenuOpen ? null : task._id)}
                   title="Task options"
-                  className="p-1.5 rounded-lg bg-[#25221F] hover:bg-[#2D2925] text-[#CDC5B6] hover:text-[#FAF7F2] border border-[#332F2A] transition-all text-xs cursor-pointer"
+                  className="p-1.5 rounded-lg bg-white hover:bg-[#F8FAFC] text-[#667085] hover:text-[#172033] border border-[#E7EAF0] transition-all text-xs cursor-pointer shadow-xs"
                 >
                   <MoreVertical className="w-3.5 h-3.5" />
                 </button>
 
                 {isMenuOpen && (
-                  <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl bg-[#1C1A17] border border-[#332F2A] shadow-2xl py-1 z-30 animate-fade-in text-xs">
+                  <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl bg-white border border-[#E7EAF0] shadow-xl py-1 z-30 animate-fade-in text-xs">
                     {onToggleMyDay && (
                       <button
                         type="button"
@@ -433,9 +433,9 @@ export const TaskListView = ({
                           setOpenMenuId(null);
                           onToggleMyDay(task, !task.isMyDay);
                         }}
-                        className="w-full text-left px-3 py-2 text-[#CDC5B6] hover:text-[#FAF7F2] hover:bg-[#25221F] flex items-center gap-2 transition-colors cursor-pointer"
+                        className="w-full text-left px-3 py-2 text-[#172033] hover:bg-[#F8FAFC] flex items-center gap-2 transition-colors cursor-pointer"
                       >
-                        <Sun className="w-3.5 h-3.5 text-[#E0693B]" />
+                        <Sun className="w-3.5 h-3.5 text-[#4F7CFF]" />
                         <span>{task.isMyDay ? "Remove from My Day" : "Add to My Day"}</span>
                       </button>
                     )}
@@ -447,9 +447,9 @@ export const TaskListView = ({
                           setOpenMenuId(null);
                           onStartFocus(task);
                         }}
-                        className="w-full text-left px-3 py-2 text-[#CDC5B6] hover:text-[#FAF7F2] hover:bg-[#25221F] flex items-center gap-2 transition-colors cursor-pointer"
+                        className="w-full text-left px-3 py-2 text-[#172033] hover:bg-[#F8FAFC] flex items-center gap-2 transition-colors cursor-pointer"
                       >
-                        <Play className="w-3.5 h-3.5 text-[#2EA366]" />
+                        <Play className="w-3.5 h-3.5 text-[#12B76A]" />
                         <span>Launch Focus</span>
                       </button>
                     )}
@@ -460,13 +460,13 @@ export const TaskListView = ({
                         setOpenMenuId(null);
                         onEditTask(task);
                       }}
-                      className="w-full text-left px-3 py-2 text-[#CDC5B6] hover:text-[#FAF7F2] hover:bg-[#25221F] flex items-center gap-2 transition-colors cursor-pointer"
+                      className="w-full text-left px-3 py-2 text-[#172033] hover:bg-[#F8FAFC] flex items-center gap-2 transition-colors cursor-pointer"
                     >
-                      <Edit2 className="w-3.5 h-3.5" />
+                      <Edit2 className="w-3.5 h-3.5 text-[#667085]" />
                       <span>Edit Details</span>
                     </button>
 
-                    <div className="my-1 border-t border-[#2D2925]" />
+                    <div className="my-1 border-t border-[#E7EAF0]" />
 
                     <button
                       type="button"
@@ -474,7 +474,7 @@ export const TaskListView = ({
                         setOpenMenuId(null);
                         onDeleteTask(task._id);
                       }}
-                      className="w-full text-left px-3 py-2 text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 flex items-center gap-2 transition-colors cursor-pointer"
+                      className="w-full text-left px-3 py-2 text-rose-600 hover:bg-rose-50 flex items-center gap-2 transition-colors cursor-pointer font-medium"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Delete Task</span>

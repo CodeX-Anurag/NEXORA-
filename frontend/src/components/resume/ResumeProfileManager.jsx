@@ -85,17 +85,17 @@ export const ResumeProfileManager = ({
   return (
     <div className="space-y-6">
       {/* Profile Completion Checklist Banner */}
-      <div className="p-5 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4">
+      <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <FileCheck className="w-4 h-4 text-[#E0693B]" />
-              <h2 className="text-base font-bold text-[#FAF7F2] font-display">Resume Profile Health</h2>
-              <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-[#2D2925] text-[#E0693B]">
+              <FileCheck className="w-4 h-4 text-[#4F7CFF]" />
+              <h2 className="text-base font-bold text-[#172033] font-display">Resume Profile Health</h2>
+              <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-[#EEF2FF] text-[#4F7CFF] border border-[#4F7CFF]/20">
                 {completion?.percentage || 0}% Complete
               </span>
             </div>
-            <p className="text-xs text-[#9C9384] mt-1">
+            <p className="text-xs text-[#667085] mt-1">
               Confirmed data is persistently stored and strictly grounded. AI generation never invents missing information.
             </p>
           </div>
@@ -105,17 +105,26 @@ export const ResumeProfileManager = ({
             size="sm"
             onClick={handleSubmit}
             isLoading={isSaving}
-            className="shrink-0 flex items-center gap-1.5"
+            className="shrink-0 flex items-center gap-1.5 shadow-sm shadow-[#4F7CFF]/25"
           >
-            <Save className="w-3.5 h-3.5" />
-            {saveSuccess ? "Profile Saved ✓" : "Save & Confirm Profile"}
+            {saveSuccess ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Profile Saved</span>
+              </>
+            ) : (
+              <>
+                <Save className="w-3.5 h-3.5" />
+                <span>Save & Confirm Profile</span>
+              </>
+            )}
           </Button>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-[#141312] rounded-full h-2 overflow-hidden border border-[#2D2925]">
+        <div className="w-full bg-[#EAECF0] rounded-full h-2 overflow-hidden">
           <div
-            className="h-full bg-[#E0693B] transition-all duration-500 rounded-full"
+            className="h-full bg-gradient-to-r from-[#4F7CFF] to-[#7C6CFA] transition-all duration-500 rounded-full"
             style={{ width: `${completion?.percentage || 0}%` }}
           />
         </div>
@@ -127,14 +136,14 @@ export const ResumeProfileManager = ({
               key={t.id}
               type="button"
               onClick={() => setActiveTab(t.id)}
-              className={`px-2.5 py-1 rounded-lg border flex items-center gap-1.5 transition-colors ${
+              className={`px-2.5 py-1 rounded-lg border flex items-center gap-1.5 transition-colors cursor-pointer ${
                 activeTab === t.id
-                  ? "bg-[#25221F] border-[#E0693B] text-[#FAF7F2]"
-                  : "bg-[#141312] border-[#2D2925] text-[#9C9384] hover:text-[#FAF7F2]"
+                  ? "bg-[#EEF2FF] border-[#4F7CFF]/30 text-[#4F7CFF] font-semibold"
+                  : "bg-white border-[#E7EAF0] text-[#667085] hover:text-[#172033] hover:border-[#D0D5DD]"
               }`}
             >
               {t.complete ? (
-                <CheckCircle2 className="w-3 h-3 text-[#2EA366]" />
+                <CheckCircle2 className="w-3 h-3 text-[#12B76A]" />
               ) : (
                 <AlertCircle className="w-3 h-3 text-amber-500" />
               )}
@@ -145,107 +154,107 @@ export const ResumeProfileManager = ({
       </div>
 
       {/* Main Tabbed Form Container */}
-      <div className="p-6 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-6">
+      <div className="p-6 rounded-2xl bg-white border border-[#E7EAF0] shadow-xs space-y-6">
         {/* Tab 1: Contact & Links */}
         {activeTab === "contact" && (
           <div className="space-y-4">
-            <h3 className="text-sm font-bold text-[#FAF7F2] font-display">Personal Details & Professional Links</h3>
+            <h3 className="text-sm font-bold text-[#172033] font-display">Personal Details & Professional Links</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div>
-                <label className="block text-[11px] font-medium text-[#9C9384] mb-1">Full Legal Name *</label>
+                <label className="block text-[11px] font-medium text-[#667085] mb-1">Full Legal Name *</label>
                 <input
                   type="text"
                   value={pInfo.fullName || ""}
                   onChange={(e) => updateNested("personalInfo.fullName", e.target.value)}
-                  className="w-full bg-[#141312] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                  className="w-full bg-[#F7F8FC] border border-[#E7EAF0] rounded-xl p-2.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF] focus:ring-1 focus:ring-[#4F7CFF]"
                   placeholder="e.g. John Doe"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#9C9384] mb-1">Default Target Role *</label>
+                <label className="block text-[11px] font-medium text-[#667085] mb-1">Default Target Role *</label>
                 <input
                   type="text"
                   value={formData.targetRole || ""}
                   onChange={(e) => updateNested("targetRole", e.target.value)}
-                  className="w-full bg-[#141312] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                  className="w-full bg-[#F7F8FC] border border-[#E7EAF0] rounded-xl p-2.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF] focus:ring-1 focus:ring-[#4F7CFF]"
                   placeholder="e.g. Backend Software Engineer"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#9C9384] mb-1">Email Address *</label>
+                <label className="block text-[11px] font-medium text-[#667085] mb-1">Email Address *</label>
                 <input
                   type="email"
                   value={pInfo.email || ""}
                   onChange={(e) => updateNested("personalInfo.email", e.target.value)}
-                  className="w-full bg-[#141312] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                  className="w-full bg-[#F7F8FC] border border-[#E7EAF0] rounded-xl p-2.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF] focus:ring-1 focus:ring-[#4F7CFF]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#9C9384] mb-1">Phone Number</label>
+                <label className="block text-[11px] font-medium text-[#667085] mb-1">Phone Number</label>
                 <input
                   type="text"
                   value={pInfo.phone || ""}
                   onChange={(e) => updateNested("personalInfo.phone", e.target.value)}
-                  className="w-full bg-[#141312] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                  className="w-full bg-[#F7F8FC] border border-[#E7EAF0] rounded-xl p-2.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF] focus:ring-1 focus:ring-[#4F7CFF]"
                   placeholder="+1 (555) 123-4567"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#9C9384] mb-1">Location / Residence</label>
+                <label className="block text-[11px] font-medium text-[#667085] mb-1">Location / Residence</label>
                 <input
                   type="text"
                   value={pInfo.location || ""}
                   onChange={(e) => updateNested("personalInfo.location", e.target.value)}
-                  className="w-full bg-[#141312] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                  className="w-full bg-[#F7F8FC] border border-[#E7EAF0] rounded-xl p-2.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF] focus:ring-1 focus:ring-[#4F7CFF]"
                   placeholder="San Francisco, CA (or Remote)"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#9C9384] mb-1">LinkedIn Profile</label>
+                <label className="block text-[11px] font-medium text-[#667085] mb-1">LinkedIn Profile</label>
                 <input
                   type="url"
                   value={pInfo.linkedin || ""}
                   onChange={(e) => updateNested("personalInfo.linkedin", e.target.value)}
-                  className="w-full bg-[#141312] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                  className="w-full bg-[#F7F8FC] border border-[#E7EAF0] rounded-xl p-2.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF] focus:ring-1 focus:ring-[#4F7CFF]"
                   placeholder="https://linkedin.com/in/username"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#9C9384] mb-1">GitHub Profile</label>
+                <label className="block text-[11px] font-medium text-[#667085] mb-1">GitHub Profile</label>
                 <input
                   type="url"
                   value={pInfo.github || ""}
                   onChange={(e) => updateNested("personalInfo.github", e.target.value)}
-                  className="w-full bg-[#141312] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                  className="w-full bg-[#F7F8FC] border border-[#E7EAF0] rounded-xl p-2.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF] focus:ring-1 focus:ring-[#4F7CFF]"
                   placeholder="https://github.com/username"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#9C9384] mb-1">Portfolio or Website</label>
+                <label className="block text-[11px] font-medium text-[#667085] mb-1">Portfolio or Website</label>
                 <input
                   type="url"
                   value={pInfo.portfolio || pInfo.website || ""}
                   onChange={(e) => updateNested("personalInfo.portfolio", e.target.value)}
-                  className="w-full bg-[#141312] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                  className="w-full bg-[#F7F8FC] border border-[#E7EAF0] rounded-xl p-2.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF] focus:ring-1 focus:ring-[#4F7CFF]"
                   placeholder="https://myportfolio.dev"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] font-medium text-[#9C9384] mb-1">Professional Summary Bio</label>
+              <label className="block text-[11px] font-medium text-[#667085] mb-1">Professional Summary Bio</label>
               <textarea
                 rows={3}
                 value={formData.professionalSummary || ""}
                 onChange={(e) => updateNested("professionalSummary", e.target.value)}
-                className="w-full bg-[#141312] border border-[#2D2925] rounded-lg p-2.5 text-[#FAF7F2] text-xs leading-relaxed"
+                className="w-full bg-[#F7F8FC] border border-[#E7EAF0] rounded-xl p-3 text-[#172033] text-xs leading-relaxed focus:outline-none focus:border-[#4F7CFF] focus:ring-1 focus:ring-[#4F7CFF]"
                 placeholder="2-3 sentence overview of your background, technical specialties, and career focus..."
               />
             </div>
@@ -256,7 +265,7 @@ export const ResumeProfileManager = ({
         {activeTab === "education" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-[#FAF7F2] font-display">Academic Education</h3>
+              <h3 className="text-sm font-bold text-[#172033] font-display">Academic Education</h3>
               <Button
                 variant="secondary"
                 size="sm"
@@ -279,16 +288,16 @@ export const ResumeProfileManager = ({
             </div>
 
             {formData.education?.length === 0 ? (
-              <p className="text-xs text-[#787165] italic">No education entries added yet.</p>
+              <p className="text-xs text-[#667085] italic">No education entries added yet.</p>
             ) : (
               formData.education?.map((edu, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-[#141312] border border-[#2D2925] space-y-3">
+                <div key={idx} className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-xs text-[#FAF7F2]">Degree #{idx + 1}</span>
+                    <span className="font-semibold text-xs text-[#172033]">Degree #{idx + 1}</span>
                     <button
                       type="button"
                       onClick={() => removeItem("education", idx)}
-                      className="text-[#9C9384] hover:text-rose-400"
+                      className="text-[#667085] hover:text-rose-500 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -300,21 +309,21 @@ export const ResumeProfileManager = ({
                       placeholder="Degree (e.g. B.Tech / B.S.)"
                       value={edu.degree || ""}
                       onChange={(e) => updateItem("education", idx, "degree", e.target.value)}
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                     <input
                       type="text"
                       placeholder="Field of Study (e.g. Computer Science)"
                       value={edu.fieldOfStudy || ""}
                       onChange={(e) => updateItem("education", idx, "fieldOfStudy", e.target.value)}
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                     <input
                       type="text"
                       placeholder="Institution / University Name"
                       value={edu.institution || ""}
                       onChange={(e) => updateItem("education", idx, "institution", e.target.value)}
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                     <input
                       type="text"
@@ -325,14 +334,14 @@ export const ResumeProfileManager = ({
                         updateItem("education", idx, "startDate", s || "");
                         updateItem("education", idx, "endDate", eDate || "");
                       }}
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                     <input
                       type="text"
                       placeholder="GPA (e.g. 3.8 / 4.0)"
                       value={edu.gpa || ""}
                       onChange={(e) => updateItem("education", idx, "gpa", e.target.value)}
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                     <input
                       type="text"
@@ -346,7 +355,7 @@ export const ResumeProfileManager = ({
                           e.target.value.split(",").map((c) => c.trim()).filter(Boolean)
                         )
                       }
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                   </div>
                 </div>
@@ -359,7 +368,7 @@ export const ResumeProfileManager = ({
         {activeTab === "experience" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-[#FAF7F2] font-display">Work Experience & Internships</h3>
+              <h3 className="text-sm font-bold text-[#172033] font-display">Work Experience & Internships</h3>
               <Button
                 variant="secondary"
                 size="sm"
@@ -380,16 +389,16 @@ export const ResumeProfileManager = ({
             </div>
 
             {formData.experience?.length === 0 ? (
-              <p className="text-xs text-[#787165] italic">No work experience added. Relevant projects will be highlighted.</p>
+              <p className="text-xs text-[#667085] italic">No work experience added. Relevant projects will be highlighted.</p>
             ) : (
               formData.experience?.map((exp, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-[#141312] border border-[#2D2925] space-y-3">
+                <div key={idx} className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-xs text-[#FAF7F2]">Role #{idx + 1}</span>
+                    <span className="font-semibold text-xs text-[#172033]">Role #{idx + 1}</span>
                     <button
                       type="button"
                       onClick={() => removeItem("experience", idx)}
-                      className="text-[#9C9384] hover:text-rose-400"
+                      className="text-[#667085] hover:text-rose-500 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -401,14 +410,14 @@ export const ResumeProfileManager = ({
                       placeholder="Job Title (e.g. Software Engineer Intern)"
                       value={exp.title || ""}
                       onChange={(e) => updateItem("experience", idx, "title", e.target.value)}
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                     <input
                       type="text"
                       placeholder="Company Name"
                       value={exp.company || ""}
                       onChange={(e) => updateItem("experience", idx, "company", e.target.value)}
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                     <input
                       type="text"
@@ -419,25 +428,25 @@ export const ResumeProfileManager = ({
                         updateItem("experience", idx, "startDate", s || "");
                         updateItem("experience", idx, "endDate", eDate || "");
                       }}
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                     <input
                       type="text"
                       placeholder="Location"
                       value={exp.location || ""}
                       onChange={(e) => updateItem("experience", idx, "location", e.target.value)}
-                      className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-[#9C9384] mb-1">Key Responsibilities / Bullet Points</label>
+                    <label className="block text-[11px] font-medium text-[#667085] mb-1">Key Responsibilities / Bullet Points</label>
                     <textarea
                       rows={3}
                       placeholder="• Engineered microservices using Node.js..."
                       value={Array.isArray(exp.bulletPoints) ? exp.bulletPoints.join("\n") : ""}
                       onChange={(e) => updateItem("experience", idx, "bulletPoints", e.target.value.split("\n"))}
-                      className="w-full bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2] font-mono text-[11px]"
+                      className="w-full bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] font-mono text-[11px] focus:outline-none focus:border-[#4F7CFF]"
                     />
                   </div>
                 </div>
@@ -450,7 +459,7 @@ export const ResumeProfileManager = ({
         {activeTab === "projects" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-[#FAF7F2] font-display">Portfolio Projects</h3>
+              <h3 className="text-sm font-bold text-[#172033] font-display">Portfolio Projects</h3>
               <Button
                 variant="secondary"
                 size="sm"
@@ -471,13 +480,13 @@ export const ResumeProfileManager = ({
             </div>
 
             {formData.projects?.map((proj, idx) => (
-              <div key={idx} className="p-4 rounded-xl bg-[#141312] border border-[#2D2925] space-y-3">
+              <div key={idx} className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-xs text-[#FAF7F2]">Project #{idx + 1}</span>
+                  <span className="font-semibold text-xs text-[#172033]">Project #{idx + 1}</span>
                   <button
                     type="button"
                     onClick={() => removeItem("projects", idx)}
-                    className="text-[#9C9384] hover:text-rose-400"
+                    className="text-[#667085] hover:text-rose-500 cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -489,7 +498,7 @@ export const ResumeProfileManager = ({
                     placeholder="Project Title"
                     value={proj.title || ""}
                     onChange={(e) => updateItem("projects", idx, "title", e.target.value)}
-                    className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                    className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                   <input
                     type="text"
@@ -503,32 +512,32 @@ export const ResumeProfileManager = ({
                         e.target.value.split(",").map((s) => s.trim()).filter(Boolean)
                       )
                     }
-                    className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                    className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                   <input
                     type="text"
                     placeholder="GitHub Repo URL"
                     value={proj.githubUrl || ""}
                     onChange={(e) => updateItem("projects", idx, "githubUrl", e.target.value)}
-                    className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                    className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                   <input
                     type="text"
                     placeholder="Live Deployment Demo URL"
                     value={proj.demoUrl || ""}
                     onChange={(e) => updateItem("projects", idx, "demoUrl", e.target.value)}
-                    className="bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2]"
+                    className="bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-medium text-[#9C9384] mb-1">Architecture & Accomplishment Bullets</label>
+                  <label className="block text-[11px] font-medium text-[#667085] mb-1">Architecture & Accomplishment Bullets</label>
                   <textarea
                     rows={2}
                     placeholder="• Built resilient API handling async jobs..."
                     value={Array.isArray(proj.bulletPoints) ? proj.bulletPoints.join("\n") : ""}
                     onChange={(e) => updateItem("projects", idx, "bulletPoints", e.target.value.split("\n"))}
-                    className="w-full bg-[#191816] border border-[#2D2925] rounded-lg p-2 text-[#FAF7F2] font-mono text-[11px]"
+                    className="w-full bg-white border border-[#E7EAF0] rounded-lg p-2 text-[#172033] font-mono text-[11px] focus:outline-none focus:border-[#4F7CFF]"
                   />
                 </div>
               </div>
@@ -540,7 +549,7 @@ export const ResumeProfileManager = ({
         {activeTab === "skills" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-[#FAF7F2] font-display">Technical Skill Inventory</h3>
+              <h3 className="text-sm font-bold text-[#172033] font-display">Technical Skill Inventory</h3>
               <Button
                 variant="secondary"
                 size="sm"
@@ -553,18 +562,18 @@ export const ResumeProfileManager = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
               {formData.skills?.map((s, idx) => (
-                <div key={idx} className="p-2.5 rounded-lg bg-[#141312] border border-[#2D2925] flex items-center gap-2">
+                <div key={idx} className="p-2.5 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] flex items-center gap-2">
                   <input
                     type="text"
                     placeholder="Skill (e.g. TypeScript)"
                     value={s.name || ""}
                     onChange={(e) => updateItem("skills", idx, "name", e.target.value)}
-                    className="flex-1 bg-[#191816] border border-[#2D2925] rounded px-2 py-1 text-[#FAF7F2]"
+                    className="flex-1 bg-white border border-[#E7EAF0] rounded px-2 py-1 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                   <select
                     value={s.category || "languages"}
                     onChange={(e) => updateItem("skills", idx, "category", e.target.value)}
-                    className="bg-[#191816] border border-[#2D2925] rounded px-2 py-1 text-[#CDC5B6] text-[11px]"
+                    className="bg-white border border-[#E7EAF0] rounded px-2 py-1 text-[#172033] text-[11px] cursor-pointer"
                   >
                     <option value="languages">Languages</option>
                     <option value="frameworks">Frameworks</option>
@@ -575,7 +584,7 @@ export const ResumeProfileManager = ({
                   <button
                     type="button"
                     onClick={() => removeItem("skills", idx)}
-                    className="text-[#9C9384] hover:text-rose-400 p-1"
+                    className="text-[#667085] hover:text-rose-500 p-1 cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -591,7 +600,7 @@ export const ResumeProfileManager = ({
             {/* Certifications */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#E0693B] font-display">Certifications</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#4F7CFF] font-display">Certifications</h4>
                 <Button
                   variant="secondary"
                   size="sm"
@@ -609,19 +618,19 @@ export const ResumeProfileManager = ({
                     placeholder="Cert Name (e.g. AWS Certified Solutions Architect)"
                     value={c.name || ""}
                     onChange={(e) => updateItem("certifications", idx, "name", e.target.value)}
-                    className="flex-1 bg-[#141312] border border-[#2D2925] rounded px-2.5 py-1.5 text-[#FAF7F2]"
+                    className="flex-1 bg-[#F7F8FC] border border-[#E7EAF0] rounded-lg px-2.5 py-1.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                   <input
                     type="text"
                     placeholder="Issuer"
                     value={c.issuer || ""}
                     onChange={(e) => updateItem("certifications", idx, "issuer", e.target.value)}
-                    className="w-40 bg-[#141312] border border-[#2D2925] rounded px-2.5 py-1.5 text-[#FAF7F2]"
+                    className="w-40 bg-[#F7F8FC] border border-[#E7EAF0] rounded-lg px-2.5 py-1.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                   <button
                     type="button"
                     onClick={() => removeItem("certifications", idx)}
-                    className="text-[#9C9384] hover:text-rose-400 p-1"
+                    className="text-[#667085] hover:text-rose-500 p-1 cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -630,9 +639,9 @@ export const ResumeProfileManager = ({
             </div>
 
             {/* Achievements */}
-            <div className="space-y-3 border-t border-[#2D2925] pt-4">
+            <div className="space-y-3 border-t border-[#E7EAF0] pt-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#E0693B] font-display">Achievements & Awards</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#4F7CFF] font-display">Achievements & Awards</h4>
                 <Button
                   variant="secondary"
                   size="sm"
@@ -650,19 +659,19 @@ export const ResumeProfileManager = ({
                     placeholder="Award / Competition (e.g. Hackathon Finalist)"
                     value={a.title || ""}
                     onChange={(e) => updateItem("achievements", idx, "title", e.target.value)}
-                    className="flex-1 bg-[#141312] border border-[#2D2925] rounded px-2.5 py-1.5 text-[#FAF7F2]"
+                    className="flex-1 bg-[#F7F8FC] border border-[#E7EAF0] rounded-lg px-2.5 py-1.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                   <input
                     type="text"
                     placeholder="Issuer / Event"
                     value={a.issuer || ""}
                     onChange={(e) => updateItem("achievements", idx, "issuer", e.target.value)}
-                    className="w-40 bg-[#141312] border border-[#2D2925] rounded px-2.5 py-1.5 text-[#FAF7F2]"
+                    className="w-40 bg-[#F7F8FC] border border-[#E7EAF0] rounded-lg px-2.5 py-1.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                   <button
                     type="button"
                     onClick={() => removeItem("achievements", idx)}
-                    className="text-[#9C9384] hover:text-rose-400 p-1"
+                    className="text-[#667085] hover:text-rose-500 p-1 cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -678,7 +687,7 @@ export const ResumeProfileManager = ({
             {/* Languages */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#E0693B] font-display">Spoken / Written Languages</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#4F7CFF] font-display">Spoken / Written Languages</h4>
                 <Button
                   variant="secondary"
                   size="sm"
@@ -696,12 +705,12 @@ export const ResumeProfileManager = ({
                     placeholder="Language (e.g. English)"
                     value={l.language || ""}
                     onChange={(e) => updateItem("languages", idx, "language", e.target.value)}
-                    className="flex-1 bg-[#141312] border border-[#2D2925] rounded px-2.5 py-1.5 text-[#FAF7F2]"
+                    className="flex-1 bg-[#F7F8FC] border border-[#E7EAF0] rounded-lg px-2.5 py-1.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                   />
                   <select
                     value={l.proficiency || "Fluent"}
                     onChange={(e) => updateItem("languages", idx, "proficiency", e.target.value)}
-                    className="bg-[#141312] border border-[#2D2925] rounded px-2.5 py-1.5 text-[#CDC5B6]"
+                    className="bg-[#F7F8FC] border border-[#E7EAF0] rounded-lg px-2.5 py-1.5 text-[#172033] cursor-pointer"
                   >
                     <option value="Native">Native</option>
                     <option value="Fluent">Fluent</option>
@@ -712,7 +721,7 @@ export const ResumeProfileManager = ({
                   <button
                     type="button"
                     onClick={() => removeItem("languages", idx)}
-                    className="text-[#9C9384] hover:text-rose-400 p-1"
+                    className="text-[#667085] hover:text-rose-500 p-1 cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -721,9 +730,9 @@ export const ResumeProfileManager = ({
             </div>
 
             {/* Positions of Responsibility */}
-            <div className="space-y-3 border-t border-[#2D2925] pt-4">
+            <div className="space-y-3 border-t border-[#E7EAF0] pt-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#E0693B] font-display">Positions of Responsibility & Leadership</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#4F7CFF] font-display">Positions of Responsibility & Leadership</h4>
                 <Button
                   variant="secondary"
                   size="sm"
@@ -735,13 +744,13 @@ export const ResumeProfileManager = ({
               </div>
 
               {formData.responsibilities?.map((r, idx) => (
-                <div key={idx} className="p-3 rounded-lg bg-[#141312] border border-[#2D2925] space-y-2">
+                <div key={idx} className="p-4 rounded-xl bg-[#F7F8FC] border border-[#E7EAF0] space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-xs text-[#FAF7F2]">Role #{idx + 1}</span>
+                    <span className="font-semibold text-xs text-[#172033]">Role #{idx + 1}</span>
                     <button
                       type="button"
                       onClick={() => removeItem("responsibilities", idx)}
-                      className="text-[#9C9384] hover:text-rose-400"
+                      className="text-[#667085] hover:text-rose-500 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -752,14 +761,14 @@ export const ResumeProfileManager = ({
                       placeholder="Leadership Role (e.g. Lead Organizer)"
                       value={r.role || ""}
                       onChange={(e) => updateItem("responsibilities", idx, "role", e.target.value)}
-                      className="bg-[#191816] border border-[#2D2925] rounded px-2 py-1 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg px-2.5 py-1.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                     <input
                       type="text"
                       placeholder="Organization / Club"
                       value={r.organization || ""}
                       onChange={(e) => updateItem("responsibilities", idx, "organization", e.target.value)}
-                      className="bg-[#191816] border border-[#2D2925] rounded px-2 py-1 text-[#FAF7F2]"
+                      className="bg-white border border-[#E7EAF0] rounded-lg px-2.5 py-1.5 text-[#172033] focus:outline-none focus:border-[#4F7CFF]"
                     />
                   </div>
                 </div>

@@ -16,6 +16,14 @@ const conversationSchema = new mongoose.Schema(
     isFreshChat: {
       type: Boolean,
       default: false
+    },
+    responseMode: {
+      type: String,
+      default: "detailed"
+    },
+    language: {
+      type: String,
+      default: "auto"
     }
   },
   {

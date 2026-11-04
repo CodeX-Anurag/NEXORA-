@@ -3,9 +3,9 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock } from "luci
 
 const priorityDotColors = {
   urgent: "bg-rose-500",
-  high: "bg-rose-400",
-  medium: "bg-amber-400",
-  low: "bg-[#787165]"
+  high: "bg-amber-500",
+  medium: "bg-[#4F7CFF]",
+  low: "bg-slate-400"
 };
 
 export const TaskCalendarView = ({
@@ -81,26 +81,26 @@ export const TaskCalendarView = ({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
       {/* Main Calendar Grid (3 cols on large screen) */}
-      <div className="lg:col-span-3 p-5 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4">
+      <div className="lg:col-span-3 p-5 sm:p-6 rounded-2xl bg-white border border-[#E7EAF0] shadow-xs space-y-4">
         {/* Calendar Navigation Bar */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#2D2925]">
+        <div className="flex items-center justify-between pb-3 border-b border-[#E7EAF0]">
           <div className="flex items-center gap-2">
-            <CalendarIcon className="w-4 h-4 text-[#E0693B]" />
-            <h3 className="text-base font-bold text-[#FAF7F2] font-display">{monthName}</h3>
+            <CalendarIcon className="w-4 h-4 text-[#4F7CFF]" />
+            <h3 className="text-base font-bold text-[#172033] font-display">{monthName}</h3>
           </div>
 
           <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={handleToday}
-              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-[#25221F] hover:bg-[#2D2925] text-[#FAF7F2] border border-[#38332E] transition-colors"
+              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white hover:bg-[#F8FAFC] text-[#172033] border border-[#E7EAF0] transition-colors cursor-pointer shadow-xs"
             >
               Today
             </button>
             <button
               type="button"
               onClick={handlePrevMonth}
-              className="p-1.5 rounded-lg bg-[#25221F] hover:bg-[#2D2925] text-[#FAF7F2] border border-[#38332E] transition-colors"
+              className="p-1.5 rounded-lg bg-white hover:bg-[#F8FAFC] text-[#172033] border border-[#E7EAF0] transition-colors cursor-pointer shadow-xs"
               aria-label="Previous month"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -108,7 +108,7 @@ export const TaskCalendarView = ({
             <button
               type="button"
               onClick={handleNextMonth}
-              className="p-1.5 rounded-lg bg-[#25221F] hover:bg-[#2D2925] text-[#FAF7F2] border border-[#38332E] transition-colors"
+              className="p-1.5 rounded-lg bg-white hover:bg-[#F8FAFC] text-[#172033] border border-[#E7EAF0] transition-colors cursor-pointer shadow-xs"
               aria-label="Next month"
             >
               <ChevronRight className="w-4 h-4" />
@@ -119,7 +119,7 @@ export const TaskCalendarView = ({
         {/* Weekday Labels */}
         <div className="grid grid-cols-7 gap-1 text-center">
           {weekDays.map((wd) => (
-            <div key={wd} className="text-[11px] font-bold uppercase tracking-wider text-[#787165] py-1">
+            <div key={wd} className="text-[11px] font-bold uppercase tracking-wider text-[#667085] py-1">
               {wd}
             </div>
           ))}
@@ -132,7 +132,7 @@ export const TaskCalendarView = ({
               return (
                 <div
                   key={`empty-${idx}`}
-                  className="min-h-[90px] rounded-xl bg-[#141312]/40 border border-transparent"
+                  className="min-h-[90px] rounded-xl bg-[#F8FAFC]/50 border border-transparent"
                 />
               );
             }
@@ -141,10 +141,10 @@ export const TaskCalendarView = ({
               <div
                 key={cell.dateKey}
                 onClick={() => onCreateTaskWithDate(cell.dateKey)}
-                className={`min-h-[90px] p-2 rounded-xl bg-[#141312] border transition-all text-left flex flex-col justify-between group cursor-pointer ${
+                className={`min-h-[90px] p-2 rounded-xl border transition-all text-left flex flex-col justify-between group cursor-pointer shadow-2xs ${
                   cell.isToday
-                    ? "border-[#E0693B]/50 bg-[#E0693B]/5"
-                    : "border-[#24211D] hover:border-[#38332E] hover:bg-[#1A1815]"
+                    ? "border-[#4F7CFF] bg-[#EEF2FF]/40"
+                    : "bg-[#F8FAFC] border-[#E7EAF0] hover:border-[#4F7CFF]/50 hover:bg-white"
                 }`}
               >
                 {/* Day Header */}
@@ -152,14 +152,14 @@ export const TaskCalendarView = ({
                   <span
                     className={`w-6 h-6 rounded-full text-xs font-mono font-bold flex items-center justify-center ${
                       cell.isToday
-                        ? "bg-[#E0693B] text-white"
-                        : "text-[#CDC5B6] group-hover:text-[#FAF7F2]"
+                        ? "bg-[#4F7CFF] text-white"
+                        : "text-[#172033] group-hover:text-[#4F7CFF]"
                     }`}
                   >
                     {cell.dayNumber}
                   </span>
                   {cell.tasks.length > 0 && (
-                    <span className="text-[10px] font-mono text-[#9C9384] font-semibold">
+                    <span className="text-[10px] font-mono text-[#667085] font-semibold">
                       {cell.tasks.length}
                     </span>
                   )}
@@ -174,10 +174,10 @@ export const TaskCalendarView = ({
                         e.stopPropagation();
                         onSelectTask(task);
                       }}
-                      className={`px-1.5 py-0.5 rounded text-[10px] truncate flex items-center gap-1 font-medium border transition-colors ${
+                      className={`px-1.5 py-0.5 rounded text-[10px] truncate flex items-center gap-1 font-medium border transition-colors shadow-2xs ${
                         task.status === "completed"
-                          ? "bg-[#1E1C19] border-[#2B2723] text-[#787165] line-through"
-                          : "bg-[#1C1A17] hover:bg-[#25221F] border-[#302C28] text-[#FAF7F2]"
+                          ? "bg-[#F1F4F9] border-[#E7EAF0] text-[#98A2B3] line-through"
+                          : "bg-white hover:bg-[#EEF2FF] border-[#E7EAF0] text-[#172033]"
                       }`}
                     >
                       <span
@@ -189,7 +189,7 @@ export const TaskCalendarView = ({
                     </div>
                   ))}
                   {cell.tasks.length > 3 && (
-                    <span className="text-[9px] text-[#E0693B] block font-mono pl-1">
+                    <span className="text-[9px] text-[#4F7CFF] block font-mono pl-1 font-semibold">
                       +{cell.tasks.length - 3} more
                     </span>
                   )}
@@ -201,21 +201,21 @@ export const TaskCalendarView = ({
       </div>
 
       {/* Sidebar: Unscheduled Tasks (1 col) */}
-      <div className="p-5 rounded-2xl bg-[#191816] border border-[#2D2925] space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#2D2925]">
+      <div className="p-5 rounded-2xl bg-white border border-[#E7EAF0] shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-[#E7EAF0]">
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[#9C9384]" />
-            <h4 className="text-xs font-bold text-[#FAF7F2] uppercase tracking-wider font-display">
+            <Clock className="w-4 h-4 text-[#667085]" />
+            <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider font-display">
               Without Due Date
             </h4>
           </div>
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#141312] text-[#9C9384] border border-[#2D2925]">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F8FAFC] text-[#667085] border border-[#E7EAF0]">
             {unscheduledTasks.length}
           </span>
         </div>
 
         {unscheduledTasks.length === 0 ? (
-          <p className="text-xs text-[#787165] italic py-4 text-center">
+          <p className="text-xs text-[#98A2B3] italic py-4 text-center">
             All tasks have scheduled deadlines.
           </p>
         ) : (
@@ -224,23 +224,23 @@ export const TaskCalendarView = ({
               <div
                 key={task._id}
                 onClick={() => onSelectTask(task)}
-                className="p-3 rounded-xl bg-[#141312] border border-[#262420] hover:border-[#38332E] hover:bg-[#1A1815] transition-all cursor-pointer space-y-1.5 group"
+                className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E7EAF0] hover:border-[#D0D5DD] hover:bg-white transition-all cursor-pointer space-y-1.5 group shadow-2xs"
               >
                 <div className="flex items-center justify-between gap-1">
-                  <h5 className="text-xs font-semibold text-[#FAF7F2] truncate group-hover:text-[#E0693B] transition-colors">
+                  <h5 className="text-xs font-semibold text-[#172033] truncate group-hover:text-[#4F7CFF] transition-colors">
                     {task.title}
                   </h5>
                   <span
                     className={`px-1.5 py-0.5 text-[9px] font-mono uppercase font-bold rounded-full border shrink-0 ${
                       task.priority === "urgent"
-                        ? "bg-rose-500/20 text-rose-300 border-rose-500/30"
-                        : "bg-[#22201D] text-[#9C9384] border-[#332F2A]"
+                        ? "bg-rose-50 text-rose-700 border-rose-200"
+                        : "bg-white text-[#667085] border-[#E7EAF0]"
                     }`}
                   >
                     {task.priority}
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-[10px] text-[#9C9384] font-mono">
+                <div className="flex items-center justify-between text-[10px] text-[#667085] font-mono">
                   <span>{task.category || "General"}</span>
                   {task.estimatedMinutes > 0 && <span>{task.estimatedMinutes}m est</span>}
                 </div>

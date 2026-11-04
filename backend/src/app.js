@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const helmet = require("helmet");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -45,6 +46,9 @@ app.use(
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
+
+// Serve static uploads (Generated diagrams, images & attachments)
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // 3. CORS Configuration (Scoped to CLIENT_URL and local dev origins with credentials support)
 app.use(
