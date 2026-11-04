@@ -80,13 +80,24 @@ mindmap
 
 ## 🖥️ Screenshots
 
-| Dashboard | Task Management |
-|---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Tasks](docs/screenshots/tasks.png) |
-
-| AI Coach | Analytics |
-|---|---|
-| ![AI Coach](docs/screenshots/ai-coach.png) | ![Analytics](docs/screenshots/analytics.png) |
+<table>
+  <tr>
+    <td align="center" width="50%"><b>Dashboard</b><br/><img src="docs/Screenshots/Dashboard.png" alt="Dashboard"/></td>
+    <td align="center" width="50%"><b>Task Management</b><br/><img src="docs/Screenshots/Task.png" alt="Task Management"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Analytics</b><br/><img src="docs/Screenshots/Analytics.png" alt="Analytics"/></td>
+    <td align="center"><b>Career Intelligence</b><br/><img src="docs/Screenshots/Career%20Intelligence.png" alt="Career Intelligence"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Resume Builder</b><br/><img src="docs/Screenshots/Resume%20Builder.png" alt="Resume Builder"/></td>
+    <td align="center"><b>AI Coach</b><br/><img src="docs/Screenshots/AI%20COACH.png" alt="AI Coach"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>AI Socratic Viva</b><br/><img src="docs/Screenshots/AI%20Socratic%20Viva.png" alt="AI Socratic Viva"/></td>
+    <td></td>
+  </tr>
+</table>
 
 ## 🏗️ System Architecture
 
