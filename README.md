@@ -7,193 +7,267 @@
 
 **Plan smarter. Learn consistently. Build your future.**
 
-NEXORA brings academic planning, study tracking, career preparation, project management, and AI-powered learning support together in one platform.
+A unified workspace for students to organize their academic life, track learning progress, prepare for careers, and access AI-powered learning support.
 
-[Features](#-features) · [Architecture](#-system-architecture) · [Tech Stack](#-technology-stack) · [Getting Started](#-getting-started) · [Roadmap](#-future-roadmap)
+[Explore Features](#-features) · [Architecture](#-system-architecture) · [Installation](#-getting-started) · [Roadmap](#-future-roadmap)
 
 </div>
 
 ---
 
-## 📌 Overview
+## 🌟 About NEXORA
 
-Students often manage their academic responsibilities, personal goals, projects, and career preparation across multiple disconnected tools.
+Student life involves more than attending classes. Students need to manage assignments, build consistent study habits, work on projects, develop technical skills, and prepare for future careers.
 
-**NEXORA** is designed to bring these activities into one organized workspace.
+These responsibilities are often scattered across different tools.
 
-It helps students manage tasks, record study activity, monitor progress, explore career-related skills, build resumes, and use AI-powered tools for learning and preparation.
+**NEXORA brings these activities into one platform.**
 
-NEXORA is developed as a full-stack web application with a React frontend, Node.js and Express backend, MongoDB database, and Google Gemini API integration.
+It combines student productivity tools with career-oriented features and AI-assisted learning, helping students organize their work and understand their progress.
 
-## 🎯 Problem Statement
+> NEXORA is designed to support students—not replace their effort, judgment, or learning.
 
-Students face challenges such as:
+---
 
-- Keeping track of multiple academic tasks and deadlines.
-- Maintaining consistent study habits.
-- Understanding their learning and productivity progress.
+## 🎯 The Problem We’re Solving
+
+Students commonly face challenges such as:
+
+- Managing multiple tasks, deadlines, and academic responsibilities.
+- Maintaining consistent study routines.
+- Understanding their productivity and learning progress.
 - Organizing projects and career preparation.
-- Finding accessible learning support when they need it.
+- Finding accessible support when they are learning difficult topics.
 
-NEXORA aims to address these challenges by providing a centralized platform for student productivity and career development.
+NEXORA addresses these challenges through a centralized student workspace.
 
 ## ✨ Features
 
+<table>
+<tr>
+<td width="50%">
+
 ### 📊 Student Dashboard
-A centralized view of student activities and progress, helping users understand their current workload and stay organized.
+A central overview of student activities and progress.
+
+</td>
+<td width="50%">
 
 ### ✅ Task Management
-Create, organize, prioritize, and manage tasks while keeping track of important deadlines.
+Organize tasks, priorities, and deadlines in one place.
+
+</td>
+</tr>
+<tr>
+<td>
 
 ### 📚 Study Tracker
-Record study activity and review learning progress to encourage consistent study habits.
+Record study activity and review learning progress.
+
+</td>
+<td>
 
 ### 🧭 Career Intelligence
-Explore career-related information, skills, and learning roadmaps to support career preparation.
+Explore career-related skills and learning roadmaps.
+
+</td>
+</tr>
+<tr>
+<td>
 
 ### 💻 Projects Portfolio
-Organize and showcase projects as part of a student's technical learning journey.
+Organize and showcase projects from your technical journey.
+
+</td>
+<td>
 
 ### 📄 Resume Builder
-Create and manage resumes with tools designed to support professional and career preparation.
+Create and manage resumes for career preparation.
+
+</td>
+</tr>
+<tr>
+<td>
 
 ### 📈 Analytics
-Visualize productivity and learning progress through charts and analytics.
+Visualize productivity and learning progress.
+
+</td>
+<td>
 
 ### 🤖 AI Coach
-Interact with an AI-powered assistant for explanations, learning support, and guidance.
+Get AI-assisted explanations and learning support.
+
+</td>
+</tr>
+<tr>
+<td>
 
 ### 🎓 AI Socratic Viva
-Practice answering questions and strengthen understanding through interactive learning.
+Practice answering questions and strengthen understanding.
+
+</td>
+<td>
 
 ### 🧠 Memory & Privacy
 Manage AI-related memory and privacy settings.
 
-### 🔐 Authentication
-User authentication and protected application functionality using JWT-based authentication.
+</td>
+</tr>
+</table>
 
 ---
 
-## 🖥️ Screenshots
+## 🖥️ Project Preview
 
-Screenshots help visitors understand the project before they explore the code.
+Add screenshots of your actual application to make the repository more engaging.
 
-_Add your actual screenshots to `docs/screenshots/` and update the paths below._
+Suggested structure:
+
+```text
+docs/
+└── screenshots/
+    ├── dashboard.png
+    ├── tasks.png
+    ├── study-tracker.png
+    ├── career.png
+    ├── resume-builder.png
+    └── ai-coach.png
+```
+
+Then embed them in this section:
 
 | Dashboard | Task Management |
 |---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Tasks](docs/screenshots/tasks.png) |
+| ![NEXORA Dashboard](docs/screenshots/dashboard.png) | ![Task Management](docs/screenshots/tasks.png) |
 
-| AI Coach | Analytics |
+| Study Tracker | AI Coach |
 |---|---|
-| ![AI Coach](docs/screenshots/ai-coach.png) | ![Analytics](docs/screenshots/analytics.png) |
+| ![Study Tracker](docs/screenshots/study-tracker.png) | ![AI Coach](docs/screenshots/ai-coach.png) |
+
+*Replace the example paths with your real screenshot files. Remove any screenshot row you have not added yet.*
 
 ---
 
 ## 🏗️ System Architecture
 
-NEXORA follows a **client–server architecture**. The frontend communicates with the backend through APIs. The backend handles application logic, database operations, authentication, and AI service integration.
+NEXORA uses a **client–server architecture**. The frontend handles the user interface, while the backend processes requests, applies application logic, communicates with the database, and connects to AI services.
 
 ```mermaid
-flowchart TD
-    User["Student / User"]
+flowchart TB
+    Student(["Student"])
 
-    subgraph Frontend["Frontend — React + Vite"]
+    subgraph Client["Frontend · React + Vite"]
         UI["User Interface"]
-        Modules["Dashboard · Tasks · Study · Career · Resume · Analytics"]
-        AIUI["AI Coach Interface"]
+        Dashboard["Dashboard & Productivity Modules"]
+        Career["Career & Resume Modules"]
+        AIChat["AI Coach & Viva Interface"]
     end
 
-    subgraph Backend["Backend — Node.js + Express"]
-        API["REST API"]
-        Auth["Authentication and Middleware"]
-        Logic["Application Logic"]
+    subgraph Server["Backend · Node.js + Express"]
+        Routes["API Routes"]
+        Middleware["Authentication & Middleware"]
+        Controllers["Controllers"]
+        Services["Business Logic & Services"]
         AIService["AI Service"]
     end
 
-    DB[("MongoDB Atlas")]
-    Gemini["Google Gemini API"]
+    Database[("MongoDB")]
+    AIProvider["Google Gemini API"]
 
-    User --> UI
-    UI --> Modules
-    UI --> AIUI
+    Student --> UI
+    UI --> Dashboard
+    UI --> Career
+    UI --> AIChat
 
-    Modules --> API
-    AIUI --> API
+    Dashboard --> Routes
+    Career --> Routes
+    AIChat --> Routes
 
-    API --> Auth
-    Auth --> Logic
+    Routes --> Middleware
+    Middleware --> Controllers
+    Controllers --> Services
 
-    Logic <--> DB
-    Logic --> AIService
-    AIService <--> Gemini
+    Services <--> Database
+    Services --> AIService
+    AIService <--> AIProvider
 
-    Logic --> API
-    AIService --> API
-    API --> UI
+    Services --> Controllers
+    AIService --> Controllers
+    Controllers --> Routes
+    Routes --> UI
 ```
 
-### Architecture Overview
+### Architecture Components
 
-| Layer | Responsibility |
+| Component | Role |
 |---|---|
-| Frontend | Displays the interface and handles user interactions |
-| Backend | Processes requests and runs application logic |
-| Authentication | Supports protected functionality using JWT |
-| Database | Stores application data using MongoDB |
-| AI Integration | Connects AI features to Google Gemini through an API |
+| React frontend | Renders the application interface and manages user interactions |
+| Express API | Receives and routes client requests |
+| Middleware | Supports request processing and authentication |
+| Controllers and services | Implement application behavior and business logic |
+| MongoDB | Stores application data |
+| Gemini API | Provides AI-generated responses for supported features |
 
-The backend acts as the controlled connection between the frontend, database, and external AI services.
+---
+
+## 🔄 How an AI Request Works
+
+The AI Coach uses the backend as an intermediary between the frontend and the AI provider.
+
+```mermaid
+sequenceDiagram
+    actor Student
+    participant UI as React Frontend
+    participant API as Express Backend
+    participant AI as AI Service
+    participant Gemini as Gemini API
+
+    Student->>UI: Submit a question
+    UI->>API: Send request
+    API->>AI: Prepare AI request
+    AI->>Gemini: Send prompt
+    Gemini-->>AI: Generate response
+    AI-->>API: Return response
+    API-->>UI: Send response
+    UI-->>Student: Display answer
+```
+
+This design keeps the AI integration on the backend instead of exposing the provider’s secret API key in the browser.
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Category | Technology |
+| Category | Technologies |
 |---|---|
 | Frontend | React, Vite |
 | Styling | Tailwind CSS |
 | Backend | Node.js, Express.js |
-| Database | MongoDB Atlas |
+| Database | MongoDB |
 | ODM | Mongoose |
 | Authentication | JSON Web Tokens (JWT) |
 | AI Integration | Google Gemini API |
 | Data Visualization | Recharts |
 | Icons | Lucide |
 | Version Control | Git, GitHub |
-| Deployment | Render |
-
----
-
-## 🔄 How NEXORA Works
-
-A typical application workflow follows these steps:
-
-1. The student interacts with the React frontend.
-2. The frontend sends a request to the Express backend.
-3. The backend validates and processes the request.
-4. The backend interacts with MongoDB when data needs to be stored or retrieved.
-5. For AI-powered functionality, the backend communicates with the Gemini API.
-6. The backend returns the result to the frontend.
-7. The frontend displays the updated information to the student.
-
-This separation helps keep the user interface, application logic, data storage, and AI integration organized.
+| Deployment Platform | Render |
 
 ---
 
 ## 🚀 Getting Started
 
-Follow these instructions to run NEXORA locally.
+Follow these steps to run NEXORA locally.
 
 ### Prerequisites
 
-Make sure you have the following installed:
+Install the following:
 
 - [Node.js](https://nodejs.org/)
 - npm
 - [Git](https://git-scm.com/)
 - A MongoDB database
-- A Gemini API key for AI features
+- A Gemini API key for AI-powered features
 
 ### 1. Clone the repository
 
@@ -213,9 +287,7 @@ npm install
 
 Create a `.env` file inside the `backend` directory.
 
-Add the environment variables required by your backend configuration.
-
-Example:
+Example configuration:
 
 ```env
 PORT=5000
@@ -224,11 +296,11 @@ JWT_SECRET=your_jwt_secret
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-> **Important:** These are example variable names. Check the backend source code and use the exact names expected by your application. Never commit real credentials or API keys.
+**Important:** These are example names. Confirm the exact environment variable names in your backend code before using them. Never commit real credentials.
 
 ### 4. Start the backend
 
-Use the appropriate start script defined in `backend/package.json`.
+Run the start command defined in `backend/package.json`.
 
 For example:
 
@@ -238,7 +310,7 @@ npm start
 
 ### 5. Install frontend dependencies
 
-Open a new terminal from the project root:
+Open another terminal from the project root:
 
 ```bash
 cd frontend
@@ -247,15 +319,15 @@ npm install
 
 ### 6. Configure the frontend API URL
 
-Configure the frontend to communicate with your local backend.
+Set the backend URL using the environment variable expected by the frontend.
 
-For example:
+Example:
 
 ```env
 VITE_API_URL=http://localhost:5000
 ```
 
-Check the frontend configuration to confirm the correct environment variable name and expected API URL format.
+Confirm the actual variable name and URL format in your frontend configuration.
 
 ### 7. Start the frontend
 
@@ -263,38 +335,30 @@ Check the frontend configuration to confirm the correct environment variable nam
 npm run dev
 ```
 
-Open the local URL printed by Vite in your terminal.
+Open the local URL printed by Vite.
 
 ---
 
-## 🔐 Environment Variables & Security
+## 🔐 Security
 
-NEXORA uses environment variables for application configuration and sensitive credentials.
+NEXORA uses environment variables to configure sensitive credentials and application settings.
 
-Depending on the backend configuration, these may include:
+Recommended practices:
 
-- MongoDB connection string
-- JWT secret
-- Gemini API key
-- Backend port
-- Frontend API base URL
-
-Security recommendations:
-
-- Keep `.env` files out of version control.
+- Keep `.env` files out of Git.
 - Never expose private API keys in frontend code.
-- Use strong secrets for authentication.
+- Use a strong JWT secret.
 - Restrict database access to trusted sources.
 - Avoid logging passwords, tokens, or database credentials.
-- Use separate configuration values for local development and production.
+- Use separate configuration for local development and production.
 
 ---
 
 ## 🧪 Testing
 
-NEXORA includes tests for selected application features.
+NEXORA contains tests for selected application features.
 
-To run tests, use the scripts defined in the relevant `package.json` files.
+Check the scripts in the backend and frontend `package.json` files to find the supported test commands.
 
 For example:
 
@@ -302,17 +366,17 @@ For example:
 npm test
 ```
 
-The exact command may differ between the frontend and backend. Check the available scripts before running it.
+Use the command supported by the relevant package.
 
 ---
 
 ## 🧠 AI Integration
 
-NEXORA integrates Google Gemini through an API for AI-powered functionality.
+NEXORA integrates Google Gemini through an API for supported AI-powered features.
 
-The backend communicates with the AI provider and returns generated responses to the frontend. This allows the application to use AI capabilities without hosting or training a large language model directly.
+The backend sends requests to the AI provider and returns generated responses to the frontend. This allows NEXORA to use a hosted language model without training or hosting a large model itself.
 
-The AI integration is intended to support learning and productivity—not to replace independent learning or guarantee academic or career outcomes.
+AI features are intended to assist with learning and productivity. They do not guarantee academic results, interview success, or job placement.
 
 ---
 
@@ -320,20 +384,20 @@ The AI integration is intended to support learning and productivity—not to rep
 
 NEXORA is an evolving project. Potential future improvements include:
 
-- AI provider fallback and improved quota handling.
-- Retrieval-Augmented Generation (RAG) for student notes and documents.
-- Personalized AI study-plan generation.
+- AI provider fallback and better API quota handling.
+- Retrieval-Augmented Generation (RAG) for personal study documents.
+- Personalized study-plan generation.
 - AI-generated quizzes and revision material.
-- Improved study analytics and progress insights.
-- More robust monitoring and deployment reliability.
-- Additional career preparation and interview practice tools.
+- More detailed study and productivity analytics.
+- Improved error handling, monitoring, and deployment reliability.
+- Expanded career preparation and interview practice tools.
 
 ---
 
 ## 👨‍💻 Author
 
 **Anurag Soni**  
-B.Tech — Computer Science & Engineering
+B.Tech · Computer Science & Engineering
 
 GitHub: [@CodeX-Anurag](https://github.com/CodeX-Anurag)
 
@@ -343,22 +407,24 @@ GitHub: [@CodeX-Anurag](https://github.com/CodeX-Anurag)
 
 NEXORA was developed as a student software project and learning experience.
 
-The development process involved implementation, testing, debugging, refinement, and the use of AI-assisted development tools.
+The development process included implementation, testing, debugging, refinement, and the use of AI-assisted development tools.
 
-The project will continue to evolve as new ideas, technologies, and improvements are explored.
+The project will continue to evolve through future improvements and new ideas.
 
 ---
 
 ## 📄 License
 
-A license has not been specified in this README.
+No license has been specified yet.
 
-If you intend to allow others to use, modify, or distribute the project, consider adding an appropriate open-source license. Without a license, others should not assume they have permission to reuse or redistribute the code.
+If you intend to allow others to use, modify, or distribute this project, consider adding an appropriate open-source license. Without a license, visitors should not assume they have permission to reuse or redistribute the code.
 
 ---
 
 <div align="center">
 
-**NEXORA — Your journey from student productivity to career readiness.**
+### NEXORA
+
+**Your journey from student productivity to career readiness.**
 
 </div>
